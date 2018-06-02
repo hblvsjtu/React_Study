@@ -147,7 +147,15 @@
 > - 大约经历过三个阶段：
 >> - 全局变量+命名空间
 >> - AMD和CommonJS Node.js使用的正是CommonJS的规范
->> - ES6模块      
+>> - ES6模块
+#### 3) 单JavaScript入口组件方案
+> - 允许将一般的资源是作于JavaScript平等的模块，并以一致的方式加载进来
+> - 这样做的好处是，可以将一些相关的依赖放在一起，然后对外只暴露一个JavaScript模块作为模块的入口
+> - 能实现这些功能的现代打包工具有browserify,webpack.
+#### 4) Web Component方案
+> - 2011年提出的Web Component，他的引入组件的方式是通过简单的的方法实现，但是这种方法并没有火起来
+        
+                <link rel="import" href="bar.html"\>     
 ------      
         
         
