@@ -15,16 +15,14 @@
 ## [一、现代前端开发](#1)
 ### [1.1 新一代JS标准](#1.1)
 ### [1.2 前端组件化方案](#1.2) 
-### [1.3 数组化](#1.3) 
-### [1.4 类型的判断](#1.4)
-### [1.5 无冲突处理](#1.5)
-### [1.6 前端组件化方案](#1.6)
+### [1.3 任务流工具](#1.3) 
 ## [二、环境的安装](#2)
 ### [2.1 Homebrew](#2.1)
 ### [2.2 wget](#2.2) 
-### [2.3 Node](#2.3) 
-### [2.4 babel](#2.4)
-### [2.5 无冲突处理](#2.5) 
+### [2.3 node & npm](#2.3) 
+### [2.4 package.json](#2.4)
+### [2.5 babel](#2.5)
+### [2.6 jshint](#2.6)  
         
 ------      
         
@@ -155,7 +153,17 @@
 #### 4) Web Component方案
 > - 2011年提出的Web Component，他的引入组件的方式是通过简单的的方法实现，但是这种方法并没有火起来
         
-                <link rel="import" href="bar.html"\>     
+                <link rel="import" href="bar.html"\>  
+#### 5) 包和模块
+> - 包是指用package.json文件描述的文件夹或者文件
+> - 模块则更为具体，任何可以被Node.js或者require载入的文件
+        
+<h3 id='1.3'>1.3 任务流工具</h3>  
+        
+#### 1) jshint
+
+
+                          
 ------      
         
         
@@ -337,7 +345,7 @@
                 🍺  /usr/local/Cellar/wget/1.19.5: 50 files, 3.7MB
 
         
-<h3 id='2.3'>2.3 node</h3>  
+<h3 id='2.3'>2.3 node & npm</h3>  
         
 #### 1) 简介，安装与卸载
 > -  node这个我们未来的核心，服务器的主要JacvaScript编译器
@@ -375,8 +383,318 @@
                 undefined
                 > .exit
 
+#### 2) npm的使用 详细看[官方网站](https://docs.npmjs.com)
+> - 安装
         
-<h3 id='2.4'>2.4 babel</h3>  
+                npm install 默认安装最新版本，如果想要安装指定版本，可以在库名称后加 @版本号
+> - 更新最新的版本
+        
+                <!-- To be sure that this matches the latest version, scroll to the bottom of this page. If the version you see does not match the latest version, run:  -->
+
+                npm install npm@latest -g.
+
+                <!-- If you want to try the next, unreleased version of npm to test that packages you have created will work with the planned next release of npm, use this command: -->
+
+                npm install npm@next -g
+
+                # 更新所有
+                npm update 
+
+                # 更新某个包
+                npm update <package-name>                
+
+> - 发布public
+>> - Create a User Account创建一个npm账号 npm adduser
+        
+                $ npm adduser
+                Username: YOUR_USER_NAME
+                Password: YOUR_PASSWORD
+                Email: YOUR_EMAIL@domain.com
+
+                # 不知道为什么死活加不上
+                LvHongbins-Mac-2:React_Study lvhongbin$ npm adduser
+                Username: lvhongbin
+                Password: 
+                Email: (this IS public) hblvsjtu@163.com
+                npm ERR! code E400
+                npm ERR! Registry returned 400 for PUT on https://registry.npmjs.org/-/user/org.couchdb.user:lvhongbin: Account creation denied. Please contact support@npmjs.com.
+
+                npm ERR! A complete log of this run can be found in:
+                npm ERR!     /Users/lvhongbin/.npm/_logs/2018-06-02T16_31_03_371Z-debug.log
+>> - If you created a user account on the site, use npm login to access your account from your terminal.
+>> - Type npm whoami from a terminal to see if you are already logged in (technically, this also means that your credentials have been stored locally).测试一下你的用户名是否已经创建
+>> - 包里面必须包括说明文档readme.md或者以.md为后缀的文件
+>> - Use "npm publish" to publish the package.
+> - 更新Update the package
+        
+                # where <update_type> is one of the semantic versioning release types, patch, minor, or major.
+                # This command will change the version number in package.json
+                npm version <update_type>
+
+                # After updating the version number, run npm publish again
+                npm publish
+> - npm run 即 npm run-script 的缩写，用来直接运行 package.json 中 scripts 指定的脚本
+> - npm run 会创建一个Shell，执行指定的命令，并临时将node_modules/.bin加入PATH 变量，这意味着本地模块可以直接运行。具体可以看[张拭心的博客](https://blog.csdn.net/u011240877/article/details/76582670)
+        
+                {
+                  "name": "demo",
+                  "scripts": {
+                    "lint": "jshint **.js",
+                    "test": "mocha test/"
+                  }
+                }
+    
+                # 执行 jshint **.js
+                npm run lint 
+                
+                #或者 
+                npm run-script lint 
+
+                # 运行所有的脚本
+                npm run
+        
+<h3 id='2.4'>4.4 package.json 详细看<a href="https://docs.npmjs.com/getting-started/using-a-package.json">官网</a></h3>  
+        
+#### 1) 简介
+> -  它是一个JSON文件，对比手动安装，The best way to manage locally installed npm packages is to create a package.json file.
+>> - lists the packages that your project depends on.
+>> - allows you to specify the versions of a package that your project can use using semantic versioning rules.
+>> - makes your build reproducible, and therefore much easier to share with other developers.
+#### 2) 创建
+> - 可以手动创建
+> - 也使用npm init命令来创建
+> - 当然如果你嫌烦的话可以使用 npm init --yes  
+> - 一个简单的例子
+                        
+                npm init --yes
+                Wrote to /home/ag_dubs/my_package/package.json:
+
+                {
+                  "name": "my_package",
+                  "description": "",
+                  "version": "1.0.0",
+                  "main": "index.js",
+                  "scripts": {
+                    "test": "echo \"Error: no test specified\" && exit 1"
+                  },
+                  "repository": {
+                    "type": "git",
+                    "url": "https://github.com/ashleygwilliams/my_package.git"
+                  },
+                  "keywords": [],
+                  "author": "",
+                  "license": "ISC",
+                  "bugs": {
+                    "url": "https://github.com/ashleygwilliams/my_package/issues"
+                  },
+                  "homepage": "https://github.com/ashleygwilliams/my_package"
+                }
+#### 3) 包含的字段
+> - name 必填 默认是 the current directory name
+>> - all lowercase
+>> - one word, no spaces
+>> - dashes and underscores allowed  
+> - version 必填 a.b.c
+>> - 补丁版本：解决了 Bug 或者一些较小的更改，增加最后一位数字，比如 1.0.1
+>> - 小版本：增加了新特性，同时不会影响之前的版本，增加中间一位数字，比如 1.1.0
+>> - 大版本：大改版，无法兼容之前的，增加第一位数字，比如 2.0.0
+> - dependencies 选填 生产环境中需要依赖的包 相当于npm install 安装包 --save
+> - devDependencies 选填 仅在开发和测试环节中需要依赖的包 相当于npm install 安装包 --save-dev    
+> - description：描述信息，有助于搜索 If there is no description field in the package.json, npm uses the first line of the README.md or README instead。这对人们去搜索你的包很有帮助
+> - main: 入口文件，一般都是 index.js
+> - scripts：支持的shell脚本，默认是一个空的test，执行的是CLI
+> - keywords：关键字，有助于在人们使用 npm search 搜索时发现你的项目
+> - author：作者信息
+> - license：默认是 MIT
+> - bugs：当前项目的一些错误信息，如果有的话
+> - 一个简单的例子
+        
+                {
+                  "name": "my_package",
+                  "version": "1.0.0",
+                  "dependencies": {
+                    "my_dep": "^1.0.0"
+                  },
+                  "devDependencies" : {
+                    "my_test_framework": "^3.1.0"
+                  }
+                }
+#### 4) 默认值的设置
+> - npm set init.author.email "hblvsjtu@163.com"
+> - npm set init.author.name "LvHongbin"
+> - npm set init.license "MIT"
+#### 5) --save or --save-dev
+> - To add an entry to your package.json's dependencies:
+        
+                npm install <package_name> --save
+> - To add an entry to your package.json's devDependencies:
+        
+                npm install <package_name> --save-dev
+#### 5) -locally or -globally
+> - If you want to use a package as a command line tool, then install it globally. This way, it works no matter which directory is current. This is the choice you would use if you were installing grunt, for example.
+> - If you want to depend on the package from your own module, then install it locally. This is the choice you would use if you are using require statements
+> - 比如
+        
+                npm install -g jshint  
+
+#### 6) 实例
+> - 
+        
+                # 首先初始化 package.json
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ npm init
+                This utility will walk you through creating a package.json file.
+                It only covers the most common items, and tries to guess sensible defaults.
+
+                See `npm help json` for definitive documentation on these fields
+                and exactly what they do.
+
+                Use `npm install <pkg>` afterwards to install a package and
+                save it as a dependency in the package.json file.
+
+                Press ^C at any time to quit.
+                package name: (testpackagejson) testpackagejson
+                version: (1.0.0) 1.0.0
+                description: test the packagejson file can whether can run the module 
+                entry point: (index.js) index.js
+                test command: 
+                git repository: https://github.com/hblvsjtu/React_Study.git
+                keywords: testpackagejson
+                author: LvHongbin
+                license: (ISC) ISC
+                About to write to /Users/lvhongbin/Desktop/React_Study/testpackagejson/package.json:
+
+                {
+                  "name": "testpackagejson",
+                  "version": "1.0.0",
+                  "description": "test the packagejson file can whether can run the module ",
+                  "main": "index.js",
+                  "scripts": {
+                    "test": "echo \"Error: no test specified\" && exit 1"
+                  },
+                  "repository": {
+                    "type": "git",
+                    "url": "git+https://github.com/hblvsjtu/React_Study.git"
+                  },
+                  "keywords": [
+                    "testpackagejson"
+                  ],
+                  "author": "LvHongbin",
+                  "license": "ISC",
+                  "bugs": {
+                    "url": "https://github.com/hblvsjtu/React_Study/issues"
+                  },
+                  "homepage": "https://github.com/hblvsjtu/React_Study#readme"
+                }
+
+
+                Is this OK? (yes) yes
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ cat package.json
+                {
+                  "name": "testpackagejson",
+                  "version": "1.0.0",
+                  "description": "test the packagejson file can whether can run the module ",
+                  "main": "index.js",
+                  "scripts": {
+                    "test": "echo \"Error: no test specified\" && exit 1"
+                  },
+                  "repository": {
+                    "type": "git",
+                    "url": "git+https://github.com/hblvsjtu/React_Study.git"
+                  },
+                  "keywords": [
+                    "testpackagejson"
+                  ],
+                  "author": "LvHongbin",
+                  "license": "ISC",
+                  "bugs": {
+                    "url": "https://github.com/hblvsjtu/React_Study/issues"
+                  },
+                  "homepage": "https://github.com/hblvsjtu/React_Study#readme"
+                }
+
+                # 经过修改和下载依赖包后自动添加dependencies和dependencies
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ vim package.json
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ cat package.json
+                {
+                  "name": "testpackagejson",
+                  "version": "1.0.0",
+                  "description": "test the packagejson file can whether can run the module ",
+                  "main": "index.js",
+                  "scripts": {
+                    "compile": "babel jsTest.js -o compiled.js",
+                    "test": "node ./compiled.js"
+                  },
+                  "repository": {
+                    "type": "git",
+                    "url": "git+https://github.com/hblvsjtu/React_Study.git"
+                  },
+                  "keywords": [
+                    "testpackagejson"
+                  ],
+                  "author": "LvHongbin",
+                  "license": "ISC",
+                  "bugs": {
+                    "url": "https://github.com/hblvsjtu/React_Study/issues"
+                  },
+                  "dependencies": {
+                    "babel": "6.26.0",
+                    "babel-cli": "^6.26.0",
+                    "node": "10.3.0"
+                  },
+                  "homepage": "https://github.com/hblvsjtu/React_Study#readme",
+                  "devDependencies": {
+                    "babel-preset-env": "^1.7.0"
+                  }
+                }
+
+                # jsTest.js
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ cat jsTest.js
+                var a = [1, 2, 3];
+                var b = a.map((ele) => ele*2) ;
+                console.log(b);
+
+                export {b as b1};
+
+                # index.js
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ cat index.js
+                var b2 = require("./compiled.js");
+                console.log("Get Start!\nb = " + b2.b1[0] + b2.b1[1] + b2.b1[2]);
+
+                # 这里不能使用npm run运行所有脚本，只能一个一个来，要不然中间生成的compiled.js后面无法直接调用而报错
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ npm run compile && npm run test
+
+                > testpackagejson@1.0.0 compile /Users/lvhongbin/Desktop/React_Study/testpackagejson
+                > babel jsTest.js -o compiled.js
+
+
+                > testpackagejson@1.0.0 test /Users/lvhongbin/Desktop/React_Study/testpackagejson
+                > node ./compiled.js
+
+                [ 2, 4, 6 ]
+
+                # compiled.js
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ cat compiled.js
+                "use strict";
+
+                Object.defineProperty(exports, "__esModule", {
+                  value: true
+                });
+                var a = [1, 2, 3];
+                var b = a.map(function (ele) {
+                  return ele * 2;
+                });
+                console.log(b);
+
+                exports.b1 = b;
+
+                # 运行最终文件
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ node ./index.js
+                [ 2, 4, 6 ]
+                Get Start!
+                b = 246
+
+        
+<h3 id='2.5'>2.5 babel</h3>  
         
 #### 1) 简介，安装与卸载
 > -  Babel is a JavaScript compiler,Use next generation JavaScript, today.
@@ -514,9 +832,64 @@
                     }]
                   ]
                 }
-> -                          
 
+            
+<h3 id='2.6'>2.6 jshint</h3>  
+        
+#### 1) 安装与卸载
+> -  
+                # 使用全局安装
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ npm install jshint -g
+                /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/jshint -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/jshint/bin/jshint
+                + jshint@2.9.5
+                added 31 packages from 18 contributors in 10.169s
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ jshint -v
+                jshint v2.9.5
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ cd ..
+                LvHongbins-Mac-2:React_Study lvhongbin$ jshint -v
+                jshint v2.9.5
+                LvHongbins-Mac-2:React_Study lvhongbin$ which jshint
+                /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/jshint
+                
 
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ jshint index.js
+#### 2) 基本使用
+> -  即使语法有错，jshint都检查不出来
+> -  jshint只用来判断那是不是JS文件，并不管里面内容是否编译成功
+                
+                # 即使语法有错，jshint都检查不出来
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ touch error.js && echo "console.log(b);" > error.js
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ jshint error.js
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ node error.js
+                /Users/lvhongbin/Desktop/React_Study/testpackagejson/error.js:1
+                (function (exports, require, module, __filename, __dirname) { console.log(b);
+                                                                                          ^
+                ReferenceError: b is not defined
+                    at Object.<anonymous> (/Users/lvhongbin/Desktop/React_Study/testpackagejson/error.js:1:75)
+                    at Module._compile (internal/modules/cjs/loader.js:702:30)
+                    at Object.Module._extensions..js (internal/modules/cjs/loader.js:713:10)
+                    at Module.load (internal/modules/cjs/loader.js:612:32)
+                    at tryModuleLoad (internal/modules/cjs/loader.js:551:12)
+                    at Function.Module._load (internal/modules/cjs/loader.js:543:3)
+                    at Function.Module.runMain (internal/modules/cjs/loader.js:744:10)
+                    at startup (internal/bootstrap/node.js:238:19)
+                    at bootstrapNodeJSCore (internal/bootstrap/node.js:572:3)
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ cat error.js
+                console.log(b);
+
+                # jshint只用来判断那是不是JS文件，并不管里面内容是否编译成功
+                LvHongbins-Mac-2:testpackagejson lvhongbin$ jshint setPATH.sh
+                setPATH.sh: line 1, col 1, 'export' is only available in ES6 (use 'esversion: 6').
+                setPATH.sh: line 1, col 8, Unexpected 'PATH'.
+                setPATH.sh: line 1, col 7, Missing semicolon.
+                setPATH.sh: line 1, col 14, Missing semicolon.
+                setPATH.sh: line 1, col 15, Expected an assignment or function call and instead saw an expression.
+                setPATH.sh: line 1, col 19, Missing semicolon.
+                setPATH.sh: line 1, col 19, Unrecoverable syntax error. (50% scanned).
+
+                7 errors
+
+> - 
 
 
 
