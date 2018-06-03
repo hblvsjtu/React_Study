@@ -15,7 +15,7 @@
 ## [一、现代前端开发](#1)
 ### [1.1 新一代JS标准](#1.1)
 ### [1.2 前端组件化方案](#1.2) 
-### [1.3 任务流工具](#1.3) 
+### [1.3 任务流工具 Task Runner](#1.3) 
 ## [二、环境的安装](#2)
 ### [2.1 Homebrew](#2.1)
 ### [2.2 wget](#2.2) 
@@ -23,7 +23,8 @@
 ### [2.4 package.json](#2.4)
 ### [2.5 babel](#2.5)
 ### [2.6 jshint](#2.6)  
-### [2.7 uglifejs](#2.7)  
+### [2.7 uglifejs](#2.7) 
+### [2.8 grunt](#2.8) 
         
 ------      
         
@@ -301,7 +302,7 @@
 > - 包是指用package.json文件描述的文件夹或者文件
 > - 模块则更为具体，任何可以被Node.js或者require载入的文件
         
-<h3 id='1.3'>1.3 任务流工具</h3>  
+<h3 id='1.3'>1.3 任务流工具 Task Runner</h3>  
         
 #### 1) jshint
 > - JSHint is a community-driven tool that detects errors and potential problems in JavaScript code. Since JSHint is so flexible, you can easily adjust it in the environment you expect your code to execute. JSHint is open source and will always stay this way
@@ -309,7 +310,17 @@
 > - UglifyJS is a JavaScript parser, minifier, compressor and beautifier toolkit.
 > - uglify-js only supports JavaScript (ECMAScript 5).
 > - To minify ECMAScript 2015 or above, transpile using tools like Babel.
-
+#### 3) Task Runner
+> - 因为每个模块你都有可能需要执行一遍以下代码，项目小的时候还好，但是当项目巨大的时候，这就变得非常的awkward了
+        
+                jshint test.js
+                uglifyjs test.js
+> - 于是，这时候Task Runner就粉墨登场了
+> - Task Runner有两位成员，分别是Grunt和Gulp
+#### 4) Grunt
+> - 他是一个命令行工具
+#### 5) Gulp
+> - 
                           
 ------      
         
@@ -1001,41 +1012,26 @@
 
                 LvHongbins-Mac-2:testpackagejson lvhongbin$ jshint index.js
 #### 2) 基本使用
-> -  即使语法有错，jshint都检查不出来
-> -  jshint只用来判断那是不是JS文件，并不管里面内容是否编译成功
+> - 检查语法
                 
-                # 即使语法有错，jshint都检查不出来
-                LvHongbins-Mac-2:testpackagejson lvhongbin$ touch error.js && echo "console.log(b);" > error.js
-                LvHongbins-Mac-2:testpackagejson lvhongbin$ jshint error.js
-                LvHongbins-Mac-2:testpackagejson lvhongbin$ node error.js
-                /Users/lvhongbin/Desktop/React_Study/testpackagejson/error.js:1
-                (function (exports, require, module, __filename, __dirname) { console.log(b);
-                                                                                          ^
-                ReferenceError: b is not defined
-                    at Object.<anonymous> (/Users/lvhongbin/Desktop/React_Study/testpackagejson/error.js:1:75)
-                    at Module._compile (internal/modules/cjs/loader.js:702:30)
-                    at Object.Module._extensions..js (internal/modules/cjs/loader.js:713:10)
-                    at Module.load (internal/modules/cjs/loader.js:612:32)
-                    at tryModuleLoad (internal/modules/cjs/loader.js:551:12)
-                    at Function.Module._load (internal/modules/cjs/loader.js:543:3)
-                    at Function.Module.runMain (internal/modules/cjs/loader.js:744:10)
-                    at startup (internal/bootstrap/node.js:238:19)
-                    at bootstrapNodeJSCore (internal/bootstrap/node.js:572:3)
-                LvHongbins-Mac-2:testpackagejson lvhongbin$ cat error.js
-                console.log(b);
+                LvHongbins-Mac-2:grunttest lvhongbin$ cat src/test.js
+                var x = {
+                    baz_: 0,
+                    foo_: 1,
+                    calc: function() {
+                        return this.foo_ + this.baz_;
+                    }
+                };
+                x.bar_ = 2;
+                x['baz_'] = 3;
+                console.log(x.calc());
+                LvHongbins-Mac-2:grunttest lvhongbin$ jshint src/test.js
+                src/test.js: line 9, col 2, ['baz_'] is better written in dot notation.
 
-                # jshint只用来判断那是不是JS文件，并不管里面内容是否编译成功
-                LvHongbins-Mac-2:testpackagejson lvhongbin$ jshint setPATH.sh
-                setPATH.sh: line 1, col 1, 'export' is only available in ES6 (use 'esversion: 6').
-                setPATH.sh: line 1, col 8, Unexpected 'PATH'.
-                setPATH.sh: line 1, col 7, Missing semicolon.
-                setPATH.sh: line 1, col 14, Missing semicolon.
-                setPATH.sh: line 1, col 15, Expected an assignment or function call and instead saw an expression.
-                setPATH.sh: line 1, col 19, Missing semicolon.
-                setPATH.sh: line 1, col 19, Unrecoverable syntax error. (50% scanned).
+                1 error
 
-                7 errors
-
+        
+------
             
 <h3 id='2.7'>2.7 uglifejs <a href="https://www.npmjs.com/package/uglify-js">详细请看这里</a></h3>  
         
@@ -1074,7 +1070,7 @@
                 # 单纯的把空格给去掉
                 LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example4.js
                 var x={baz_:0,foo_:1,calc:function(){return this.foo_+this.baz_},bar_:2,baz_:3};console.log(x.calc());
-                
+
                 LvHongbins-Mac-2:uglifejsTest lvhongbin$ uglifyjs example.js -c -m --mangle-props -o example1.js
                 LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example1.js
                 var x={o:0,t:1,_:function(){return this.t+this.o},i:2,o:3};console.log(x._());
@@ -1088,8 +1084,243 @@
                 LvHongbins-Mac-2:uglifejsTest lvhongbin$ uglifyjs example.js -c -m --mangle-props regex=/_$/ -o example3.js
                 LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example3.js
                 var x={o:0,t:1,calc:function(){return this.t+this.o},_:2,o:3};console.log(x.calc());
-> - 
-> - 
+#### 3) 注意事项
+> - 对于es6的js会报错
+                
+                LvHongbins-Mac-2:grunttest lvhongbin$ grunt
+                Running "jshint:src" (jshint) task
+                >> 1 file lint free.
+
+                Running "uglify:build" (uglify) task
+                { [SyntaxError: Unexpected token: operator (>)
+                  at JS_Parse_Error.get (<anonymous>:73:23)
+                  at formatError (util.js:767:16)
+                  at formatValue (util.js:598:14)
+                  at inspect (util.js:327:10)
+                  at Object.formatWithOptions (util.js:181:12)
+                  at Console.(anonymous function) (console.js:188:15)
+                  at Console.log (console.js:199:31)
+                  at /Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt-contrib-uglify/tasks/uglify.js:144:17
+                  at Array.forEach (<anonymous>:null:null)
+                  at Object.<anonymous> (/Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt-contrib-uglify/tasks/uglify.js:78:16)
+                  at Object.<anonymous> (/Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt/lib/grunt/task.js:252:15)
+                  at Object.thisTask.fn (/Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt/lib/grunt/task.js:70:16)
+                  at Object.<anonymous> (/Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt/lib/util/task.js:294:30)
+                  at Task.runTaskFn (/Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt/lib/util/task.js:244:24)
+                  at Task.<anonymous> (/Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt/lib/util/task.js:293:12)
+                  at /Users/lvhongbin/Desktop/React_Study/grunttest/node_modules/grunt/lib/util/task.js:220:11
+                  at process._tickCallback (internal/process/next_tick.js:61:11)
+                ]
+                  message: 'Unexpected token: operator (>)',
+                  filename: 'src/jsTest.js',
+                  line: 2,
+                  col: 21,
+                  pos: 40 }
+                >> Uglifying source ./index.js,./src/jsTest.js,./src/test.js failed.
+                Warning: Uglification failed.
+                Unexpected token: operator (>). 
+                Line 2 in ./index.js,./src/jsTest.js,./src/test.js
+                 Use --force to continue.
+
+                Aborted due to warnings.
+                LvHongbins-Mac-2:grunttest lvhongbin$ cat src/jsTest.js
+                var a = [1, 2, 3];
+                var b = a.map((ele) => ele*2) ;
+                console.log(b);
+
+                export {b as b1};
+        
+------
+            
+<h3 id='2.8'>2.8 grunt <a href="https://gruntjs.com/getting-started">详细请看这里</a></h3>  
+        
+#### 1) 安装与卸载
+> - 安装命令
+        
+                LvHongbins-Mac-2:grunttest lvhongbin$ npm install grunt-cli -g
+                /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/grunt -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/grunt-cli/bin/grunt
+                + grunt-cli@1.2.0
+                updated 1 package in 3.632s
+                LvHongbins-Mac-2:grunttest lvhongbin$ ln -s /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/grunt-cli/bin/grunt /usr/local/bin/grunt
+                
+                LvHongbins-Mac-2:grunttest lvhongbin$ grunt -V
+                grunt-cli v1.2.0
+                grunt v1.0.2
+#### 2) 使用流程
+> - Assuming that the Grunt CLI has been installed and that the project has already been configured with a package.json and a Gruntfile, it's very easy to start working with Grunt:
+>> - Change to the project's root directory.
+>> - Install project dependencies with npm install.
+>> - Run Grunt with grunt. 
+#### 3) 使用方法
+> - 配置两个文件：package.json and the Gruntfile
+> - package.json: 把grunt和tGrunt插件放在devDependencies里面。package.json的创建方法，有两种，第一种是我们常用的npm init命令，第二种是使用grunt-init。Grunt插件的安装可以采用本地安装的方式--save-dev
+        
+                {
+                  "name": "my-project-name",
+                  "version": "0.1.0",
+                  "devDependencies": {
+                    "grunt": "~0.4.5",
+                    "grunt-contrib-jshint": "~0.10.0",
+                    "grunt-contrib-nodeunit": "~0.4.1",
+                    "grunt-contrib-uglify": "~0.5.0"
+                  }
+                }
+
+                npm install grunt --save-dev
+                npm install grunt-contrib-jshint --save-dev
+
+                LvHongbins-Mac-2:gruntTest lvhongbin$ npm install grunt@>=0.4.0 --save-dev
+                npm WARN grunttest@1.0.0 No repository field.
+
+                LvHongbins-Mac-2:gruntTest lvhongbin$ npm install grunt-contrib-jshint --save-dev
+                npm WARN grunttest@1.0.0 No repository field.
+
+                + grunt-contrib-jshint@1.1.0
+                updated 1 package and audited 215 packages in 3.29s
+                found 3 low severity vulnerabilities
+                  run `npm audit fix` to fix them, or `npm audit` for details
+                LvHongbins-Mac-2:gruntTest lvhongbin$ npm install grunt-contrib-uglify --save-dev
+                npm WARN grunttest@1.0.0 No repository field.
+
+                + grunt-contrib-uglify@3.3.0
+                added 20 packages from 49 contributors and audited 329 packages in 9.853s
+                found 3 low severity vulnerabilities
+                  run `npm audit fix` to fix them, or `npm audit` for details
+> - 创建Gruntfile.js 或者 Gruntfile.coffee，这两个后缀都可以。但都是合法的JS文件。而且必须放在项目的根目录。用来配置或者定义任务和加载Grunt插件。一个Gruntfile文件由四个部分组成
+>> - The "wrapper" function
+>> - Project and task configuration
+>> - Loading Grunt plugins and tasks
+>> - Custom tasks
+                
+                LvHongbins-Mac-2:grunttest lvhongbin$ cat /Users/lvhongbin/Desktop/React_Study/grunttest/Gruntfile.js 
+                /* ***************************************************************
+                  *
+                  * * Filename: Gruntfile.js
+                  *
+                  * * Description:Configure the Grunt job
+                  *
+                  * * Version: 1.0
+                  *
+                  * * Created: 2018/06/03
+                  *
+                  * * Revision: none
+                  *
+                  * * Compiler: node
+                  *
+                  * * Author: Lv Hongbin
+                  *
+                  * * Company: Shanghai JiaoTong Univerity
+                  *
+                 /* **************************************************************/
+
+                // The "wrapper" function
+                module.exports = function(grunt) {
+
+                  // Do grunt-related things in here
+                  // Project configuration.
+                  grunt.initConfig({
+
+                    //参考已有的一些设置，避免重复，并且可以有启用插件一些特殊的命令
+                    pkg: grunt.file.readJSON('package.json'),
+                    jshint: {
+                       src: "src/test.js"
+                    },
+                    uglify: {
+                      options: {
+                        banner: '/*! <%= pkg.main %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                      },
+                      build: {
+
+                        // 实现多文件压缩
+                        src: ['<%= pkg.main %>', 'src/test.js', 'build/complied'],
+                        dest: 'index.min.js',
+                      }
+                    }
+                  });
+
+                  // Load the plugin that provides the "uglify" task.
+                  grunt.loadNpmTasks('grunt-contrib-uglify');
+                  grunt.loadNpmTasks('grunt-contrib-jshint');
+
+                  // Default task(s).用一个数组把需要运行的插件列出来
+                  grunt.registerTask('default', ['jshint', 'uglify']);
+
+                };
+
+                  // Load the plugin that provides the "uglify" task.
+                  grunt.loadNpmTasks('grunt-contrib-uglify');
+                  grunt.loadNpmTasks('grunt-contrib-jshint');
+
+                  // Default task(s).用一个数组把需要运行的插件列出来
+                  grunt.registerTask('default', ['jshint', 'uglify']);
+
+                };
+
+                # package.json
+                LvHongbins-Mac-2:grunttest lvhongbin$ cat /Users/lvhongbin/Desktop/React_Study/grunttest/package.json 
+                {
+                  "name": "grunttest",
+                  "version": "1.0.0",
+                  "description": "test the grunt",
+                  "main": "./index.js",
+                  "scripts": {
+                    "compile": "babel src/jsTest.js -o build/compiled.js",
+                    "test": "node build/compiled.js"
+                  },
+                  "keywords": [
+                    "grunttest"
+                  ],
+                  "author": "LvHongbin",
+                  "license": "ISC",
+                  "devDependencies": {
+                    "babel-preset-env": "^1.7.0",
+                    "grunt": "^1.0.2",
+                    "grunt-contrib-jshint": "^1.1.0",
+                    "grunt-contrib-uglify": "^3.3.0"
+                  }
+                }
+
+                # index.js
+                LvHongbins-Mac-2:grunttest lvhongbin$ cat /Users/lvhongbin/Desktop/React_Study/grunttest/index.js 
+                var b2 = require("./build/compiled.js");
+                console.log("Get Start!\nb = " + b2.b1[0] + b2.b1[1] + b2.b1[2]);
+
+                # index.min.js
+                LvHongbins-Mac-2:grunttest lvhongbin$ cat index.min.js
+                /*! ./index.js 2018-06-03 */
+
+                var b2=require("./build/compiled.js");console.log("Get Start!\nb = "+b2.b1[0]+b2.b1[1]+b2.b1[2]);var x={baz_:0,foo_:1,calc:function(){return this.foo_+this.baz_},bar_:2,baz_:3};console.log(x.calc());
+
+                # 结果
+                LvHongbins-Mac-2:grunttest lvhongbin$ grunt
+                Running "jshint:src" (jshint) task
+                >> 1 file lint free.
+
+                Running "uglify:build" (uglify) task
+                >> 1 file created 260 B → 229 B
+
+                Done.
+
+> - Template样板<%=  %> 其实就是引用变量
+        
+                grunt.initConfig({
+                  concat: {
+                    sample: {
+                      options: {
+                        banner: '/* <%= baz %> */\n',   // '/* abcde */\n'
+                      },
+                      src: ['<%= qux %>', 'baz/*.js'],  // [['foo/*.js', 'bar/*.js'], 'baz/*.js']
+                      dest: 'build/<%= baz %>.js',      // 'build/abcde.js'
+                    },
+                  },
+                  // Arbitrary properties used in task configuration templates.
+                  foo: 'c',
+                  bar: 'b<%= foo %>d', // 'bcd'
+                  baz: 'a<%= bar %>e', // 'abcde'
+                  qux: ['foo/*.js', 'bar/*.js'],
+                });
+> -  
+
 
 
 
