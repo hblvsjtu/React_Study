@@ -23,6 +23,7 @@
 ### [2.4 package.json](#2.4)
 ### [2.5 babel](#2.5)
 ### [2.6 jshint](#2.6)  
+### [2.7 uglifejs](#2.7)  
         
 ------      
         
@@ -303,7 +304,11 @@
 <h3 id='1.3'>1.3 任务流工具</h3>  
         
 #### 1) jshint
-
+> - JSHint is a community-driven tool that detects errors and potential problems in JavaScript code. Since JSHint is so flexible, you can easily adjust it in the environment you expect your code to execute. JSHint is open source and will always stay this way
+#### 2) uglify-js 详细请看[这里](https://www.npmjs.com/package/uglify-js)
+> - UglifyJS is a JavaScript parser, minifier, compressor and beautifier toolkit.
+> - uglify-js only supports JavaScript (ECMAScript 5).
+> - To minify ECMAScript 2015 or above, transpile using tools like Babel.
 
                           
 ------      
@@ -1031,8 +1036,60 @@
 
                 7 errors
 
-> - 
+            
+<h3 id='2.7'>2.7 uglifejs <a href="https://www.npmjs.com/package/uglify-js">详细请看这里</a></h3>  
+        
+#### 1) 安装与卸载
+> - 作为命令行安装
+        
+                LvHongbins-Mac-2:React_Study lvhongbin$ npm install uglify-js -g
+                /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/uglifyjs -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/uglify-js/bin/uglifyjs
+                + uglify-js@3.4.0
+                added 3 packages from 38 contributors in 5.918s
+                LvHongbins-Mac-2:React_Study lvhongbin$ uglifyjs -V
+                uglify-js 3.4.0
+> - 作为为程序所使用
+                
+                npm install uglify-js
+#### 2) 基本使用
+> - If no input file is specified, UglifyJS will read from STDIN.
+        
+                uglifyjs --compress --mangle -- input.js
+> - -c, --compress [options]    Enable compressor/specify compressor options: `pure_funcs`  List of functions that can be safely removed when their return values are not used.即去掉函数中一些没有用的参数
+> - -m, --mangle [options]      Mangle names/specify mangler options:`reserved`  List of names that should not be mangled. 更换属性的名字
+        
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ vim example.js
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example.js
+                var x = {
+                    baz_: 0,
+                    foo_: 1,
+                    calc: function() {
+                        return this.foo_ + this.baz_;
+                    }
+                };
+                x.bar_ = 2;
+                x["baz_"] = 3;
+                console.log(x.calc());
 
+                # 单纯的把空格给去掉
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example4.js
+                var x={baz_:0,foo_:1,calc:function(){return this.foo_+this.baz_},bar_:2,baz_:3};console.log(x.calc());
+                
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ uglifyjs example.js -c -m --mangle-props -o example1.js
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example1.js
+                var x={o:0,t:1,_:function(){return this.t+this.o},i:2,o:3};console.log(x._());
+
+                # 可以剔除某些变量不让改
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ uglifyjs example.js -c -m --mangle-props reserved=[foo_,bar_] -o example2.js
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example2.js
+                var x={o:0,foo_:1,t:function(){return this.foo_+this.o},bar_:2,o:3};console.log(x.t());LvHongbins-Mac-2:uglifejsTest lvhongbin$
+
+                # 也可以使用正则表达式
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ uglifyjs example.js -c -m --mangle-props regex=/_$/ -o example3.js
+                LvHongbins-Mac-2:uglifejsTest lvhongbin$ cat example3.js
+                var x={o:0,t:1,calc:function(){return this.t+this.o},_:2,o:3};console.log(x.calc());
+> - 
+> - 
 
 
 
