@@ -1,0 +1,1 @@
+var x={o:0,t:1,calc:function(){return this.t+this.o},_:2,o:3};console.log(x.calc());

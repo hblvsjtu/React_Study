@@ -1,0 +1,4 @@
++ grunt@1.0.2
+added 75 packages from 58 contributors and audited 215 packages in 18.413s
+found 3 low severity vulnerabilities
+  run `npm audit fix` to fix them, or `npm audit` for details

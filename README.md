@@ -24,7 +24,8 @@
 ### [2.5 babel](#2.5)
 ### [2.6 jshint](#2.6)  
 ### [2.7 uglifejs](#2.7) 
-### [2.8 grunt](#2.8) 
+### [2.8 grunt](#2.8)
+### [2.9 gulp](#2.9) 
         
 ------      
         
@@ -318,9 +319,10 @@
 > - 于是，这时候Task Runner就粉墨登场了
 > - Task Runner有两位成员，分别是Grunt和Gulp
 #### 4) Grunt
-> - 他是一个命令行工具
+> - 他是一个命令行工具，实质上是一个JavaScript文件，学习成本比bash要低，容易接受和学习，其安装和使用详细看[2.8节](#2.8)
 #### 5) Gulp
-> - 
+> - Gulp是后起之秀，吸收了Grunt的很多优点，同时有推出了很多全新的特性，最大的特点是有bash中管道命令的流概念。
+> - 其安装和使用详细看[2.9节](#2.9)
                           
 ------      
         
@@ -1130,7 +1132,7 @@
 
                 export {b as b1};
         
-------
+
             
 <h3 id='2.8'>2.8 grunt <a href="https://gruntjs.com/getting-started">详细请看这里</a></h3>  
         
@@ -1319,7 +1321,317 @@
                   baz: 'a<%= bar %>e', // 'abcde'
                   qux: ['foo/*.js', 'bar/*.js'],
                 });
-> -  
+
+            
+<h3 id='2.9'>2.9 gulp <a href="https://gulpjs.com">详细请看这里</a></h3>  
+        
+#### 1) 安装与卸载
+> - 安装命令
+        
+                LvHongbins-Mac-2:React_Study lvhongbin$ npm install gulp-cli -g
+                /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/gulp -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/gulp-cli/bin/gulp.js
+                + gulp-cli@2.0.1
+                added 238 packages from 148 contributors in 34.723s
+                
+                LvHongbins-Mac-2:React_Study lvhongbin$ ln -s /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/gulp  /usr/local/bin/gulp
+                
+                LvHongbins-Mac-2:React_Study lvhongbin$ which gulp
+                /usr/local/bin/gulp
+                LvHongbins-Mac-2:React_Study lvhongbin$ gulp -v
+                [09:32:18] CLI version 2.0.1
+
+#### 2) 使用流程
+> -  新建一个gulpfile.js文件
+        
+                touch gulpfile.js
+> -  帮助文件
+        
+                LvHongbins-Mac-2:React_Study lvhongbin$ gulp --help
+
+                Usage: gulp [options] tasks
+
+                Options:
+                  --help, -h              Show this help.                              [boolean]
+                  --version, -v           Print the global and local gulp versions.    [boolean]
+                  --require               Will require a module before running the gulpfile.
+                                          This is useful for transpilers but also has other
+                                          applications.                                 [string]
+                  --gulpfile, -f          Manually set path of gulpfile. Useful if you have
+                                          multiple gulpfiles. This will set the CWD to the
+                                          gulpfile directory as well.                   [string]
+                  --cwd                   Manually set the CWD. The search for the gulpfile, as
+                                          well as the relativity of all requires will be from
+                                          here.                                         [string]
+                  --verify                Will verify plugins referenced in project's
+                                          package.json against the plugins blacklist.
+                  --tasks, -T             Print the task dependency tree for the loaded
+                                          gulpfile.                                    [boolean]
+                  --tasks-simple          Print a plaintext list of tasks for the loaded
+                                          gulpfile.                                    [boolean]
+                  --tasks-json            Print the task dependency tree, in JSON format, for
+                                          the loaded gulpfile.
+                  --tasks-depth, --depth  Specify the depth of the task dependency tree.[number]
+                  --compact-tasks         Reduce the output of task dependency tree by printing
+                                          only top tasks and their child tasks.        [boolean]
+                  --sort-tasks            Will sort top tasks of task dependency tree. [boolean]
+                  --color                 Will force gulp and gulp plugins to display colors,
+                                          even when no color support is detected.      [boolean]
+                  --no-color              Will force gulp and gulp plugins to not display
+                                          colors, even when color support is detected. [boolean]
+                  --silent, -S            Suppress all gulp logging.                   [boolean]
+                  --continue              Continue execution of tasks upon failure.    [boolean]
+                  --series                Run tasks given on the CLI in series (the default is
+                                          parallel).                                   [boolean]
+                  --log-level, -L         Set the loglevel. -L for least verbose and -LLLL for
+                                          most verbose. -LLL is default.                 [count]
+> - gulp.src(globs[, options])和gulp.dest(path[, options])
+        
+                # 注意base路径的选取和dest路径，两个通配符都作为文件名的一部分
+                ulp.src('client/js/**/*.js') // Matches 'client/js/somedir/somefile.js' and resolves `base` to `client/js/`
+                  .pipe(minify())
+                  .pipe(gulp.dest('build'));  // Writes 'build/somedir/somefile.js'
+
+                gulp.src('client/js/**/*.js', { base: 'client' })
+                  .pipe(minify())
+                  .pipe(gulp.dest('build'));  // Writes 'build/js/somedir/somefile.js'
+
+                  # 文件名接受通配符和exclude符号！
+                  # 最后接受的是a.js and bad.js
+                  client/
+                    a.js
+                    bob.js
+                    bad.js
+
+                  gulp.src(['client/*.js', '!client/b*.js', 'client/bad.js'])
+> - gulp.task(name [, deps, fn])
+        
+                # 定义一个工作任务
+                gulp.task('somename', function() {
+                  // Do stuff
+                });
+
+                # 如
+                gulp.task('buildStuff', function() {
+                  // Do something that "builds stuff"
+                  var stream = gulp.src(/*some source path*/)
+                  .pipe(somePlugin())
+                  .pipe(someOtherPlugin())
+                  .pipe(gulp.dest(/*some destination*/));
+                  
+                  return stream;
+                  });
+
+                # 多任务工作流
+                var gulp = require('gulp');
+
+                // takes in a callback so the engine knows when it'll be done
+                gulp.task('one', function(cb) {
+                    // do stuff -- async or otherwise
+                    cb(err); // if err is not null and not undefined, the run will stop, and note that it failed
+                });
+
+                // identifies a dependent task must be complete before this one begins
+                gulp.task('two', ['one'], function() {
+                    // task 'one' is done now
+                });
+
+                gulp.task('default', ['one', 'two']);
+> - gulp.watch(glob[, opts, cb])
+        
+                # 监视文件的变化
+                gulp.watch('js/**/*.js', function(event) {
+                  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                });
+
+                # 针对文件特定任务的监察
+                var watcher = gulp.watch('js/**/*.js', ['uglify','reload']);
+                watcher.on('change', function(event) {
+                  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                });
+> - 实例 [插件地址](https://gulpjs.com/plugins/)
+                
+                # 安装grup 
+                LvHongbins-Mac-2:gulptest lvhongbin$ npm install gulp -D
+                npm WARN deprecated gulp-util@3.0.8: gulp-util is deprecated - replace it, following the guidelines at https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5
+                npm WARN deprecated graceful-fs@3.0.11: please upgrade to graceful-fs 4 for compatibility with current and future versions of Node.js
+                npm WARN deprecated minimatch@2.0.10: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
+                npm WARN deprecated minimatch@0.2.14: Please update to minimatch 3.0.2 or higher to avoid a RegExp DoS issue
+                npm WARN deprecated graceful-fs@1.2.3: please upgrade to graceful-fs 4 for compatibility with current and future versions of Node.js
+                + gulp@3.9.1
+                added 230 packages from 118 contributors and audited 3119 packages in 17.259s
+                found 5 vulnerabilities (1 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+
+
+                # 安装Babel 源包和gulp-*包都要
+                LvHongbins-Mac-2:gulptest lvhongbin$ npm install --save-dev gulp-babel babel-core babel-preset-env
+                npm notice created a lockfile as package-lock.json. You should commit this file.
+                + gulp-babel@7.0.1
+                + babel-preset-env@1.7.0
+                + babel-core@6.26.3
+                added 126 packages from 81 contributors and audited 2000 packages in 22.854s
+                found 0 vulnerabilities
+
+                # 安装jshint 源包和gulp-*包都要
+                LvHongbins-Mac-2:gulptest lvhongbin$ npm install jshint gulp-jshint --save-dev
+                + jshint@2.9.5
+                + gulp-jshint@2.1.0
+                added 36 packages from 22 contributors and audited 3195 packages in 11.522s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+                        
+
+                # 安装uglify 源包和gulp-*包都要
+                LvHongbins-Mac-2:gulptest lvhongbin$ npm install --save-dev gulp-uglify
+                + gulp-uglify@3.0.0
+                added 6 packages from 41 contributors and audited 3220 packages in 7.224s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+
+                # 安装pump 
+                # pump is a small node module that pipes streams together and destroys all of them if one of them closes.
+                # 当使用Node.js流中的管道时，错误不会通过管道流传播，如果目标流关闭，则源流不会关闭。 泵模块将这些问题规范化，并在回调中传递错误。
+                # 其实说白了就是pump可以使我们更容易找到代码出错位置.
+                # 具体看[翾的博客](https://blog.csdn.net/c_kite/article/details/73260891)
+                 LvHongbins-Mac-2:gulptest lvhongbin$ npm install pump --save-dev
+                 + pump@3.0.0
+                 added 3 packages from 3 contributors and audited 3226 packages in 6.347s
+                 found 6 vulnerabilities (2 low, 4 high)
+                   run `npm audit fix` to fix them, or `npm audit` for details
+
+                # gulpfile.js文件
+                LvHongbins-Mac-2:gulptest lvhongbin$ cat gulpfile.js
+                /* ***************************************************************
+                 *
+                 * * Filename: Gulpfile.js
+                 *
+                 * * Description:Configure the Gulp job
+                 *
+                 * * Version: 1.0
+                 *
+                 * * Created: 2018/06/03
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+                const gulp = require('gulp');
+                const babel = require('gulp-babel');
+                const jshint = require('gulp-jshint');
+                var uglify = require('gulp-uglify');
+                var pump = require('pump');
+
+                // es5转义 
+                gulp.task('babel', () =>
+                    gulp.src('src/jsTest.js')
+                        .pipe(babel({
+                            presets: ['env']
+                        }))
+                        .pipe(gulp.dest('dist'))
+                );
+
+                // 检查语法错误
+                gulp.task('lint', function() {
+                  return gulp.src('/src/test.js')
+                    .pipe(jshint())
+                    //.pipe(jshint.reporter('YOUR_REPORTER_HERE'));
+                    .pipe(jshint.reporter('default'));
+                });
+
+                // 压缩文件
+                gulp.task('compress', function (cb) {
+                  pump([
+                        gulp.src(['src/test.js', 'dist/jsTest.js']),
+                        uglify(),
+                        gulp.dest('dist/min')
+                    ],
+                    cb
+                  );
+                });
+
+                // 监察文件变化 jsTest文件夹
+                var watcher_jsTest = gulp.watch('src/jsTest.js', ['babel', 'compress']);
+                watcher_jsTest.on('change', function(event) {
+                  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                });
+
+                // 监察文件变化 jsTest文件夹
+                var watcher_test = gulp.watch('src/test.js', ['lint']);
+                watcher_test.on('change', function(event) {
+                  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                });
+
+                // 任务流
+                gulp.task('default', ['babel', 'lint', 'compress']);
+
+                # ackage.json文件
+                LvHongbins-Mac-2:gulptest lvhongbin$ cat package.json
+                {
+                  "name": "gulptest",
+                  "version": "1.0.0",
+                  "description": "test the gulp",
+                  "main": "index.js",
+                  "scripts": {
+                    "test": "echo \"Error: no test specified\" && exit 1"
+                  },
+                  "repository": {
+                    "type": "git",
+                    "url": "git+https://github.com/hblvsjtu/React_Study.git"
+                  },
+                  "keywords": [
+                    "test",
+                    "the",
+                    "gulp"
+                  ],
+                  "author": "LvHongbin",
+                  "license": "ISC",
+                  "bugs": {
+                    "url": "https://github.com/hblvsjtu/React_Study/issues"
+                  },
+                  "homepage": "https://github.com/hblvsjtu/React_Study#readme",
+                  "devDependencies": {
+                    "babel-core": "^6.26.3",
+                    "babel-preset-env": "^1.7.0",
+                    "gulp": "^3.9.1",
+                    "gulp-babel": "^7.0.1",
+                    "gulp-jshint": "^2.1.0",
+                    "gulp-uglify": "^3.0.0",
+                    "jshint": "^2.9.5",
+                    "pump": "^3.0.0"
+                  }
+                }
+
+
+
+                # 运行结果
+                LvHongbins-Mac-2:gulptest lvhongbin$ gulp
+                [12:13:57] Using gulpfile ~/Desktop/React_Study/gulptest/gulpfile.js
+                [12:13:57] Starting 'babel'...
+                [12:13:57] Starting 'lint'...
+                [12:13:57] Starting 'compress'...
+                [12:13:57] Finished 'lint' after 8.86 ms
+                [12:13:57] Finished 'babel' after 149 ms
+                [12:13:57] Finished 'compress' after 142 ms
+                [12:13:57] Starting 'default'...
+                [12:13:57] Finished 'default' after 43 μs
+                File /Users/lvhongbin/Desktop/React_Study/gulptest/src/jsTest.js was changed, running tasks...
+                [12:14:03] Starting 'babel'...
+                [12:14:03] Starting 'compress'...
+                [12:14:03] Finished 'babel' after 24 ms
+                [12:14:03] Finished 'compress' after 24 ms
+                File /Users/lvhongbin/Desktop/React_Study/gulptest/src/jsTest.js was changed, running tasks...
+                [12:14:07] Starting 'babel'...
+                [12:14:07] Starting 'compress'...
+                [12:14:07] Finished 'babel' after 29 ms
+                [12:14:07] Finished 'compress' after 28 ms
+
+> -         
 
 
 

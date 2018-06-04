@@ -1,0 +1,1 @@
+var x={o:0,foo_:1,t:function(){return this.foo_+this.o},bar_:2,o:3};console.log(x.t());

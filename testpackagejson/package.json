@@ -1,0 +1,31 @@
+{
+  "name": "testpackagejson",
+  "version": "1.0.0",
+  "description": "test the packagejson file can whether can run the module ",
+  "main": "index.js",
+  "scripts": {
+    "compile": "babel jsTest.js -o compiled.js",
+    "test": "node ./compiled.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hblvsjtu/React_Study.git"
+  },
+  "keywords": [
+    "testpackagejson"
+  ],
+  "author": "LvHongbin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hblvsjtu/React_Study/issues"
+  },
+  "dependencies": {
+    "babel": "6.26.0",
+    "babel-cli": "^6.26.0",
+    "node": "10.3.0"
+  },
+  "homepage": "https://github.com/hblvsjtu/React_Study#readme",
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0"
+  }
+}

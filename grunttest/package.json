@@ -1,0 +1,21 @@
+{
+  "name": "grunttest",
+  "version": "1.0.0",
+  "description": "test the grunt",
+  "main": "./index.js",
+  "scripts": {
+    "compile": "babel src/jsTest.js -o build/compiled.js",
+    "test": "node build/compiled.js"
+  },
+  "keywords": [
+    "grunttest"
+  ],
+  "author": "LvHongbin",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "grunt": "^1.0.2",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify": "^3.3.0"
+  }
+}
