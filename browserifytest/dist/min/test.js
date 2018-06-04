@@ -1,0 +1,1 @@
+var x={baz_:0,foo_:1,calc:function(){return this.foo_+this.baz_},bar_:2,baz_:3};console.log(x.calc());

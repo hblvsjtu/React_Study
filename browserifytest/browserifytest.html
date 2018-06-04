@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>browserifytest Examples</title>
+<meta name="description" content="test the browserify">
+<meta name="keywords" content="browserifytest">
+<link href="" rel="stylesheet">
+<script src="./dist/findGF.min.js"></script>
+</head>
+<body>
+    /* ***************************************************************
+     *
+     * * Filename: findGF.js
+     *
+     * * Description:required condition.js to find GF
+     *
+     * * Version: 1.0
+     *
+     * * Created: 2018/06/03
+     *
+     * * Revision: none
+     *
+     * * Compiler: node
+     *
+     * * Author: Lv Hongbin
+     *
+     * * Company: Shanghai JiaoTong Univerity
+     *
+    /* **************************************************************/
+
+    var condition = require("./condition.js");
+
+    console.log("开始执行execute!");
+
+    // 执行execute
+    condition.execute(condition.gen);
+
+    console.log("结束执行execute!");
+</body>
+</html>

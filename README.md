@@ -15,7 +15,8 @@
 ## [一、现代前端开发](#1)
 ### [1.1 新一代JS标准](#1.1)
 ### [1.2 前端组件化方案](#1.2) 
-### [1.3 任务流工具 Task Runner](#1.3) 
+### [1.3 任务流工具 Task Runner](#1.3)
+### [1.4 模块打包工具 Bundler](#1.4)  
 ## [二、环境的安装](#2)
 ### [2.1 Homebrew](#2.1)
 ### [2.2 wget](#2.2) 
@@ -25,7 +26,8 @@
 ### [2.6 jshint](#2.6)  
 ### [2.7 uglifejs](#2.7) 
 ### [2.8 grunt](#2.8)
-### [2.9 gulp](#2.9) 
+### [2.9 gulp](#2.9)
+### [2.10 browserify](#2.10)
         
 ------      
         
@@ -323,6 +325,35 @@
 #### 5) Gulp
 > - Gulp是后起之秀，吸收了Grunt的很多优点，同时有推出了很多全新的特性，最大的特点是有bash中管道命令的流概念。
 > - 其安装和使用详细看[2.9节](#2.9)
+        
+<h3 id='1.4'>1.4 模块打包工具 Bundler</h3>  
+        
+#### 1)<a href="https://github.com/browserify/browserify#usage">Browserify</a> 
+> - Browserify lets you require('modules') in the browser by bundling up all of your dependencies.
+> - "browserify可以让你使用类似于 node 的 require() 的方式来组织浏览器端的Javascript代码，通过预编译让前端Javascript可以直接使用 Node NPM 安装的一些库。"，如：
+        
+                # 在命令行中进行依赖打包
+                $ browserify -r through -r duplexer -r ./my-file.js:my-module > bundle.
+
+                #在浏览器中使用依赖
+                <script src="bundle.js"></script>
+                <script>
+                  var through = require('through');
+                  var duplexer = require('duplexer');
+                  var myModule = require('my-module');
+                  /* ... */
+                </script>
+> - 若干问题和答案 详细看[海角在眼前的博客](https://www.cnblogs.com/lovesong/p/5861932.html)
+>> - 1. browserify出现的日期？在网上没有找到browserify开始出现的日期的说明，只是有Github上找到最初的版本是在2011/6/6。anywhere，这问题并不关键，也就不深究。
+>> - 2. 能构建哪些文件？只能构建JavaScript文件。
+>> - 3. 附加的browserify代码体积是多大？文件合并后（编译后），browserify附加的代码的体积（不是业务代码）是不到1KB的。
+>> - 4. 能生成多个输出文件吗？严格上讲，单从命令使用，只能是一个输出文件。 
+>> - 5. 如何兼顾开发调试？页面上运行时的js是编译后，所以要兼顾开发调试，那还是要用source map。PS：不过必须部署到服务器才能看到source map文件。
+> - 与webpack的比较
+>> - 1. 都是前端模块化的方案，都需要预编译。
+>> - 2. browserify只针对JavaScript，webpack啥都可以（CSS、JavaScript、图片等）
+>> - 3. browserify是轻量级的，webpack 整体解决、大而全的。 
+
                           
 ------      
         
@@ -1449,6 +1480,7 @@
                   console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
                 });
 > - 实例 [插件地址](https://gulpjs.com/plugins/)
+>> - 安装grup 
                 
                 # 安装grup 
                 LvHongbins-Mac-2:gulptest lvhongbin$ npm install gulp -D
@@ -1462,7 +1494,8 @@
                 found 5 vulnerabilities (1 low, 4 high)
                   run `npm audit fix` to fix them, or `npm audit` for details
 
-
+>> - 安装Babel 源包和gulp-*包都要
+        
                 # 安装Babel 源包和gulp-*包都要
                 LvHongbins-Mac-2:gulptest lvhongbin$ npm install --save-dev gulp-babel babel-core babel-preset-env
                 npm notice created a lockfile as package-lock.json. You should commit this file.
@@ -1472,6 +1505,8 @@
                 added 126 packages from 81 contributors and audited 2000 packages in 22.854s
                 found 0 vulnerabilities
 
+>> - 安装jshint 源包和gulp-*包都要
+        
                 # 安装jshint 源包和gulp-*包都要
                 LvHongbins-Mac-2:gulptest lvhongbin$ npm install jshint gulp-jshint --save-dev
                 + jshint@2.9.5
@@ -1481,6 +1516,8 @@
                   run `npm audit fix` to fix them, or `npm audit` for details
                         
 
+>> - 安装uglify 源包和gulp-*包都要
+                
                 # 安装uglify 源包和gulp-*包都要
                 LvHongbins-Mac-2:gulptest lvhongbin$ npm install --save-dev gulp-uglify
                 + gulp-uglify@3.0.0
@@ -1488,6 +1525,8 @@
                 found 6 vulnerabilities (2 low, 4 high)
                   run `npm audit fix` to fix them, or `npm audit` for details
 
+>> - 安装pump
+                
                 # 安装pump 
                 # pump is a small node module that pipes streams together and destroys all of them if one of them closes.
                 # 当使用Node.js流中的管道时，错误不会通过管道流传播，如果目标流关闭，则源流不会关闭。 泵模块将这些问题规范化，并在回调中传递错误。
@@ -1499,6 +1538,8 @@
                  found 6 vulnerabilities (2 low, 4 high)
                    run `npm audit fix` to fix them, or `npm audit` for details
 
+>> - ulpfile.js文件
+                
                 # gulpfile.js文件
                 LvHongbins-Mac-2:gulptest lvhongbin$ cat gulpfile.js
                 /* ***************************************************************
@@ -1570,7 +1611,9 @@
                 // 任务流
                 gulp.task('default', ['babel', 'lint', 'compress']);
 
-                # ackage.json文件
+>> - package.json文件
+                
+                # package.json文件
                 LvHongbins-Mac-2:gulptest lvhongbin$ cat package.json
                 {
                   "name": "gulptest",
@@ -1607,8 +1650,8 @@
                   }
                 }
 
-
-
+>> - 运行结果
+                
                 # 运行结果
                 LvHongbins-Mac-2:gulptest lvhongbin$ gulp
                 [12:13:57] Using gulpfile ~/Desktop/React_Study/gulptest/gulpfile.js
