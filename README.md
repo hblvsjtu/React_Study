@@ -330,7 +330,8 @@
         
 #### 1)<a href="https://github.com/browserify/browserify#usage">Browserify</a> 
 > - Browserify lets you require('modules') in the browser by bundling up all of your dependencies.
-> - "browserify可以让你使用类似于 node 的 require() 的方式来组织浏览器端的Javascript代码，通过预编译让前端Javascript可以直接使用 Node NPM 安装的一些库。"，如：
+> - "browserify可以让你使用类似于 node 的 require() 的方式来组织浏览器端的Javascript代码，通过预编译让前端Javascript可以直接使用 Node NPM 安装的一些库。"
+> - 也就是说可以把含有require的js文件，需要的所有依赖文件都会被编译进 bundle.js 中，包括很多层 require() 的情况也会一起被递归式的编译过来。如：
         
                 # 在命令行中进行依赖打包
                 $ browserify -r through -r duplexer -r ./my-file.js:my-module > bundle.
@@ -343,6 +344,7 @@
                   var myModule = require('my-module');
                   /* ... */
                 </script>
+> - 至于为什么要这样做呢？这是因为由于浏览器环境的特殊性，像node中使用的require同步加载的方式无法使用。所以需要利用browserify直接把预编译好的含有依赖的js文件导进浏览器
 > - 若干问题和答案 详细看[海角在眼前的博客](https://www.cnblogs.com/lovesong/p/5861932.html)
 >> - 1. browserify出现的日期？在网上没有找到browserify开始出现的日期的说明，只是有Github上找到最初的版本是在2011/6/6。anywhere，这问题并不关键，也就不深究。
 >> - 2. 能构建哪些文件？只能构建JavaScript文件。
@@ -1023,6 +1025,24 @@
                     }]
                   ]
                 }
+> - 有时你在使用迭代器的时候，有可能会发生错误ReferenceError: regeneratorRuntime is not defined
+> - 这时候你需要安装插件 babel-polyfill，这是因为1，[avoid duplication across your compiled output. The runtime will be compiled into your build](http://babeljs.io/docs/plugins/transform-runtime/)； 2,当你使用Promise, Set and Map的时候在Babel转换的时候污染全局变量；3，“新标准引入的新的原生对象，部分原生对象新增的原型方法，新增的API等（如Proxy、Set等），这些babel是不会转译的。需要用户自行引入polyfill来解决” 或者可以看这里[mercurygear的简书](https://www.jianshu.com/p/e9b94b2d52e2) 或者是[zhalcie2011的博客](https://blog.csdn.net/zhalcie2011/article/details/79212730)
+        
+                npm i --save-dev babel-plugin-transform-runtime
+                #.babelrc文件
+                {
+                  "presets": "env",       
+                  "plugins": [
+                    [
+                      "transform-runtime", {
+                        "helpers": false,
+                        "polyfill": false,
+                        "regenerator": true,
+                        "moduleName": "babel-runtime"
+                      }
+                    ]
+                  ]
+                }
 
             
 <h3 id='2.6'>2.6 jshint</h3>  
@@ -1354,7 +1374,7 @@
                 });
 
             
-<h3 id='2.9'>2.9 gulp <a href="https://gulpjs.com">详细请看这里</a></h3>  
+<h3 id='2.9'>2.9 <a href="https://gulpjs.com">gulp</a></h3>  
         
 #### 1) 安装与卸载
 > - 安装命令
@@ -1504,6 +1524,9 @@
                 + babel-core@6.26.3
                 added 126 packages from 81 contributors and audited 2000 packages in 22.854s
                 found 0 vulnerabilities
+
+                # 安装babel-plugin-transform-runtime 这是解决错误ReferenceError: regeneratorRuntime is not defined的关键
+                可惜gulp-babel并不支持
 
 >> - 安装jshint 源包和gulp-*包都要
         
@@ -1674,7 +1697,522 @@
                 [12:14:07] Finished 'babel' after 29 ms
                 [12:14:07] Finished 'compress' after 28 ms
 
-> -         
+            
+<h3 id='2.10'>2.10 <a href="http://browserify.org">browserify</a></h3>  
+        
+#### 1) 安装与卸载
+> - 安装命令
+        
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install -g browserify
+                /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/browserify -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/browserify/bin/cmd.js
+                + browserify@16.2.2
+                added 135 packages from 185 contributors in 42.829s
+                LvHongbins-Mac-2:browserifytest lvhongbin$ ln -s /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/browserify /usr/local/bin
+
+                Standard Options:
+
+                    --outfile, -o  Write the browserify bundle to this file.
+                                   If unspecified, browserify prints to stdout.
+
+                    --require, -r  A module name or file to bundle.require()
+                                   Optionally use a colon separator to set the target.
+
+                      --entry, -e  An entry point of your app
+                  
+                     --ignore, -i  Replace a file with an empty stub. Files can be globs.
+                 
+                    --exclude, -u  Omit a file from the output bundle. Files can be globs.
+
+                   --external, -x  Reference a file from another bundle. Files can be globs.
+                  
+                  --transform, -t  Use a transform module on top-level files.
+                 
+                    --command, -c  Use a transform command on top-level files.
+                   
+                  --standalone -s  Generate a UMD bundle for the supplied export name.
+                                   This bundle works with other module systems and sets the name
+                                   given as a window global if no module system is found.
+                  
+                       --debug -d  Enable source maps that allow you to debug your files
+                                   separately.
+
+                       --help, -h  Show this message
+
+                For advanced options, type `browserify --help advanced`.
+
+                Specify a parameter. 
+> - 本地安装
+                
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install browserify --save-dev
+                + browserify@16.2.2
+                added 111 packages from 142 contributors and audited 4103 packages in 42.854s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+                LvHongbins-Mac-2:browserifytest lvhongbin$ 
+> - 相关插件的安装
+>> - [pump](https://www.npmjs.com/package/pump) 其实就是告知我们流在哪里出错了 
+When using standard source.pipe(dest) source will not be destroyed if dest emits close or an error. You are also not able to provide a callback to tell when then pipe has finished.pump does these two things for you。 具体用法可以参考[C_Kite的博客](https://blog.csdn.net/c_kite/article/details/73260891)
+        
+                npm install pump --save-dev
+>> - [gulp-concat](https://www.npmjs.com/package/gulp-sourcemaps)主要使用gulp-concat合并javascript文件，减少网络请求。 具体用法可以参考[u013063153的博客](https://blog.csdn.net/u013063153/article/details/52796884)
+        
+                # 安装
+                npm install gulp-concat --save-dev
+                # 使用命令行
+                gulp testConcat
+
+                //使用的时候添加
+                var concat = require('gulp-concat');
+>> - [gulp-util](https://www.npmjs.com/package/gulp-sourcemaps)主要用来打印日志，可以查看看bug具体出现在什么地方 但是现在好像被弃用了，原因是[“We’ve been planning to deprecate gulp-util since 2014 because it’s just grab-bag of modules. Why would you want to download the beeper module if you’re only using gulp-util for logging? It drastically increases the download size of plugins and gulp itself. We had hoped people would transition to smaller modules, but it seems everyone continued with the status quo.”](https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5)  具体用法可以参考[maybe28的博客](https://blog.csdn.net/shu580231/article/details/79258296)
+        
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install gulp-util --save-dev
+                npm WARN deprecated gulp-util@3.0.8: gulp-util is deprecated - replace it, following the guidelines at https://medium.com/gulpjs/gulp-util-ca3b1f9f9ac5
+                + gulp-util@3.0.8
+                updated 1 package and audited 4441 packages in 11.222s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+>> - [gulp-sourcemaps](https://www.npmjs.com/package/gulp-sourcemaps)主要用来在浏览器显示命令或者相关语句的来源。很可惜目前只有Chrome支持实现Source Map的功能。 具体用法可以参考[幸福n-1次方的博客](https://www.cnblogs.com/zy20160429/p/8205025.html)
+                
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install --save gulp-sourcemaps 
+                + gulp-sourcemaps@2.6.4
+                added 28 packages from 128 contributors and audited 4267 packages in 14.387s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm uninstall --save gulp-sourcemaps 
+                removed 28 packages and audited 4103 packages in 6.368s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install gulp-sourcemaps --save-dev
+                + gulp-sourcemaps@2.6.4
+                added 28 packages from 128 contributors and audited 4267 packages in 6.394s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+
+                  # 相关用法                              
+                  1）sourceMap.init( ) 启用sourcemaps功能
+
+                  2）sourceMap.write( ) 生成记录位置信息的sourcemaps文件
+
+                  经过 concat 和 uglify ，将生成的all.js 与 源文件( src 下的所有js文件 )之间的位置映射信息，生成sourcemaps文件。
+
+                  sourceMap.write( )，不传参，将会直接在 all.js 尾部，生成sourcemaps信息。
+
+                  sourceMap.write( path )，将会在指定的 path，生成独立的sourcemaps信息文件。如果指定的是相对路径，是相对于 all.js 的路径。
+>> - [vinyl-source-stream](https://www.npmjs.com/package/vinyl-buffer)将把 Node 常规流直接传递给 gulp 及其插件 Use conventional text streams at the start of your gulp or vinyl pipelines, making for nicer interoperability with the existing npm stream ecosystem. [" gulp 预期输入的是 Vinyl 文件对象" "Gulp 管道中的「流」不是操作 Strings 和 Buffers 的常规 Node.js 流，而是启用 object mode 的流。Gulp 中的流发送的是 vinyl 文件对象"](https://csspod.com/advanced-tips-for-using-gulp-js/)
+                
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install vinyl-source-stream --save-dev
+                + vinyl-source-stream@2.0.0
+                added 7 packages from 27 contributors and audited 4320 packages in 8.399s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+>> - [vinyl-buffer](https://www.npmjs.com/package/vinyl-buffer)将vinyl对象内容中的Stream转换为Buffer Convert streaming vinyl files to use buffers. [Joe-sky的博客](https://www.cnblogs.com/jesy/p/5192815.html)
+                
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install vinyl-buffer --save-dev
+                + vinyl-buffer@1.0.1
+                added 2 packages from 1 contributor and audited 4290 packages in 7.122s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+>> - [gulp-size](https://www.npmjs.com/package/gulp-size)展示文件的大小 Display the size of your project
+        
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install gulp-size --save-dev
+                + gulp-size@3.0.0
+                added 18 packages from 7 contributors and audited 4360 packages in 10.799s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+
+>> - [gulp-streamify](https://www.npmjs.com/package/gulp-streamify)将vinyl对象内容中的Stream转换为Buffer 这是因为类似["有时则是需要基于完整的源内容做转换，比如基于字符串的正则替换，分块的文件可能会出现匹配遗漏的情况。同样地，诸如 UglifyJS 及 Traceur compiler 之类的工具也需要完整的文件输入（至少是 JavaScript 句法完整的字符串）。"](https://www.imooc.com/article/1424)  It is pretty annoying when Gulp plugins doesn't support streams. This plugin allows you to wrap them in order to use the stream mode anyway. It is pretty useful when you want to take advantage of streams on part of your pipelines.
+              
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install gulp-streamify --save-dev
+                  + gulp-streamify@1.0.2
+                  added 3 packages from 2 contributors and audited 4372 packages in 8.49s
+                  found 6 vulnerabilities (2 low, 4 high)
+                    run `npm audit fix` to fix them, or `npm audit` for details
+
+>> - [gulp-rename](https://www.npmjs.com/package/gulp-rename)对最后用gulp.dist()输出的文件进行重命名
+        
+                LvHongbins-Mac-2:browserifytest lvhongbin$ npm install gulp-rename --save-dev
+                + gulp-rename@1.2.3
+                added 1 package from 1 contributor and audited 4373 packages in 7.013s
+                found 6 vulnerabilities (2 low, 4 high)
+                  run `npm audit fix` to fix them, or `npm audit` for details
+#### 2) 基本使用
+> - browserify()：功能是将当前项目的依赖，也就是require的东西打包到当前的一个文件当中。但是它无法将jsx文件转换为js文件，这就需要用到reactify。
+> - add(): Bundle the files and their dependencies into a single javascript file.
+> - debug属性： When opts.debug is true, add a source map inline to the end of the bundle. This makes debugging easier because you can see all the original files if you are in a modern enough browser.
+> - b.require(file, opts) Make file available from outside the bundle with require(file).
+> - external(file) 忽略有一些文件的加入 Prevent file from being loaded into the current bundle, instead referencing from another bundle.
+> - exclude(file) 忽略一些文件的输出 Prevent the module name or file at file from showing up in the output bundle. If file is an array, each item in file will be excluded.
+> - b.transform() 自动转换为Node v0.10版本 You don't need to necessarily use the through module. Browserify is compatible with the newer, more verbose Transform streams built into Node v0.10.
+> - reactify：功能是将jsx转换为js。所以在browserify({})中我们设置了transform属性，它可以过滤或转换一些内容。这里用到的是转换。
+> - bundle()：将多个文件打包成一个，Bundle the files and their dependencies into a single javascript file.
+> - source()：由于browserify生成的代码无法直接让gulp使用，所以需要用到source()。它将browserify生成的代码转换为gulp可识别的代码。参数是生成的文件名。 
+实例
+> - browserifytest.html文件
+                
+                # browserifytest.html
+                LvHongbins-Mac-2:browserifytest lvhongbin$ cat /Users/lvhongbin/Desktop/React_Study/browserifytest/browserifytest.html 
+                <html>
+                <head>
+                <meta charset="utf-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+                <title>browserifytest Examples</title>
+                <meta name="description" content="test the browserify">
+                <meta name="keywords" content="browserifytest">
+                <link href="" rel="stylesheet">
+                <script src="./dist/findGF.min.js"></script>
+                </head>
+                <body>
+                    /* ***************************************************************
+                     *
+                     * * Filename: findGF.js
+                     *
+                     * * Description:required condition.js to find GF
+                     *
+                     * * Version: 1.0
+                     *
+                     * * Created: 2018/06/03
+                     *
+                     * * Revision: none
+                     *
+                     * * Compiler: node
+                     *
+                     * * Author: Lv Hongbin
+                     *
+                     * * Company: Shanghai JiaoTong Univerity
+                     *
+                    /* **************************************************************/
+
+                    var condition = require("./condition.js");
+
+                    console.log("开始执行execute!");
+
+                    // 执行execute
+                    condition.execute(condition.gen);
+
+                    console.log("结束执行execute!");
+                </body>
+                </html>
+> - package.json
+                
+                # package.json
+                LvHongbins-Mac-2:browserifytest lvhongbin$ cat /Users/lvhongbin/Desktop/React_Study/browserifytest/package.json 
+                {
+                  "name": "gulptest",
+                  "version": "1.0.0",
+                  "description": "test the gulp",
+                  "main": "index.js",
+                  "scripts": {
+                    "test": "echo \"Error: no test specified\" && exit 1"
+                  },
+                  "repository": {
+                    "type": "git",
+                    "url": "git+https://github.com/hblvsjtu/React_Study.git"
+                  },
+                  "keywords": [
+                    "test",
+                    "the",
+                    "gulp"
+                  ],
+                  "author": "LvHongbin",
+                  "license": "ISC",
+                  "bugs": {
+                    "url": "https://github.com/hblvsjtu/React_Study/issues"
+                  },
+                  "homepage": "https://github.com/hblvsjtu/React_Study#readme",
+                  "devDependencies": {
+                    "babel-core": "^6.26.3",
+                    "babel-plugin-transform-runtime": "^6.23.0",
+                    "babel-preset-env": "^1.7.0",
+                    "browserify": "^16.2.2",
+                    "gulp": "^3.9.1",
+                    "gulp-babel": "^7.0.1",
+                    "gulp-jshint": "^2.1.0",
+                    "gulp-rename": "^1.2.3",
+                    "gulp-size": "^3.0.0",
+                    "gulp-sourcemaps": "^2.6.4",
+                    "gulp-streamify": "^1.0.2",
+                    "gulp-uglify": "^3.0.0",
+                    "gulp-util": "^3.0.8",
+                    "jshint": "^2.9.5",
+                    "pump": "^3.0.0",
+                    "vinyl-buffer": "^1.0.1",
+                    "vinyl-source-stream": "^2.0.0"
+                  },
+                  "dependencies": {}
+                } 
+> -  gulpfile.js 
+                
+                # gulpfile.js 
+                LvHongbins-Mac-2:browserifytest lvhongbin$ cat /Users/lvhongbin/Desktop/React_Study/browserifytest/gulpfile.js 
+                /* ***************************************************************
+                 *
+                 * * Filename: Gulpfile.js
+                 *
+                 * * Description:Configure the Gulp job
+                 *
+                 * * Version: 1.0
+                 *
+                 * * Created: 2018/06/03
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+                const gulp = require('gulp');
+                const babel = require('gulp-babel');
+                const jshint = require('gulp-jshint');
+                var uglify = require('gulp-uglify');
+                var pump = require('pump');
+                var browserify = require('browserify');
+                var source = require('vinyl-source-stream')
+                var buffer = require('vinyl-buffer')
+                var size = require('gulp-size')
+                var rename = require("gulp-rename");
+                var streamify = require('gulp-streamify'); 
+                var sourcemaps = require("gulp-sourcemaps");
+                var gutil = require('gulp-util');
+
+                // es5转义 
+                gulp.task('babel', () =>
+                    gulp.src('./src/jsTest.js')
+                        .pipe(babel({
+                            presets: ['env']
+                        }))
+                        .pipe(gulp.dest('dist'))
+                );
+
+                // 检查语法错误
+                gulp.task('lint', function() {
+                  return gulp.src('/src/test.js')
+                    .pipe(jshint())
+                    //.pipe(jshint.reporter('YOUR_REPORTER_HERE'));
+                    .pipe(jshint.reporter('default'));
+                });
+
+                // 压缩文件
+                gulp.task('compress', function (cb) {
+                  pump([
+                        gulp.src(['src/test.js', 'dist/jsTest.js']),
+                        uglify(),
+                        gulp.dest('dist/min')
+                    ],
+                    cb
+                  );
+                });
+
+
+                // 模块打包
+                gulp.task("browserify", function() {
+                    var bundleStream = browserify('./src/findGF.js').bundle(); // 得到Node 常规流
+                    bundleStream.pipe(source('findGF.js'))  // 将Node 常规流转换vinyl 文件对象的stream，并将其重命名
+                            .pipe(buffer())     //将vinyl对象内容中的Stream转换为Buffer
+                            .pipe(sourcemaps.init({loadMaps: true}))    //启用sourcemaps功能
+                        .pipe(babel({
+                                    presets: ['env']
+                            }))
+                        .pipe(uglify())                 //这里不能直接使用，因为不支持ES6，需要先进行Babel转换
+                        .on('error', function (err) {
+                                    gutil.log(gutil.colors.red('[Error]'), err.toString());
+                                })
+                        //.pipe(streamify(uglify())     //将vinyl对象内容中的Stream转换为Buffer的第二种方法
+                            .pipe(size())           //展示文件的大小
+                        .pipe(sourcemaps.write("."))            // 生成记录位置信息的sourcemaps文件
+                        .pipe(rename("findGF.min.js"))
+                        .pipe(gulp.dest('dist/'))
+                })
+
+                // 监察文件变化 jsTest文件夹
+                var watcher_jsTest = gulp.watch('src/jsTest.js', ['babel', 'compress']);
+                watcher_jsTest.on('change', function(event) {
+                  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                });
+
+                // 监察文件变化 Test文件夹
+                var watcher_test = gulp.watch('src/test.js', ['lint']);
+                watcher_test.on('change', function(event) {
+                  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                });
+
+                // 监察文件变化 Test文件夹
+                var watcher_findGF = gulp.watch('src/findGF.js', ['browserify']);
+                watcher_findGF.on('change', function(event) {
+                  console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+                });
+
+                // 任务流
+                gulp.task('default', ['babel', 'lint', 'compress', 'browserify']);
+> - findGF.js
+                
+                # findGF.js
+                LvHongbins-Mac-2:browserifytest lvhongbin$ source setPATH.sh
+                LvHongbins-Mac-2:browserifytest lvhongbin$ babel ./src/condition.js -o ./src/conditionES5.js
+                LvHongbins-Mac-2:browserifytest lvhongbin$ cat ./src/findGF.js
+                /* ***************************************************************
+                 *
+                 * * Filename: findGF.js
+                 *
+                 * * Description:required condition.js to find GF
+                 *
+                 * * Version: 1.0
+                 *
+                 * * Created: 2018/06/03
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+                //由于gulp-babel并不支持generator ，promise等异步编程，所以这里采用conditionES5.js
+                var condition = require("./conditionES5.js");
+
+                console.log("开始执行execute!");
+
+                // 执行execute
+                condition.execute(condition.gen);
+
+                console.log("结束执行execute!");
+> - condition.js            
+                
+                LvHongbins-Mac-2:browserifytest lvhongbin$ cat ./src/condition.js
+                /* ***************************************************************
+                 *
+                 * * Filename: condition.js
+                 *
+                 * * Description:apply some neccessary condition to find a GF 
+                         as a module for findGF.js. Process, Generator,trump function and
+                         execute function will be used in this process.
+                 *
+                 * * Version: 1.0
+                 *
+                 * * Created: 2018/06/03
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+                var calulate = function(str=null, value=5) {
+                    return new Promise(function(resolve, reject){resolve(`${str} fib(${value})=${fib(value)}`)});
+                }
+
+
+                // Fibonacci function
+                var fib = (n => n<2?n:fib(n-1)+fib(n-2));
+
+                // print function
+                var printCondition = function(str) {
+                    console.log("开始执行printCondition!");
+                    console.log(str);
+                    console.log("结束执行printCondition!");
+                }
+
+                // generator for printing the conditions
+                var gen = function* () {
+                    
+                    // defined the valuables
+                    let a = "You must be smart and strong enough to protect everything you care!";
+                    let b = "You must learn C, Java, JavaScript!";
+                    let c = "You must earn much money and keep fit!";
+                    
+                    yield calulate(a, 10);
+                    yield calulate(b, 20);
+                    yield calulate(c, 30);
+
+                }
+
+                /* 
+                 * trump function
+                 * 关键是把generator，next()的结果和回调函数callback三个分离开来
+                 */
+                var trump = function(fn) {
+                    return function(arg) {
+                        return function(callback) { 
+                            arg.value.then(callback);   
+                            return fn;
+                        }
+                    }
+                }
+
+                //execute function
+                var execute = function(gen) {
+                    
+                    // 新建一个generator
+                    let g = gen();
+                    
+                    // 指针指向generator的第一个yield
+                    let result = g.next();
+                    
+                    // 新建一个trump转换器
+                    let t = trump(g)
+
+                    /* 
+                     * 迭代循环，循环的关键是把generation和next()的结果分开
+                     * 这是因为next()的结果用来循环判断的指标，
+                     * 而generation用来作为返回值使用
+                     */ 
+                    while(!result.done) {
+                        
+                        // 返回迭代器generator，并执行一个yield的值函数
+                        let gen=t(result)(printCondition);
+                        
+                        // 指针指向下一个yield
+                        result = gen.next();        
+                    }
+                }
+
+                // 输出execute模块并挂在exports中
+                exports.execute = execute;
+                exports.gen = gen;
+                LvHongbins-Mac-2:browserifytest lvhongbin$ 
+> - 结果
+                
+                # 命令行结果 
+                LvHongbins-Mac-2:browserifytest lvhongbin$ gulp
+                [22:56:25] Using gulpfile ~/Desktop/React_Study/browserifytest/gulpfile.js
+                [22:56:25] Starting 'babel'...
+                [22:56:25] Starting 'lint'...
+                [22:56:25] Starting 'compress'...
+                [22:56:25] Starting 'browserify'...
+                [22:56:25] Finished 'browserify' after 5.99 ms
+                [22:56:25] Finished 'lint' after 17 ms
+                [22:56:25] Finished 'compress' after 166 ms
+                [22:56:25] Finished 'babel' after 174 ms
+                [22:56:25] Starting 'default'...
+                [22:56:25] Finished 'default' after 23 μs
+                [22:56:26] all files 8.66 kB
+
+                # 浏览器结果
+                [Log] 开始执行execute! (findGF.min.js, line 1)
+                [Log] 结束执行execute! (findGF.min.js, line 1)
+                [Log] 开始执行printCondition! (findGF.min.js, line 1)
+                [Log] You must be smart and strong enough to protect everything you care! fib(10)=55 (findGF.min.js, line 1)
+                [Log] 结束执行printCondition! (findGF.min.js, line 1)
+                [Log] 开始执行printCondition! (findGF.min.js, line 1)
+                [Log] You must learn C, Java, JavaScript! fib(20)=6765 (findGF.min.js, line 1)
+                [Log] 结束执行printCondition! (findGF.min.js, line 1)
+                [Log] 开始执行printCondition! (findGF.min.js, line 1)
+                [Log] You must earn much money and keep fit! fib(30)=832040 (findGF.min.js, line 1)
+                [Log] 结束执行printCondition! (findGF.min.js, line 1)
+                [Error] Not allowed to load local resource: file:///Users/lvhongbin/Desktop/React_Study/browserifytest/dist/findGF.js.map
+
+                
+
 
 
 
