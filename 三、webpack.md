@@ -20,4 +20,9 @@
         
 #### 1) 简介
 > -  现代的静态模块包装器webpack is a static module bundler for modern JavaScript applications
-> -  建立一个依赖图对应你每一个依赖模块it internally builds a dependency graph which maps every module your project needs and generates one or more bundles 
+> -  建立一个依赖图对应你每一个需要打一个或者多个包的依赖模块it internally builds a dependency graph which maps every module your project needs and generates one or more bundles 
+> - 四大核心概念
+>> - Entry
+>> - Output
+>> - Loaders
+>> - Plugins
