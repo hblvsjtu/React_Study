@@ -521,5 +521,76 @@
                 + html-webpack-plugin@3.2.0
                 added 49 packages from 66 contributors and audited 4221 packages in 22.032s
                 found 0 vulnerabilities
-
+> - 设置webpack.config.js文件
+        
+                const HtmlWebpackPlugin = require('html-webpack-plugin');
+                plugins: [
+                    new HtmlWebpackPlugin({
+                        title: 'Output Management'
+                      })
+                    ],
 > - 不过这里有一个问题：会把原来的index.html文件自动覆盖掉 
+#### 3) 插件clean-webpack-plugin    
+> - 有时候我们在build的时候，由于旧的文件的存在会干扰我们对于每次生成的新文件的判断
+> - 所以最好的方式每次在build之前都清空dist文件，再进行build，使得每次的dist文件都是最新的
+                
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install clean-webpack-plugin --save-dev
+                + clean-webpack-plugin@0.1.19
+                added 1 package from 1 contributor and audited 4237 packages in 7.353s
+                found 0 vulnerabilities
+> - 设置webpack.config.js文件
+        
+                const CleanWebpackPlugin = require('clean-webpack-plugin');
+                const HtmlWebpackPlugin = require('html-webpack-plugin');
+                plugins: [
+                    new CleanWebpackPlugin(['dist
+                    new HtmlWebpackPlugin({
+                        title: 'Output Management'
+                      })                    
+                    ],
+> - 结果
+                
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm run build
+
+                > webpacktest@1.0.0 build /Users/lvhongbin/Desktop/React_Study/webpacktest
+                > webpack
+
+                clean-webpack-plugin: /Users/lvhongbin/Desktop/React_Study/webpacktest/dist has been removed.
+                Hash: 43296dc863ac84457e39
+                Version: webpack 4.10.2
+                Time: 808ms
+                Built at: 06/06/2018 4:36:00 PM
+                                                Asset       Size  Chunks             Chunk Names
+                 af01dccc1a3bc9b4fc6e8032010da11a.png   28.9 KiB          [emitted]  
+                 1dbdd9ff2c27da280c13e7bd31188cb7.png   20.2 KiB          [emitted]  
+                c5c3c84b266a0e76cfb78b01f35843f2.woff   79.2 KiB          [emitted]  
+                6f05ec37b4e216c8e298ce784b60f14a.woff    140 KiB          [emitted]  
+                                     findGF/bundle.js   1.52 KiB       0  [emitted]  findGF
+                                      print/bundle.js   1.02 KiB       1  [emitted]  print
+                                        app/bundle.js   77.4 KiB    2, 1  [emitted]  app
+                                           index.html  317 bytes          [emitted]  
+                 [0] ./src/print.js 451 bytes {1} {2} [built]
+                 [1] ./src/data.xml 113 bytes {2} [built]
+                 [2] ./src/picture.png 82 bytes {2} [built]
+                 [4] ./src/findGF.js + 1 modules 2.61 KiB {0} [built]
+                     | ./src/findGF.js 692 bytes [built]
+                     | ./src/condition.js 1.93 KiB [built]
+                 [7] ./src/background.png 82 bytes {2} [built]
+                 [8] ./src/YouRock-Extras.woff 83 bytes {2} [built]
+                 [9] ./src/YouRock-Regular.woff 83 bytes {2} [built]
+                [12] ./node_modules/css-loader!./src/style.css 656 bytes {2} [built]
+                [13] ./src/style.css 1.05 KiB {2} [built]
+                [14] (webpack)/buildin/module.js 497 bytes {2} [built]
+                [15] (webpack)/buildin/global.js 489 bytes {2} [built]
+                [16] ./src/index.js 1.58 KiB {2} [built]
+                    + 5 hidden modules
+
+                WARNING in configuration
+                The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+                You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/
+                Child html-webpack-plugin for "index.html":
+                     1 asset
+                    [0] (webpack)/buildin/module.js 497 bytes {0} [built]
+                    [1] (webpack)/buildin/global.js 489 bytes {0} [built]
+                        + 2 hidden modules
+> - 
