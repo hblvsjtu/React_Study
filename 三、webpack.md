@@ -20,6 +20,7 @@
 ### [3.2 一个简单的例子](#3.2) 
 ### [3.3 资源管理](#3.3) 
 ### [3.4 多文件输入和输出](#3.4) 
+### [3.5 开发者模式](#3.5) 
 
 ------      
         
@@ -593,4 +594,46 @@
                     [0] (webpack)/buildin/module.js 497 bytes {0} [built]
                     [1] (webpack)/buildin/global.js 489 bytes {0} [built]
                         + 2 hidden modules
-> - 
+
+<h3 id='3.5'>3.5 开发者模式</h3>  
+        
+#### 1) Using source maps
+> - 用来检查出错的源代码的位置
+> - 在webpack.config.js文件中添加
+                
+                devtool: 'inline-source-map'
+> - source maps好像没啥用浏览器本来就可以显示错误的地方
+>>>>>> ![图1-3 source-maps好像没啥用浏览器本来就可以显示错误的地方]()
+        
+#### 2) Using Watch Mode
+> - 实质上是运行lic命令 webpack --watch
+> - 当然了你也可以在package.json中添加脚本
+        
+                "watch": "webpack --watch",
+> - 作用是监察文件的变动，一旦文件发生了更新就会自动编译
+> - You can instruct webpack to "watch" all files within your dependency graph for changes. If one of these files is updated, the code will be recompiled so you don't have to run the full build manually.
+#### 3) Using webpack-dev-server
+> - 相当于livereload，一旦文件发生了更新，就会自动编译，并在网页中自动更新
+> - 安装
+        
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev webpack-dev-server
+                + webpack-dev-server@3.1.4
+                added 183 packages from 125 contributors and audited 6914 packages in 75.843s
+                found 0 vulnerabilities
+> - 在webpack.config.js文件中添加
+        
+                devServer: {
+                    contentBase: './dist'
+                  },
+> - This tells webpack-dev-server to serve the files from the dist directory on localhost:8080.
+> - 初次运行的时候需要执行命令
+        
+                webpack-dev-server --open
+> - 当然了你也可以当然了你也可以在package.json中添加脚本
+        
+                "start": "webpack-dev-server --open"
+> - webpack-dev-server有很多警告，并且结束之后会删掉dist文件夹
+>>>>>> ![图1-4 webpack-dev-server有很多警告]()
+
+#### 4) Using webpack-dev-middleware
+> -  这个我不是很理解，好像需要配合express一起使用，检测任意指定的端口

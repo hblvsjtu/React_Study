@@ -22,6 +22,9 @@ import _ from 'lodash';
 import './style.css';
 import Picture from './picture.png';
 import Data from './data.xml';
+
+
+// 如果不是export default，这里需要用输出全局对象，所以必须要有大括号把变量括起来
 import {printfunc} from './print.js';
 
  function component() {
