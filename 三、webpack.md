@@ -18,6 +18,7 @@
 ## [三、webpack](#3)
 ### [3.1 简介，安装与卸载](#3.1)
 ### [3.2 一个简单的例子](#3.2) 
+### [3.3 资源管理](#3.3) 
 
 ------      
         
@@ -29,6 +30,10 @@
 > -  现代的静态模块包装器webpack is a static module bundler for modern JavaScript applications
 > -  建立一个依赖图对应你每一个需要打一个或者多个包的依赖模块it internally builds a dependency graph which maps every module your project needs and generates one or more bundles 
 > - 打包工具的意义在于减少组件的入口文件书，尽可能将所有的依赖进行内部声明，可以提高组件的内聚度，便于开发和维护
+> - webpack简单流程
+        
+>>>>>> ![图1-1 webpack简单流程](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-1%20webpack简单流程.png?raw=true)
+        
 > - 一般来讲，管理JavaScript projects会有以下三个问题：
 >> - JavaScript的外部依赖不明显
 >> - 如果依赖丢失或者加载的顺序出错，那么这个project的功能会出问题
@@ -272,4 +277,219 @@
                       "lodash": "^4.17.5"
                     }
                   }
+
+<h3 id='3.3'>3.3 资源管理</h3>  
+        
+#### 1) 安装插件
+> - css文件： style-loader和css-loader
+> - 图片资源和字体资源 file-loader
+> - Data资源 csv-loader xml-loader
+                
+                #style-loader css-loader
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev style-loader css-loader
+                + style-loader@0.21.0
+                + css-loader@0.28.11
+                added 130 packages from 222 contributors and audited 4120 packages in 86.743s
+                found 0 vulnerabilities
+
+                # file-loader
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev file-loader
+                + file-loader@1.1.11
+                added 1 package from 1 contributor and audited 4133 packages in 7.704s
+                found 0 vulnerabilities
+
+                #Data资源 csv-loader xml-loader
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev csv-loader xml-loader
+                + csv-loader@2.1.1
+                + xml-loader@1.2.1
+                added 5 packages from 50 contributors and audited 4147 packages in 17.517s
+                found 0 vulnerabilities
+> - webpack.config.js
+        
+                LvHongbins-Mac-2:webpacktest lvhongbin$ cat webpack.config.js
+                const path = require('path');
+                  
+                module.exports = {
+                  entry: './src/index.js',
+                  output: {
+                    filename: 'bundle.js',
+                    path: path.resolve(__dirname, 'dist')
+                  },
+                  module: {
+                    rules: [
+                      {
+                        test: /\.css$/,
+                        use: [
+                          'style-loader',
+                          'css-loader'
+                        ]
+                      },
+                      {
+                        test: /\.(png|svg|jpg|gif)$/,
+                        use: [
+                          'file-loader'
+                        ]
+                      },
+                      {
+                        test: /\.(woff|woff2|eot|ttf|otf)$/,
+                        use: [
+                          'file-loader'
+                        ]
+                      },
+                      {
+                        test: /\.(csv|tsv)$/,
+                        use: [ 
+                          'csv-loader'
+                        ] 
+                      },
+                      { 
+                        test: /\.xml$/,
+                        use: [ 
+                          'xml-loader'
+                        ] 
+                      } 
+                    ]
+                  }
+                };
+> - src/style.css
+        
+                LvHongbins-Mac-2:webpacktest lvhongbin$ cat src/style.css
+
+                LvHongbins-Mac-2:webpacktest lvhongbin$ cat src/style.css
+                @font-face {
+                  font-family: 'MyFont';
+                  src:  url('./YouRock-Regular.woff') format('woff'),
+                        url('./YouRock-Extras.woff') format('woff');
+                  font-weight: 600;
+                  font-style: normal;
+                }
+
+                .hello {
+                  display:inline-block;
+                  width: 400px;
+                  height: 200px;
+                  font-family: 'MyFont';
+                  color: red;
+                  background: url('./background.png');
+                }
+> - data.xml
+        
+                <?xml version="1.0" encoding="UTF-8"?>
+                <note>
+                  <to>Mary</to>
+                  <from>John</from>
+                  <heading>Reminder</heading>
+                  <body>Call Cindy on Tuesday</body>
+                </note>
+> - src/index.js
+        
+                /* ***************************************************************
+                 *
+                 * * Filename: index.js
+                 *
+                 * * Description:test for webpack
+                 *
+                 * * Version: 1.0.0
+                 *
+                 * * Created: 2018/06/05
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+                import _ from 'lodash';
+                import './style.css';
+                import Picture from './picture.png';
+                import Data from './data.xml';
+
+                 function component() {
+                   var element = document.createElement('div');
+
+                   /*
+                    * Lodash, currently included via a script, is required for this line to work
+                    * Our index.js file depends on lodash being included in the page before it runs.
+                    * This is because index.js never explicitly declared a need for lodash;
+                    * it just assumes that the global variable _ exists.
+                    */
+                    // Lodash, now imported by this script
+                   element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+                   element.classList.add('hello');
+
+                   // Add the image to our existing div.
+                   var myPicture = new Image();
+                   myPicture.src = Picture;
+
+                   var imageDiv = document.createElement("div");
+                   imageDiv.appendChild(myPicture);
+                   element.appendChild(imageDiv);
+
+                   console.log(Data);
+                   return element;
+                 }
+> - package.json
+        
+                LvHongbins-Mac-2:webpacktest lvhongbin$ cat package.json
+                {
+                  "name": "webpacktest",
+                  "version": "1.0.0",
+                  "description": "",
+                  "private": true,
+                  "scripts": {
+                    "test": "echo \"Error: no test specified\" && exit 1",
+                    "build": "webpack" 
+                  },
+                  "keywords": [],
+                  "author": "",
+                  "license": "ISC",
+                  "devDependencies": {
+                    "css-loader": "^0.28.11",
+                    "style-loader": "^0.21.0",
+                    "webpack": "^4.10.2",
+                    "webpack-cli": "^3.0.2"
+                  },
+                  "dependencies": {
+                    "lodash": "^4.17.10"
+                  }
+                }
+> - 打包
+        
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm run build
+
+                > webpacktest@1.0.0 build /Users/lvhongbin/Desktop/React_Study/webpacktest
+                > webpack
+
+                Hash: e7782d12a81c6931ee2e
+                Version: webpack 4.10.2
+                Time: 3333ms
+                Built at: 06/06/2018 12:07:17 PM
+                                                Asset      Size  Chunks             Chunk Names
+                 af01dccc1a3bc9b4fc6e8032010da11a.png  28.9 KiB          [emitted]  
+                 1dbdd9ff2c27da280c13e7bd31188cb7.png  20.2 KiB          [emitted]  
+                c5c3c84b266a0e76cfb78b01f35843f2.woff  79.2 KiB          [emitted]  
+                6f05ec37b4e216c8e298ce784b60f14a.woff   140 KiB          [emitted]  
+                                            bundle.js  77.1 KiB       0  [emitted]  main
+                 [0] ./src/data.xml 113 bytes {0} [built]
+                 [1] ./src/picture.png 82 bytes {0} [built]
+                 [5] ./src/background.png 82 bytes {0} [built]
+                 [6] ./src/YouRock-Extras.woff 83 bytes {0} [built]
+                 [7] ./src/YouRock-Regular.woff 83 bytes {0} [built]
+                [10] ./node_modules/css-loader!./src/style.css 656 bytes {0} [built]
+                [11] ./src/style.css 1.05 KiB {0} [built]
+                [12] (webpack)/buildin/module.js 497 bytes {0} [built]
+                [13] (webpack)/buildin/global.js 489 bytes {0} [built]
+                [14] ./src/index.js 1.29 KiB {0} [built]
+                    + 5 hidden modules
+
+                WARNING in configuration
+                The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+                You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/
+> - 效果图
+>>>>>> ![图1-2 资源加载效果图]()
+> - 
 > - 
