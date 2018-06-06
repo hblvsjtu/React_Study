@@ -22,6 +22,7 @@ import _ from 'lodash';
 import './style.css';
 import Picture from './picture.png';
 import Data from './data.xml';
+import {printfunc} from './print.js';
 
  function component() {
    var element = document.createElement('div');
@@ -48,4 +49,14 @@ import Data from './data.xml';
    return element;
  }
 
+
+var createBtn = function() {
+   
+   // 增加一个按钮
+   var btn = document.createElement("button"); 
+   btn.innerHTML = "Click me and check the console!";
+   btn.addEventListener("click", printfunc, false);
+   return btn;
+}
  document.body.appendChild(component());
+ document.body.appendChild(createBtn());

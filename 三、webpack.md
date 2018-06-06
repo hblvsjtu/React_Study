@@ -19,6 +19,7 @@
 ### [3.1 简介，安装与卸载](#3.1)
 ### [3.2 一个简单的例子](#3.2) 
 ### [3.3 资源管理](#3.3) 
+### [3.4 多文件输入和输出](#3.4) 
 
 ------      
         
@@ -490,6 +491,35 @@
                 The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
                 You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/
 > - 效果图
->>>>>> ![图1-2 资源加载效果图]()
-> - 
-> - 
+>>>>>> ![图1-2 资源加载效果图](https://github.com/hblvsjtu/React_Study/blob/master/picture/图2-1%20资源加载效果图.png?raw=true)
+        
+
+<h3 id='3.4'>3.4 多文件输入和输出</h3>  
+        
+#### 1) 多文件输入
+> - 需要在webpack.config.js的entry属性赋予一个文件对象，文件对象的形式如下：
+        
+                entry: {
+                   app:'./src/index.js',
+                   print: './src/print.js',
+                   findGF: "./src/findGF.js"
+                }
+
+#### 2) 多文件输出
+> - 则在filename中添加一个变量\[name\]
+        
+                output: {
+                  filename: '[name]/bundle.js',
+                  path: path.resolve(__dirname, 'dist')
+                },
+> - 奇怪的是，在webpack.config.js中引用的是commonJS的规范，而对于打包的commonJS的规范的JS文件虽然可以通过，但是浏览器却找不到相应的引用模块变量，所以等同于不支持ommonJS的规范的JS文件，对于支持es6的文件是可以成功运行的
+#### 3) 插件html-webpack-plugin    
+> - 有时候假如更改入口文件的名字，那么相应的html也需要跟着改变，带来了不便
+> - html-webpack-plugin可以自动生成index.html文件，并把相应的依赖加进去body标签里面
+        
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev html-webpack-plugin
+                + html-webpack-plugin@3.2.0
+                added 49 packages from 66 contributors and audited 4221 packages in 22.032s
+                found 0 vulnerabilities
+
+> - 不过这里有一个问题：会把原来的index.html文件自动覆盖掉 
