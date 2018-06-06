@@ -21,6 +21,7 @@
 ### [3.3 资源管理](#3.3) 
 ### [3.4 多文件输入和输出](#3.4) 
 ### [3.5 开发者模式](#3.5) 
+### [3.6 模块热替换](#3.6) 
 
 ------      
         
@@ -603,7 +604,7 @@
                 
                 devtool: 'inline-source-map'
 > - source maps好像没啥用浏览器本来就可以显示错误的地方
->>>>>> ![图1-3 source-maps好像没啥用浏览器本来就可以显示错误的地方]()
+>>>>>> ![图1-3 source-maps好像没啥用浏览器本来就可以显示错误的地方](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-3%20source-maps好像没啥用浏览器本来就可以显示错误的地方.png?raw=true)
         
 #### 2) Using Watch Mode
 > - 实质上是运行lic命令 webpack --watch
@@ -633,7 +634,66 @@
         
                 "start": "webpack-dev-server --open"
 > - webpack-dev-server有很多警告，并且结束之后会删掉dist文件夹
->>>>>> ![图1-4 webpack-dev-server有很多警告]()
-
+>>>>>> ![图1-4 webpack-dev-server有很多警告](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-4%20webpack-dev-server有很多警告.png?raw=true)
 #### 4) Using webpack-dev-middleware
 > -  这个我不是很理解，好像需要配合express一起使用，检测任意指定的端口
+        
+<h3 id='3.6'>3.6 模块热替换</h3>  
+        
+#### 1) 实时的局部更新
+> - It allows all kinds of modules to be updated at runtime without the need for a full refresh.
+#### 2) 更新webpack-dev-server的设置
+> - 在webpack.config.js文件中添加
+        
+                # "NamedModulesPlugin" to make it easier to see which dependencies are being 
+                # 
+                const webpack = require('webpack');
+                devServer: {
+                  contentBase: './dist',
+            +     hot: true
+                },
+                plugins: [
+            +     new webpack.NamedModulesPlugin(),
+            +     new webpack.HotModuleReplacementPlugin()
+                ],
+> - 在index.js中添加
+                
+                + import {printMe} from './print.js';
+                + if (module.hot) {
+                +   module.hot.accept('./print.js', function() {
+                +     console.log('Accepting the updated printMe module!');
+                +     printMe();
+                +   })
+                + }
+> - 调试命令行
+        
+                webpack-dev-server --hotOnly
+> - 在print.js中增加胰腺癌语句然后保存
+                
+                export var printMe = function() {
+                    console.log('Updating print.js...');
+                }
+> - 调试结果
+>>>>>> ![图1-5 模块热替换]()
+> - If you took the route of using webpack-dev-middleware instead of webpack-dev-server, please use the webpack-hot-middleware package to enable HMR on your custom server or application.
+#### 3）Via the Node.js API
+> - To enable HMR, you also need to modify your webpack configuration object to include the HMR entry points. The webpack-dev-server package includes a method called addDevServerEntrypoints which you can use to do this. 
+                    
+                    const webpackDevServer = require('webpack-dev-server');
+                    const webpack = require('webpack');
+
+                    const config = require('./webpack.config.js');
+                    const options = {
+                      contentBase: './dist',
+                      hot: true,
+                      host: 'localhost'
+                    };
+
+                    webpackDevServer.addDevServerEntrypoints(config, options);
+                    const compiler = webpack(config);
+                    const server = new webpackDevServer(compiler, options);
+
+                    server.listen(5000, 'localhost', () => {
+                      console.log('dev server listening on port 5000');
+                    });
+                

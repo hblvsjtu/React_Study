@@ -22,3 +22,7 @@ export var printfunc = function() {
 	console.log("I am called by index.js");
 }
 
+export var printMe = function() {
+	console.log('Updating print.js...');
+}
+

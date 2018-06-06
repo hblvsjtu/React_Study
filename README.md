@@ -35,6 +35,7 @@
 ### [3.3 资源管理](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.3)
 ### [3.4 多文件输入和输出](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.4) 
 ### [3.5 开发者模式](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.5)  
+[3.6 模块热替换](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.6) 
 
         
         
