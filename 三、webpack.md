@@ -22,7 +22,8 @@
 ### [3.4 多文件输入和输出](#3.4) 
 ### [3.5 开发者模式](#3.5) 
 ### [3.6 模块热替换](#3.6) 
-
+### [3.7 摇树优化和代码压缩](#3.7) 
+### [3.8 开发模式与产品模式](#3.8) 
 ------      
         
         
@@ -293,6 +294,23 @@
                 + style-loader@0.21.0
                 + css-loader@0.28.11
                 added 130 packages from 222 contributors and audited 4120 packages in 86.743s
+                found 0 vulnerabilities
+
+                # postcss-loader
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev postcss-loader
+                + postcss-loader@2.1.5
+                added 11 packages from 49 contributors and audited 7742 packages in 13.852s
+                found 0 vulnerabilities
+
+                # sass-loader node-sass
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev node-sass
+
+                > node-sass@4.9.0 install /Users/lvhongbin/Desktop/React_Study/webpacktest/node_modules/node-sass
+                > node scripts/install.js
+                
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev sass-loader
+                + sass-loader@7.0.3
+                added 8 packages from 16 contributors and audited 7762 packages in 11.981s
                 found 0 vulnerabilities
 
                 # file-loader
@@ -674,7 +692,7 @@
                     console.log('Updating print.js...');
                 }
 > - 调试结果
->>>>>> ![图1-5 模块热替换]()
+>>>>>> ![图1-5 模块热替换](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-5%20模块热替换.png?raw=true)
 > - If you took the route of using webpack-dev-middleware instead of webpack-dev-server, please use the webpack-hot-middleware package to enable HMR on your custom server or application.
 #### 3）Via the Node.js API
 > - To enable HMR, you also need to modify your webpack configuration object to include the HMR entry points. The webpack-dev-server package includes a method called addDevServerEntrypoints which you can use to do this. 
@@ -695,5 +713,369 @@
 
                     server.listen(5000, 'localhost', () => {
                       console.log('dev server listening on port 5000');
-                    });
+                    });        
+
+        
+<h3 id='3.7'>3.7 摇树优化和代码压缩</h3>  
+        
+#### 1) 简介
+> - Tree shaking is a term commonly used in the JavaScript context for dead-code elimination
+> - ["在webpack中，tree-shaking指的就是按需加载，即没有被引用的模块不会被打包进来，减少我们的包大小，缩小应用的加载时间，呈现给用户更佳的体验。"](https://blog.csdn.net/haodawang/article/details/77199980)
+> - 那什么叫dead-code呢？dead-code meaning an unused export that should be dropped
+#### 2) 那应该怎么做呢？
+> - 针对package.json
                 
+                {
+                  "name": "your-project",
+                  "sideEffects": false
+                }
+> - All the code noted above does not contain side effects, so we can simply mark the property as false to inform webpack that it can safely prune unused exports.
+> - 如果确实需要dead-code的副作用，那么可以这样写
+                
+                {
+                  "name": "your-project",
+                  "sideEffects": [
+                    "./src/some-side-effectful-file.js"
+                  ]
+                }
+
+>>>>>> ![图1-6 摇树优化前]()
+>>>>>> ![图1-7 摇树优化后]()
+#### 3) 代码压缩 
+> -  we'll use the -p (production) webpack compilation flag to enable the uglifyjs minification plugin.
+> - 第一种方法 使用产品模式
+                
+                # package.json文件
+                mode: "production"
+> - 第二种方法 使用命令
+                
+                webpack --optimize-minimize
+> - Note that the --optimize-minimize flag can be used to insert the UglifyJsPlugin as well.
+> - tree shaking can yield a significant decrease in bundle size when working on larger applications with complex dependency trees.
+> - 第三种方法 安装uglifyjs-webpack-plugin，只针对js
+>> - 安装命令 
+                
+                # 安装命令
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev uglifyjs-webpack-plugin
+                + uglifyjs-webpack-plugin@1.2.5
+                updated 1 package and audited 7172 packages in 14.704s
+                found 0 vulnerabilities
+>> - 使用方法 
+                # 使用方法 更改webpack.config.js文件
+                const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+                module.exports = {
+                  plugins: [
+                    new UglifyJsPlugin()
+                  ]
+                }
+  
+ **Name** | **Type** | **Default** | **Description**
+ - | - | - | -
+ test | \{RegExp或者Array<RegExp>\} | /\.js$/i | Test to match files against
+ include | \{RegExp或者Array<RegExp>\} | undefined | Files to include
+ exclude | \{RegExp或者Array<RegExp>\} | undefined | Files to exclude
+ cache | \{Boolean或者String\} | false | Enable file caching
+ parallel | \{Boolean或者Number\} | false | Use multi-process parallel running to improve the build speed
+ sourceMap | \{Boolean\} | false | Use source maps to map error message locations to modules (This slows down the compilation) ⚠️ cheap-source-map options don't work with this plugin
+ uglifyOptions | \{Object} | \{...defaults\} | uglify Options
+ extractComments | \{Boolean或者RegExp或者Function<(node, comment) -> \{Boolean或者Object\}>} | false | Whether comments shall be extracted to a separate file, (see details (webpack >= 2.3.0)
+ warningsFilter | \{Function(source) -> \{Boolean\}\} | () => true | Allow to filter uglify warnings 
+
+> - 第四种方法 [安装Babel Minify Webpack Plugin](https://github.com/webpack-contrib/babel-minify-webpack-plugin) 只针对js，一边Babel一边压缩不要太爽
+> - 第五种方法 [安装webpack-closure-compiler](https://github.com/roman01la/webpack-closure-compiler) 只针对js，流程化的Babel和压缩过程 不过需要提前安装Java SDK.
+#### 4) css压缩 
+> - webpack 5 是自带 CSS minimizer，但是webpack 4 及以下需要你自己去安装
+> - While webpack 5 is likely to come with a CSS minimizer built-in, with webpack 4 you need to bring your own.
+> - 安装 [mini-css-extract-plugin]()
+                
+                # mini-css-extract-plugin
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev mini-css-extract-plugin
+                + mini-css-extract-plugin@0.4.0
+                added 1 package from 1 contributor and audited 7180 packages in 8.707s
+                found 0 vulnerabilities
+> - 使用方法
+                
+                # webpack.common.js
+                const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+                const devMode = process.env.NODE_ENV !== 'production'
+
+                module.exports = {
+                  plugins: [
+                    new MiniCssExtractPlugin({
+                      // Options similar to the same options in webpackOptions.output
+                      // both options are optional
+                      filename: devMode ? '[name].css' : '[name].[hash].css',
+                      chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+                    })
+                  ],
+                  module: {
+                    rules: [
+                      {
+                        test: /\.s?[ac]ss$/,
+                        use: [
+                          devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+                          'css-loader',
+                          'postcss-loader',
+                          'sass-loader',
+                        ],
+                      }
+                    ]
+                  }
+                }
+#### 5) 整体优化 [Optimize CSS Assets Webpack Plugin](https://github.com/NMFR/optimize-css-assets-webpack-plugin) 
+> - It will search for CSS assets during the Webpack build and will optimize \ minimize the CSS (by default it uses cssnano but a custom CSS processor can be specified).Solves extract-text-webpack-plugin CSS duplication problem:
+> - 安装  
+                
+                # optimize-css-assets-webpack-plugin
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev optimize-css-assets-webpack-plugin
+                + optimize-css-assets-webpack-plugin@4.0.2
+                added 2 packages from 1 contributor in 25.703s
+> - 使用方法
+                
+                var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+                optimization: {
+                    minimizer: [
+                      new UglifyJsPlugin({
+                        cache: true,
+                        parallel: true,
+                        sourceMap: true // set to true if you want JS source maps
+                      }),
+                      new OptimizeCSSAssetsPlugin({})
+                    ]
+                  },
+
+                       
+<h3 id='3.8'>3.8 开发模式与产品模式</h3>  
+        
+#### 1) 开发模式和产品模式
+> - 开发模式针对的是强烈的源码映射和主机服务器的实时刷的特性或者是一些热替换模块
+> - 产品模式则针对的是最小化打包，轻量化源码映射和最优化资源加载时间
+> - The goals of development and production builds differ greatly. In development, we want strong source mapping and a localhost server with live reloading or hot module replacement. In production, our goals shift to a focus on minified bundles, lighter weight source maps, and optimized assets to improve load time. With this logical separation at hand, we typically recommend writing separate webpack configurations for each environment
+#### 2) webpack-merge
+> - 虽然我们总是希望把开发模式和产品模式分的很开，但是他们有些配置的相同的，而把这些相同的配置合并在一起，这时候我们就需要用到webpack-merge
+> - 安装webpack-merge
+                
+                LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev webpack-merge
+                + webpack-merge@4.1.2
+                added 1 package from 1 contributor and audited 6916 packages in 16.389s
+                found 0 vulnerabilities
+#### 3) 实例
+> - **webpack.common.js**  设置入口和输出，还有一些共同的插件 
+> - In webpack.common.js, we now have our entry and output setup configured and we've included any plugins that are required for both environments
+                
+                /* ***************************************************************
+                 *
+                 * * Filename: webpack.common.js
+                 *
+                 * * Description:common configuration for webpack
+                 *
+                 * * Version: 1.0.0
+                 *
+                 * * Created: 2018/06/07
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+                const path = require('path');
+                const CleanWebpackPlugin = require('clean-webpack-plugin');
+                const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+                module.exports = {
+                  entry: {
+                    app:'./src/index.js',
+                    findGF: "./src/findGF.js"
+                  },
+                  plugins: [
+                    new CleanWebpackPlugin(['dist']),
+                    new HtmlWebpackPlugin({
+                      title: 'Production'
+                    })
+                  ],
+                  output: {
+                    filename: '[name].bundle.js',
+                    path: path.resolve(__dirname, 'dist')
+                  },
+                  module: {
+                    rules: [
+                      {
+                        test: /\.css$/,
+                        use: [
+                          'style-loader',
+                          'css-loader'
+                        ]
+                      },
+                      {
+                        test: /\.(png|svg|jpg|gif)$/,
+                        use: [
+                          'file-loader'
+                        ]
+                      },
+                      {
+                        test: /\.(woff|woff2|eot|ttf|otf)$/,
+                        use: [
+                          'file-loader'
+                        ]
+                      },
+                      {
+                        test: /\.(csv|tsv)$/,
+                        use: [
+                          'csv-loader'
+                        ]
+                      },
+                      {
+                        test: /\.xml$/,
+                        use: [
+                          'xml-loader'
+                        ]
+                      }
+                    ]
+                  }
+                }
+> - webpack.dev.js
+> - 在开发模式者模式下，我们添加了开发者工具，包括源码映射和一些简单的开发者服务器设置
+> - In webpack.dev.js, we've set mode to development .Also, we've added the recommended devtool for that environment (strong source mapping), as well as our simple devServer configuration. 
+                
+                /* ***************************************************************
+                 *
+                 * * Filename: webpack.dev.js
+                 *
+                 * * Description: Development configuration for webpack
+                 *
+                 * * Version: 1.0.0
+                 *
+                 * * Created: 2018/06/08
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+
+                const merge = require('webpack-merge');
+                const common = require('./webpack.common.js');
+                const webpack = require('webpack');
+
+                module.exports = merge(common, {
+                  mode: 'development',
+                  devtool: 'inline-source-map',
+                  devServer: {
+                    contentBase: './dist',
+                    hot: true,
+                  },
+                  plugins: [
+                    new webpack.NamedModulesPlugin(),
+                    new webpack.HotModuleReplacementPlugin()
+                  ],
+                });
+> - webpack.prod.js
+> - 产品模式下自动加载JS文件压缩模块UglifyJSPlugin
+> - Finally, in webpack.prod.js,mode is set to production which loads UglifyJSPlugin which was first introduced by the tree shaking guide.
+                
+                /* ***************************************************************
+                 *
+                 * * Filename: webpack.prod.js
+                 *
+                 * * Description: Production configuration for webpack
+                 *
+                 * * Version: 1.0.0
+                 *
+                 * * Created: 2018/06/07
+                 *
+                 * * Revision: none
+                 *
+                 * * Compiler: node
+                 *
+                 * * Author: Lv Hongbin
+                 *
+                 * * Company: Shanghai JiaoTong Univerity
+                 *
+                /* **************************************************************/
+
+
+                const merge = require('webpack-merge');
+                const common = require('./webpack.common.js');
+                const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+                const webpack = require('webpack');
+
+                module.exports = merge(common, {
+                    mode: 'production',
+                    devtool: 'source-map',
+                    optimization: {
+                        minimizer: [
+                          new OptimizeCSSAssetsPlugin({})
+                        ]
+                    },
+                    plugins: [
+                        new UglifyJSPlugin({
+                          cache: true,
+                          parallel: true,
+                          sourceMap: true // set to true if you want JS source maps
+                        }),
+                        new MiniCssExtractPlugin({
+                          filename: "[name].css",
+                          chunkFilename: "[id].css"
+                        }),
+                        new webpack.DefinePlugin({
+                          'process.env.NODE_ENV': JSON.stringify('production')
+                        })
+                    ],
+                });
+> - 添加脚本NPM Scripts
+                
+                "scripts": {
+                    "start": "webpack-dev-server --open --config webpack.dev.js",
+                    "build": "webpack --config webpack.prod.js"
+                },
+> - 产品模式下的源码映射
+> - 在产品模式追求的是性能和加载时间，但是有时候确实需要源码映射的需求，为了满足这两者之间的平衡，最好采用source-map option，相反在开发模式下使用inline-source-map
+> - We encourage you to have source maps enabled in production, as they are useful for debugging as well as running benchmark tests. That said, you should choose one with a fairly quick build speed that's recommended for production use (see devtool). For this guide, we'll use the source-map option in production as opposed to the inline-source-map we used in development:
+                
+                 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+                 devtool: 'source-map',
+                   plugins: [
+                    new UglifyJSPlugin({
+                      cache: true,
+                      parallel: true,
+                      sourceMap: true // set to true if you want JS source maps
+                    })
+                    ]
+> - 指定环境Specify the Environment
+> - 把一些不需要用到的测试或者编译的日记logging去掉
+> - when not in production some libraries may add additional logging and testing to make debugging easier. However, with process.env.NODE_ENV === 'production' they might drop or add significant portions of code to optimize how things run for your actual users
+> - 
+                
+                # webpack.prod.js
+                const webpack = require('webpack');
+                plugins: [
+                    new webpack.DefinePlugin({
+                      'process.env.NODE_ENV': JSON.stringify('production')
+                    })
+                ]
+
+                // index.js 用来检验产品模式还是开发模式 
+                if (process.env.NODE_ENV !== 'production') {
+                  console.log('Looks like we are in development mode!');
+                }
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
