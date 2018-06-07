@@ -39,6 +39,7 @@
 ### [3.7 摇树优化和代码压缩](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.7)
 ### [3.8 开发模式与产品模式](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.8)
 ### [3.9 代码拆分](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.9)
+### [3.10 懒加载lazy loading](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.10)
         
         
 

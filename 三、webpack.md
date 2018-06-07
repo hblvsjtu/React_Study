@@ -4,13 +4,13 @@
         
 
 ### 作者：冰红茶  
-### 参考书籍：《React全栈》 张轩 杨寒星   
+### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/)  
         
 ------    
         
 
         
-   跟据目前所了解的情况，从MVC到MVVM再到React，前端经历了几个大的技术上的变化，不再是以前单纯的切图做ppt的层次，更多的需要同时具备后端工作的能力，即所谓的大前端或者叫全端。此时React盛起，打算花半个月的时间把他搞通^_ ^  
+   没想到就一个打包工具webpack就那么多的东西需要掌握，跟browserify不同的是，webpack真的是大而全，除了支持js，还支持图片，css还有其他的格式。这一次我直接看官网的文档，感觉讲的比其他的书更加具体和详细，但是书本有一个特点比文档要好的是有很多作者的体会在里面^_ ^  
         
 
 ## 目录
@@ -25,6 +25,7 @@
 ### [3.7 摇树优化和代码压缩](#3.7) 
 ### [3.8 开发模式与产品模式](#3.8) 
 ### [3.9 代码拆分](#3.9) 
+### [3.10 懒加载lazy loading](#3.10) 
 ------      
         
         
@@ -1133,42 +1134,27 @@
                 +   }
 > - 拆分前
 >> - findGF.js
->>>>>> ![图1-8 拆分前findGFbunldjs]()
+>>>>>> ![图1-8 拆分前findGFbunldjs](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-8%20拆分前findGFbunldjs.png?raw=true)
 >> - index.js
->>>>>> ![图1-9 拆分前indexbundlejs]()
+>>>>>> ![图1-9 拆分前indexbundlejs](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-9%20拆分前indexbundlejs.png?raw=true)
 > - 拆分后 vendors~app~findGF.bundle.js 很明显拆分后就把相同的部分放在单独的一个文件里面
->>>>>> ![图1-10 拆分后vendors~app~findGFbundlejs]()
+>>>>>> ![图1-10 拆分后vendors~app~findGFbundlejs](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-10%20拆分后vendors~app~findGFbundlejs.png?raw=true)
 #### 5) 拆分：动态导入
 > - 这个比较复杂，有兴趣可以看[这里](https://webpack.js.org/guides/code-splitting/)
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
+
+<h3 id='3.10'>3.10 懒加载lazy loading</h3>  
+        
+#### 1) 简介
+> - 就是需要用的时候才加载，不用就不加载，“按命令加载”
+> - Lazy, or "on demand", loading is a great way to optimize your site or application. This practice essentially involves splitting your code at logical breakpoints, and then loading it once the user has done something that requires, or will require, a new block of code. This speeds up the initial load of the application and lightens its overall weight as some blocks may never even be loaded.
+#### 2) 例子
+                
+                button.onclick = e => import(/* webpackChunkName: "print" */ './print').then(module => {
+                     var print = module.default;
+                
+                     print();
+                   });
+> - 使用了ES6的import()，这里的import()扮演了一个返回promise对象的函数角色，参数是模块路径，然后得到文件模块的对象module，而模块输出的对象挂载在这个module上；
+> - Note that when using import() on ES6 modules you must reference the .default property as it's the actual module object that will be returned when the promise is resolved.
+ 
+> - 未完待续。。。

@@ -18,6 +18,8 @@
  *
 /* **************************************************************/
 
+console.log('The print.js module has loaded! See the network tab in dev tools...');
+
 export var printfunc = function() {
 	console.log("I am called by index.js");
 }

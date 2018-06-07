@@ -25,8 +25,8 @@ import Data from './data.xml';
 import {cube} from './math.js';
 
 // 如果不是export default，这里需要用输出全局对象，所以必须要有大括号把变量括起来
-import {printfunc} from './print.js';
 import {printMe} from './print.js';
+//import {printfunc} from './print.js';
 
  function component() {
    var element = document.createElement('div');
@@ -59,7 +59,14 @@ var createBtn = function() {
    // 增加一个按钮
    var btn = document.createElement("button"); 
    btn.innerHTML = "Click me and check the console!";
-   btn.addEventListener("click", printfunc, false);
+   // Note that because a network request is involved, some indication
+   // of loading would need to be shown in a production-level site/app.
+   btn.onclick = e => import(/* webpackChunkName: "print" */ './print').then(module => {
+     //var print = module.default;
+     var print = module.printfunc;
+     print();
+   });
+   //btn.addEventListener("click", printfunc, false);
    return btn;
 }
  document.body.appendChild(component());
