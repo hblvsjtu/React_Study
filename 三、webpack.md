@@ -738,9 +738,10 @@
                     "./src/some-side-effectful-file.js"
                   ]
                 }
-
->>>>>> ![图1-6 摇树优化前]()
->>>>>> ![图1-7 摇树优化后]()
+> - 摇树优化前
+>>>>>> ![图1-6 摇树优化前](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-6%20摇树优化前.png?raw=true)
+> - 摇树优化后
+>>>>>> ![图1-7 摇树优化后](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-7%20摇树优化后.png?raw=true)
 #### 3) 代码压缩 
 > -  we'll use the -p (production) webpack compilation flag to enable the uglifyjs minification plugin.
 > - 第一种方法 使用产品模式
@@ -787,7 +788,7 @@
 #### 4) css压缩 
 > - webpack 5 是自带 CSS minimizer，但是webpack 4 及以下需要你自己去安装
 > - While webpack 5 is likely to come with a CSS minimizer built-in, with webpack 4 you need to bring your own.
-> - 安装 [mini-css-extract-plugin]()
+> - 安装 [mini-css-extract-plugin](https://webpack.js.org/plugins/mini-css-extract-plugin/#minimizing-for-production)
                 
                 # mini-css-extract-plugin
                 LvHongbins-Mac-2:webpacktest lvhongbin$ npm install --save-dev mini-css-extract-plugin
