@@ -32,8 +32,11 @@ module.exports = merge(common, {
 	devtool: 'source-map',
 	optimization: {
 	    minimizer: [
-	      new OptimizeCSSAssetsPlugin({})
-	    ]
+	    	new OptimizeCSSAssetsPlugin({})
+	    ],
+	    splitChunks: {
+      		chunks: 'all'
+    	}
 	},
 	plugins: [
 		new UglifyJSPlugin({

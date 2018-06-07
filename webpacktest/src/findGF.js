@@ -23,6 +23,11 @@
 
 //es6规范的输入
 import {execute, gen} from "./condition.js"
+import _ from 'lodash';
+
+console.log(
+  _.join(['Another', 'module', 'loaded!'], ' ')
+);
 
 console.log("开始执行execute!");
 

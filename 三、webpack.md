@@ -24,6 +24,7 @@
 ### [3.6 模块热替换](#3.6) 
 ### [3.7 摇树优化和代码压缩](#3.7) 
 ### [3.8 开发模式与产品模式](#3.8) 
+### [3.9 代码拆分](#3.9) 
 ------      
         
         
@@ -738,9 +739,9 @@
                     "./src/some-side-effectful-file.js"
                   ]
                 }
-> - 摇树优化前
->>>>>> ![图1-6 摇树优化前](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-6%20摇树优化前.png?raw=true)
 > - 摇树优化后
+>>>>>> ![图1-6 摇树优化前](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-6%20摇树优化前.png?raw=true)
+> - 摇树优化前
 >>>>>> ![图1-7 摇树优化后](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-7%20摇树优化后.png?raw=true)
 #### 3) 代码压缩 
 > -  we'll use the -p (production) webpack compilation flag to enable the uglifyjs minification plugin.
@@ -1069,7 +1070,98 @@
                 // index.js 用来检验产品模式还是开发模式 
                 if (process.env.NODE_ENV !== 'production') {
                   console.log('Looks like we are in development mode!');
-                }
+                }                       
+
+<h3 id='3.9'>3.9 代码拆分</h3>  
+        
+#### 1) 简介
+> - 把bundle拆成几份，然后并行或者根据命令进行加载，从而提升性能，缩短加载时间
+> - This feature allows you to split your code into various bundles which can then be loaded on demand or in parallel. It can be used to achieve smaller bundles and control resource load prioritization which, if used correctly, can have a major impact on load time.
+#### 2) 几种常用的方法
+> - 入口配置 Entry Points: Manually split code using entry configuration.
+> - 避免复制 Prevent Duplication: Use the SplitChunks to dedupe and split chunks.
+> - 动态导入 Dynamic Imports: Split code via inline function calls within modules.
+#### 3) 拆分：入口配置
+> - 这个比较简单，即使在入口那里设两个文件名，出口采用\[name\]变量
+> - 但是有两个比较明显的缺点
+>> - 如果导进的模块中有重复的部分，会被一起导入 If there are any duplicated modules between entry chunks they will be included in both bundles.
+>> - 无法动态加载 It isn't as flexible and can't be used to dynamically split code with the core application logic.
+                
+                const path = require('path');
+
+                module.exports = {
+                  mode: 'development',
+                  entry: {
+                    index: './src/index.js',
+                +   another: './src/another-module.js'
+                  },
+                  output: {
+                    filename: '[name].bundle.js',
+                    path: path.resolve(__dirname, 'dist')
+                  }
+                };
+#### 4) 拆分：避免复制
+> - 用到一个比较重要的属性[optimization.splitChunks](https://webpack.js.org/plugins/split-chunks-plugin/)
+> - 他的主要属性包括：
+                
+                splitChunks: {
+                    chunks: "async",
+                    minSize: 30000,
+                    minChunks: 1,
+                    maxAsyncRequests: 5,
+                    maxInitialRequests: 3,
+                    automaticNameDelimiter: '~',
+                    name: true,
+                    cacheGroups: {
+                        vendors: {
+                            test: /[\\/]node_modules[\\/]/,
+                            priority: -10
+                        },
+                        default: {
+                            minChunks: 2,
+                            priority: -20,
+                            reuseExistingChunk: true
+                        }
+                    }
+                } 
+> - 实例
+                
+                +   optimization: {
+                +     splitChunks: {
+                +       chunks: 'all'
+                +     }
+                +   }
+> - 拆分前
+>> - findGF.js
+>>>>>> ![图1-8 拆分前findGFbunldjs]()
+>> - index.js
+>>>>>> ![图1-9 拆分前indexbundlejs]()
+> - 拆分后 vendors~app~findGF.bundle.js 很明显拆分后就把相同的部分放在单独的一个文件里面
+>>>>>> ![图1-10 拆分后vendors~app~findGFbundlejs]()
+#### 5) 拆分：动态导入
+> - 这个比较复杂，有兴趣可以看[这里](https://webpack.js.org/guides/code-splitting/)
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
 > - 
 > - 
 > - 
