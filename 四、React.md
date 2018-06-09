@@ -1,0 +1,600 @@
+# React_Study
+        
+        
+        
+## 四、React
+        
+        
+### 作者：冰红茶  
+### 参考书籍：《React全栈》 张轩 杨寒星  &&   《深入React技术栈》 陈屹 
+### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/)
+### 参考源：[Reactjs官网文档https://reactjs.org ](https://reactjs.org)
+  
+        
+------    
+        
+        
+        
+   跟据目前所了解的情况，从MVC到MVVM再到React，前端经历了几个大的技术上的变化，不再是以前单纯的切图做ppt的层次，更多的需要同时具备后端工作的能力，即所谓的大前端或者叫全端。此时React盛起，打算花半个月的时间把他搞通^_ ^
+        
+        
+## 目录
+        
+## [四、React](#4)
+### [4.1 简介](#4.1)
+### [4.2 开发环境](#4.2) 
+### [4.3 sass的基本用法](#4.3) 
+### [4.3 任务流工具 Task Runner](#4.3)
+### [4.4 模块打包工具 Bundler](#4.4)  
+        
+------
+        
+<h2 id='4'>四、React</h2>
+<h3 id='4.1'>4.1 简介</h3>  
+        
+#### 1) 简介
+> - A JavaScript library for building user interfaces
+> - 三大组件
+>> - 基于组件 组件有着良好的封装性，可以让代码复用，测试和分离变得简单
+>> - JSX 可以直接把HTML嵌套在JS中，但是JSX跟HTML并不是一回事，JSX只是作为编译器，利用render把类似HTML结构编译成JavaScript 
+>> - Virtual DOM 每个React组件都是用Virtual DOM渲染，它是一种对于HTML DOM节点的抽象描述，不需要浏览器DOM API的支持，在Node.js中也可以使用。另外在用Diff算法，每次更新的时候检查变更的节点，然后修改变更的节点，而非更新整个DOM 
+> - 消耗性能最大的地方就是对真实DOM的渲染，由于Diff算法的使用，先计算出虚拟的DOM，在通过Diff算法检查出需要更新的节点，然后只更新那些节点。另外，由于对真实DOM的操作进行了封装，对外只暴露出回调函数的组件属性作为数据的接口，避免性能大量的衰减和引用的失效
+> - 
+#### 2) 模版创建
+                
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install -g create-react-app
+    /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/create-react-app -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/create-react-app/index.js
+    + create-react-app@1.5.2
+    added 67 packages from 20 contributors in 27.029s
+    LvHongbins-Mac-2:first_react_app lvhongbin$ ln -s /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/create-react-app /usr/local/bin/create-react-app
+
+    LvHongbins-Mac-2:first_react_app lvhongbin$ create-react-app --version
+    1.5.2
+    LvHongbins-Mac-2:first_react_app lvhongbin$ create-react-app --help
+
+      Usage: create-react-app <project-directory> [options]
+
+      Options:
+
+        -V, --version                            output the version number
+        --verbose                                print additional logs
+        --info                                   print environment debug info
+        --scripts-version <alternative-package>  use a non-standard version of react-scripts
+        --use-npm                                
+        -h, --help                               output usage information
+        Only <project-directory> is required.
+
+        A custom --scripts-version can be one of:
+          - a specific npm version: 0.8.2
+          - a custom fork published on npm: my-react-scripts
+          - a .tgz archive: https://mysite.com/my-react-scripts-0.8.2.tgz
+          - a .tar.gz archive: https://mysite.com/my-react-scripts-0.8.2.tar.gz
+        It is not needed unless you specifically want to use a fork.
+
+        If you have any problems, do not hesitate to file an issue:
+          https://github.com/facebookincubator/create-react-app/issues/new
+> - 使用方法 非常傻瓜
+                
+    # 使用 create-react-app命令创建一个模板
+    LvHongbins-Mac-2:React lvhongbin$ create-react-app my-react-app
+
+    Creating a new React app in /Users/lvhongbin/Desktop/React_Study/React/my-react-app.
+
+    Installing packages. This might take a couple of minutes.
+    Installing react, react-dom, and react-scripts...
+
+
+    > fsevents@1.2.4 install /Users/lvhongbin/Desktop/React_Study/React/my-react-app/node_modules/fsevents
+    > node install
+
+    [fsevents] Success: "/Users/lvhongbin/Desktop/React_Study/React/my-react-app/node_modules/fsevents/lib/binding/Release/node-v64-darwin-x64/fse.node" already installed
+    Pass --update-binary to reinstall or --build-from-source to recompile
+
+    > uglifyjs-webpack-plugin@0.4.6 postinstall /Users/lvhongbin/Desktop/React_Study/React/my-react-app/node_modules/uglifyjs-webpack-plugin
+    > node lib/post_install.js
+
+    + react-dom@16.4.0
+    + react@16.4.0
+    + react-scripts@1.1.4
+    added 1387 packages from 826 contributors and audited 14354 packages in 332.088s
+    found 0 vulnerabilities
+
+
+    Success! Created my-react-app at /Users/lvhongbin/Desktop/React_Study/React/my-react-app
+    Inside that directory, you can run several commands:
+
+      npm start
+        Starts the development server.
+
+      npm run build
+        Bundles the app into static files for production.
+
+      npm test
+        Starts the test runner.
+
+      npm run eject
+        Removes this tool and copies build dependencies, configuration files
+        and scripts into the app directory. If you do this, you can’t go back!
+
+    We suggest that you begin by typing:
+
+      cd my-react-app
+      npm start
+
+    Happy hacking!
+    LvHongbins-Mac-2:React lvhongbin$ cd my-react-app
+
+    # 运行
+    LvHongbins-Mac-2:React lvhongbin$ npm run start
+    Compiled successfully!
+
+    You can now view my-react-app in the browser.
+
+      Local:            http://localhost:3000/
+      On Your Network:  http://192.168.222.128:3000/
+
+    Note that the development build is not optimized.
+    To create a production build, use npm run build.
+>>>>>> ![图4-1 my-react-app]()
+        
+<h3 id='4.2'>4.2 开发环境</h3>  
+        
+#### 1) 安装nvm,node和npm
+> - nvm
+                
+    # 创建~/.bash_profile文件
+    LvHongbins-Mac-2: touch ~/.bash_profile
+
+    # 下载
+    LvHongbins-Mac-2:~ lvhongbin$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+
+    # 安装
+    LvHongbins-Mac-2:.nvm lvhongbin$ export NVM_DIR="$HOME/.nvm"
+    LvHongbins-Mac-2:.nvm lvhongbin$ [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    LvHongbins-Mac-2:.nvm lvhongbin$ [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+    # 验证
+    LvHongbins-Mac-2:.nvm lvhongbin$ command -v nvm
+    nvm
+> - 使用nvm
+    
+    Example:
+      nvm install 8.0.0                     Install a specific version number
+      nvm use 8.0                           Use the latest available 8.0.x release
+      nvm run 6.10.3 app.js                 Run app.js using node 6.10.3
+      nvm exec 4.8.3 node app.js            Run `node app.js` with the PATH pointing to node 4.8.3
+      nvm alias default 8.1.0               Set default node version on a shell
+      nvm alias default node                Always default to the latest available node version on a shell
+
+    Note:
+      to remove, delete, or uninstall nvm - just remove the `$NVM_DIR` folder (usually `~/.nvm`)
+#### 2) 工程构建工具：[webpack](https://webpack.js.org/concepts/)
+> - 首先安装webpack  
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev webpack webpack-cli webpack-dev-server
+    
+> - 装一些loader和插件: babel-loader sass-loader style-loader css-loader file-loader babel-loader babel-core babel-preset-env  @babel/runtime --save @babel/plugin-transform-runtime express webpack-dev-middleware
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev babel-loader sass-loader style-loader css-loader file-loader react-hot-loader
+    npm WARN ajv-keywords@3.2.0 requires a peer of ajv@^6.0.0 but none is installed. You must install peer dependencies yourself.
+    npm WARN karma-chai@0.1.0 requires a peer of chai@* but none is installed. You must install peer dependencies yourself.
+    npm WARN react-hot-loader@4.3.0 requires a peer of react@^15.0.0 || ^16.0.0 but none is installed. You must install peer dependencies yourself.
+
+    + babel-loader@7.1.4
+    + style-loader@0.21.0
+    + file-loader@1.1.11
+    + react-hot-loader@4.3.0
+    + sass-loader@7.0.3
+    + css-loader@0.28.11
+    added 158 packages from 315 contributors and audited 8487 packages in 49.704s
+    found 6 vulnerabilities (1 low, 5 moderate)
+      run `npm audit fix` to fix them, or `npm audit` for details
+> - 线上环境的配置
+> - postcss cssnano extract-text-webpack-plugin postcss-loader mini-css-extract-plugin 
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev postcss cssnano extract-text-webpack-plugin postcss-loader
+    npm WARN ajv-keywords@3.2.0 requires a peer of ajv@^6.0.0 but none is installed. You must install peer dependencies yourself.
+    npm WARN karma-chai@0.1.0 requires a peer of chai@* but none is installed. You must install peer dependencies yourself.
+    npm WARN react-hot-loader@4.3.0 requires a peer of react@^15.0.0 || ^16.0.0 but none is installed. You must install peer dependencies yourself.
+    npm WARN extract-text-webpack-plugin@3.0.2 requires a peer of webpack@^3.1.0 but none is installed. You must install peer dependencies yourself.
+
+    + postcss-loader@2.1.5
+    + cssnano@3.10.0
+    + postcss@6.0.22
+    + extract-text-webpack-plugin@3.0.2
+    added 72 packages from 52 contributors, updated 3 packages and audited 11747 packages in 77.329s
+    found 6 vulnerabilities (1 low, 5 moderate)
+      run `npm audit fix` to fix them, or `npm audit` for details
+#### 3) 安装语法检查[ESLint](https://eslint.org)
+> - 类似的还有JSLint, JSHint, JSCS
+> - ESLint特点是支持ES6和JSX语法，而且有丰富的第三方插件
+> - 又叫做preloaded，因为这是在loader处理该资源之前进行处理的，代码的检查必须是在转换代码之前
+> - 安装[eslint和eslint-loader](https://webpack.js.org/loaders/eslint-loader/)
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install eslint eslint-loader --save-dev
+    + eslint@4.19.1
+    + eslint-loader@2.0.0
+    added 84 packages from 103 contributors and audited 8393 packages in 32.109s
+    found 0 vulnerabilities
+> - 使用方法
+> - To be safe, you can use enforce: "pre" section to check source files, not modified by other loaders (like babel-loader)
+> - webpack.config.js
+    
+    #webpack.config.js
+    module.exports = {
+      // ...
+      module: {
+        rules: [
+          {
+            enforce: "pre",
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: "eslint-loader",
+            options: {
+              // eslint options (if necessary)
+            }
+          },
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: "babel-loader",
+          },
+        ],
+      },
+      // ...
+    }
+> - 相关插件 
+>> - eslint-config-airbnb 
+>> - eslint-plugin-import 
+>> - eslint-plugin-react 让eslint支持react的语法
+>> - eslint-plugin-jsx-a11y 
+>> - babel-eslint 用babel作为eslint的解释器
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev eslint-config-airbnb eslint-plugin-import eslint-plugin-react eslint-plugin-jsx-a11y babel-eslint
+    + eslint-plugin-react@7.9.1
+    + eslint-plugin-import@2.12.0
+    + eslint-plugin-jsx-a11y@6.0.3
+    + eslint-config-airbnb@16.1.0
+    added 26 packages from 19 contributors and audited 8834 packages in 14.461s
+    found 0 vulnerabilities
+> - 添加.eslintrc.json配置文件，使用命令eslint --init
+    
+    {
+        "env": {
+            "browser": true,
+            "commonjs": true,
+            "es6": true,
+            "node": true
+        },
+        "extends": "eslint-config-airbnb",
+        "parserOptions": {
+            "ecmaVersion": 6,
+            "sourceType": "module",
+            "ecmaFeatures": {
+                "jsx": true
+            }
+        },
+        "plugins": [
+            "react"
+        ],
+        "rules": {
+            "strict": 0,
+            "valid-jsdoc":2,
+            
+            "react/jsx-uses-react":2,
+            "react/jsx-uses-vars":2,
+            "react/react-in-jsx-scope":2
+        }
+    }
+> - 
+#### 4) ES6编译工具：Babel
+> - 安装babel-loader babel-core 
+        
+    babel-pLvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev babel-loader babel-core
+    npm WARN babel-loader@7.1.4 requires a peer of webpack@2 || 3 || 4 but none is installed. You must install peer dependencies yourself.
+
+    * babel-core@6.26.3
+    * babel-loader@7.1.4
+    added 66 packages from 60 contributors and audited 226 packages in 18.025s
+    found 0 vulnerabilities
+> - 安装预设
+>> -   
+    
+    # 针对js的预设
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install babel-preset-env --save-dev
+    npm WARN babel-loader@7.1.4 requires a peer of webpack@2 || 3 || 4 but none is installed. You must install peer dependencies yourself.
+
+    + babel-preset-env@1.7.0
+    added 52 packages from 9 contributors and audited 1993 packages in 33.183s
+    found 0 vulnerabilities
+
+    # 针对react的预设    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev babel-preset-react
+    + babel-preset-react@6.24.1
+    added 10 packages from 2 contributors and audited 8125 packages in 11.118s
+    found 0 vulnerabilities
+> - 添加.babelre文件
+                
+    # 编辑.babelre文件
+    LvHongbins-Mac-2:first_react_app lvhongbin$ touch .babelre && echo '{ "presets": ["env", "react"] }' > .babelrc
+    LvHongbins-Mac-2:first_react_app lvhongbin$ cat .babelre
+    {
+      "presets": ["env", "react"]
+    }
+> - 两种使用的方法
+>> 使用命令行
+    
+    babel script.js --presets react 
+>> - 使用config 无.jsx
+    
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
+          }
+        }
+      ]
+    }
+>> - 使用node API
+    
+    require("babel-core").transform("code", {
+      presets: ["react"]
+    });
+>> - 使用loader 无.jsx
+    
+    var Person = require("babel!./Person.js").default;
+    new Person();
+#### 5) CSS预处理器：[Sass](http://sass-lang.com)
+> - CSS with superpowers
+> - Sass is the most mature, stable, and powerful professional grade CSS extension language in the world.
+> - 编译前置，无需考虑浏览器兼容性的问题
+> - 拥有很多方便的特性：
+>> - 设置变量
+>> - 树状结构
+>> -  
+> - 全局安装
+                
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install -g sass
+    /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/sass -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/sass/sass.js
+    + sass@1.5.1
+    added 1 package from 1 contributor in 7.433s
+    LvHongbins-Mac-2:first_react_app lvhongbin$ ln -s /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/sass /usr/local/bin/sass
+    LvHongbins-Mac-2:first_react_app lvhongbin$ sass --version
+    1.5.1 compiled with dart2js 2.0.0-dev.59.0
+> - 局部安装 sass-loader node-sass webpack 
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install sass-loader node-sass webpack --save-dev
+> - 使用方法 需要预先安装mini-css-extract-plugin
+    
+    const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+    module.exports = {
+        ...
+        module: {
+            rules: [{
+                test: /\.scss$/,
+                use: [
+                    {
+                        // fallback to style-loader in development
+                        process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
+                    }, {
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader",
+                        options: {
+                            includePaths: ["app/src/css"]
+                        }
+                    }
+                ]
+            }]
+        },
+        plugins: [
+            new MiniCssExtractPlugin({
+                // Options similar to the same options in webpackOptions.output
+                // both options are optional
+                filename: "[name].css",
+                chunkFilename: "[id].css"
+            })
+        ]
+    };
+> - 
+#### 6) 其他插件
+> - 自动生成HTML文件：html-webpack-plugin
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev html-webpack-plugin
+    + html-webpack-plugin@3.2.0
+    added 38 packages from 57 contributors and audited 8467 packages in 14.626s
+    found 0 vulnerabilities=
+> - clean-webpack-plugin
+        
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev clean-webpack-plugin
+    + clean-webpack-plugin@0.1.19
+    added 1 package from 1 contributor and audited 8850 packages in 15.091s
+    found 0 vulnerabilities
+> - webpack-merge
+    
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev webpack-merge
+    + webpack-merge@4.1.2
+    added 1 package from 1 contributor and audited 8852 packages in 9.714s
+    found 0 vulnerabilities
+> - 
+#### 7) 安装React环境
+> - 安装插件 react react-dom
+        
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save react react-dom
+    npm WARN ajv-keywords@3.2.0 requires a peer of ajv@^6.0.0 but none is installed. You must install peer dependencies yourself.
+    npm WARN extract-text-webpack-plugin@3.0.2 requires a peer of webpack@^3.1.0 but none is installed. You must install peer dependencies yourself.
+    npm WARN karma-chai@0.1.0 requires a peer of chai@* but none is installed. You must install peer dependencies yourself.
+
+    + react@16.4.0
+    + react-dom@16.4.0
+    added 2 packages and audited 11827 packages in 22.337s
+    found 6 vulnerabilities (1 low, 5 moderate)
+      run `npm audit fix` to fix them, or `npm audit` for details
+#### 8) 测试环境：[Karma](http://karma-runner.github.io/2.0/index.html)
+> - Things should be simple. We believe in testing and so we want to make it as simple as possible.
+> - 快速响应 The main goal for Karma is to bring a productive testing environment to developers. The environment being one where they don't have to set up loads of configurations, but rather a place where developers can just write the code and get instant feedback from their tests. Because getting quick feedback is what makes you productive and creative.
+> - 安装 这个必须要全局安装完后再进行本地安装，才能执行验证安装的相关操作
+> - 本地安装的插件还是蛮多的
+>> - karma  
+>> - karma-chai 
+>> - karma-chrome-launcher 
+>> - karma-coverage 
+>> - karma-coveralls 
+>> - karma-mocha 
+>> - karma-sourcemap-loader 
+>> - karma-webpack 
+>> - istanbul-instrumenter-loader
+    
+    # 命令行安装
+    LvHongbins-Mac-2:~ lvhongbin$ npm install -g karma-cli
+    /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/karma -> /Users/lvhongbin/software/node-v10.3.0-darwin-x64/lib/node_modules/karma-cli/bin/karma
+    + karma-cli@1.0.1
+    added 3 packages from 12 contributors in 5.66s
+    LvHongbins-Mac-2:~ lvhongbin$ ln -s /Users/lvhongbin/software/node-v10.3.0-darwin-x64/bin/karma /usr/local/bin/karma
+    LvHongbins-Mac-2:~ lvhongbin$ karma --version
+    Cannot find local Karma!
+      Please install Karma by `npm install karma --save-dev`.
+      If you wanna use a global instance, please set NODE_PATH env variable.
+
+    # 本地安装
+    LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save-dev karma  karma-chai karma-chrome-launcher karma-coverage karma-coveralls karma-mocha karma-sourcemap-loader karma-webpack istanbul-instrumenter-loader
+    npm WARN deprecated nodemailer@2.7.2: All versions below 4.0.1 of Nodemailer are deprecated. See https://nodemailer.com/status/
+    npm WARN deprecated node-uuid@1.4.8: Use uuid module instead
+    npm WARN deprecated socks@1.1.10: If using 2.x branch, please upgrade to at least 2.1.6 to avoid a serious bug with socket data flow and an import issue introduced in 2.1.0
+    npm WARN deprecated socks@1.1.9: If using 2.x branch, please upgrade to at least 2.1.6 to avoid a serious bug with socket data flow and an import issue introduced in 2.1.0
+    npm WARN deprecated mailcomposer@4.0.1: This project is unmaintained
+    npm WARN deprecated buildmail@4.0.1: This project is unmaintained
+    npm WARN deprecated uws@9.14.0: stop using this version
+
+    > uws@9.14.0 install /Users/lvhongbin/Desktop/React_Study/React/first_react_app/node_modules/uws
+    > node-gyp rebuild > build_log.txt 2>&1 || exit 0
+
+    npm WARN karma-chai@0.1.0 requires a peer of chai@* but none is installed. You must install peer dependencies yourself.
+    npm WARN istanbul-instrumenter-loader@3.0.1 requires a peer of webpack@^2.0.0 || ^3.0.0 || ^4.0.0 but none is installed. You must install peer dependencies yourself.
+    npm WARN karma-webpack@3.0.0 requires a peer of webpack@^2.2.0 || ^3.0.0 || ^4.0.0 but none is installed. You must install peer dependencies yourself.
+    npm WARN webpack-dev-middleware@2.0.6 requires a peer of webpack@^2.2.0 || ^3.0.0 || ^4.0.0-alpha || ^4.0.0-beta || ^4.0.0 but none is installed. You must install peer dependencies yourself.
+
+    + karma-chai@0.1.0
+    + karma-chrome-launcher@2.2.0
+    + karma-coveralls@1.2.1
+    + karma-mocha@1.3.0
+    + istanbul-instrumenter-loader@3.0.1
+    + karma-coverage@1.1.2
+    + karma-webpack@3.0.0
+    + karma@2.0.2
+    + karma-sourcemap-loader@0.3.7
+    added 455 packages from 845 contributors and audited 4410 packages in 191.693s
+    found 6 vulnerabilities (1 low, 5 moderate)
+      run `npm audit fix` to fix them, or `npm audit` for details
+
+    # 验证安装
+    LvHongbins-Mac-2:123 lvhongbin$ karma --version
+    Karma version: 2.0.2
+    LvHongbins-Mac-2:123 lvhongbin$ karma --help
+    Karma - Spectacular Test Runner for JavaScript.
+
+    Usage:
+      /usr/local/bin/karma <command>
+
+    Commands:
+      start [<configFile>] [<options>] Start the server / do single run.
+      init [<configFile>] Initialize a config file.
+      run [<options>] [ -- <clientArgs>] Trigger a test run.
+      completion Shell completion for karma.
+
+    Run --help with particular command to see its description and available options.
+
+    Options:
+      --help     Print usage and options.
+      --version  Print current version.
+
+> - 
+> - 
+> - 
+
+        
+<h3 id='4.3'>4.3 sass的基本用法</h3>  
+        
+#### 1) 简介
+> - css预处理器，目前比较流行的是sass(诞生于2007)和less和styus，
+> - 特点：
+>> - 使用变量
+>> - 自动转换RGBA颜色值
+>> - 忘记浏览器前缀
+>> - 嵌套规则
+>> - media query 更简单
+>> - 自动压缩css 
+> - sass和scss的区别：scss是sass为了兼容css而做的中间格式，scss需要写大括号作为嵌套，而sass只需要用【tab】作为嵌套，这种写法一开始为了配合haml而设计的，后来为了拥抱css才做了scss的中间格式
+> - window下的安装需要用ruby
+#### 2) Compass
+> - compass是sass的开源工具库，主要特点
+>> - 清除一些无用的标签
+>> - 提供很多可重用的模式
+>> - compass mixins 使得创建css3更加简单
+>> - 提供一个漂亮的版面
+>> - 下载和创建插件简单
+> - compress create 创建一个sass工程 
+#### 3) 比较差异sass和less和styus
+> - 都支持//注释和/**/注释
+> - less scss 和 css类似
+> - 目前倾向于使用scss              
+#### 4) 设置变量
+> - 变量前面需要有$
+                
+                $font-stack: Helvetica, sans-serif;
+                $primary-color: #333;
+
+                body {
+                    font: 100% $font-stack
+                    color: $primary-color  
+                }
+#### 5) 继承 @extend： 某某
+#### 6) 函数 @mixin 
+                
+                @mixin 函数名(参数: 默认值) {
+                    // style
+                }
+#### 7) cli命令 
+> - --bare
+> - --sass-dir 
+> - --css-dir
+> - --image-dir
+> - --javastripts-dir
+> - --watch filename.sass:filename.css监视文件夹变化
+> - --style \[nested|expanded|compact|compressed\]
+>> - nested最后一个大括号在最后一行行末
+>> - expanded最后一个大括号另起一行，风格类似Java和JS
+>> - compact中等的压缩
+>> - compressed极大程度压缩
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+> - 
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

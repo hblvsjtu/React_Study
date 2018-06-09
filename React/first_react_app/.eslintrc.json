@@ -1,0 +1,27 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": "eslint-config-airbnb",
+    "parserOptions": {
+    	"ecmaVersion": 6,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+	"strict": 0,
+	"valid-jsdoc":2,
+	
+	"react/jsx-uses-react":2,
+	"react/jsx-uses-vars":2,
+	"react/react-in-jsx-scope":2
+    }
+}

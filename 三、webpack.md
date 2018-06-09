@@ -746,7 +746,7 @@
 >>>>>> ![图1-7 摇树优化后](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-7%20摇树优化后.png?raw=true)
 #### 3) 代码压缩 
 > -  we'll use the -p (production) webpack compilation flag to enable the uglifyjs minification plugin.
-> - 第一种方法 使用产品模式
+> - 第一种方法 使用产品模式 
                 
                 # package.json文件
                 mode: "production"
@@ -756,6 +756,7 @@
 > - Note that the --optimize-minimize flag can be used to insert the UglifyJsPlugin as well.
 > - tree shaking can yield a significant decrease in bundle size when working on larger applications with complex dependency trees.
 > - 第三种方法 安装uglifyjs-webpack-plugin，只针对js
+> - [webpack4基于零配置的思想，部分插件被移除，如webpack.optimize.UglifyJsPlugin在webpack4中已经被移除，在optimization对象中配置optimization.minimize=true即可，如果是生产环境的模式（mode：production）下，则该属性默认为true，默认压缩。](https://www.cnblogs.com/xudengwei/p/8528065.html)
 >> - 安装命令 
                 
                 # 安装命令
