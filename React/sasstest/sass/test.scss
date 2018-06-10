@@ -1,0 +1,266 @@
+
+// 文件导入
+//@import "css.css";
+//@import "http://sss/xx";
+//@import url(css.css);
+@import "part1";
+
+
+// 变量
+$fontSize: 14px;
+$fontSize: 12px !default;
+$paddings: 5px 10px 5px 10px;
+$maps: (color: red, borderColor: blue);
+$className: main;
+$test-info: lightgreen;
+$test_info: red;
+
+body{
+	$color: green !global;
+	color: $color;
+	font-size: $fontSize;
+	padding: $paddings;
+	padding-left: nth($paddings,1);
+}
+
+footer{
+	color: $color;
+	background-color: map-get($maps, color);
+	border-color: map-get($maps, borderColor);
+}
+
+.#{$className} {
+	width: 50px;
+	height: 50px;
+	color: $test-info;
+}
+
+// 嵌套
+body {
+	header {
+		.logo {
+			display: inline-block;
+			img {
+				height: 50px;
+			}
+		}
+		nav {
+			width: 100px;
+		}
+	}
+}
+
+a {
+	color: red;
+	&:hover {
+		color: green;
+	}
+	.content {
+		color: blue;
+	}
+	@at-root .container {
+		width: 1104px;
+	}
+	
+}
+
+@media screen and (max-width: 600px) { 
+	@at-root div {
+		width: 100px;
+	}
+
+	@at-root(without: media rule) {
+		div {
+			height: 100px;
+		}
+	}
+}
+
+// 继承
+%one {
+	width: 10px;
+}
+
+.two {
+	height: 20px;
+}
+
+.three {
+	@extend %one, .two;
+	color: red;
+}
+
+.four {
+	@extend .three;
+	background-color: blue;
+}
+
+%one h1 {
+	font-weight: blod;
+}
+
+.five {
+	@extend h1;
+	color: yellow;
+}
+
+%six {
+	height: 10px;
+}
+
+//数据类型
+
+/*! Number */
+$n1: 1.2;
+$n2: 12;
+$n3: 14px;
+
+/*! String字符串类型 */
+$s1: container;
+$s2: 'container';
+$s3: "container";
+
+.#{$s3} {
+	font-size: (14px/2);
+	font-size: $n3 - $n3;
+}
+
+/*! Boolean类型 */
+$bool1: true;
+$bool2: false;
+
+/*! Null类型 */
+$n: null;
+
+/*! Color类型 */
+$c1: blue;
+$c2: #fff;
+$c3: rgba(255, 255, 0, 0.5); 
+
+h2 {
+	@if $n == null {
+		color: $c3;
+	}
+}
+
+/*! Mixin */
+@mixin getColor($c: red, $num: 1px) {
+	color: $c;
+	font-size: $num; 
+}
+
+h3 {
+	@include getColor(yellow, 12px);
+	@include getColor($num: 10px);
+}
+
+@mixin box-shadow($shadow...) {
+	-moz-box-shadow: $shadow;
+	-webkit-box-shadow: $shadow;
+	box-shadow: $shadow;
+}
+
+h3 {
+	@include box-shadow(0px 4px 4px #555, 2px 6px 10px );
+}
+
+@mixin style-for-iphone {
+	@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+		@content
+	}
+}
+
+@include style-for-iphone {
+	font-size: 12px;
+}
+
+/*! Function */
+@function getColor($num) {
+	@return rgba($num, $num + 50, $num + 100, 0.5);
+} 
+
+h3 {
+	color: getColor(100);
+}
+
+@debug "This is a debug test!";
+@warn "warn";
+/*！ @error "error"; */
+
+
+/*！ 流程控制 */
+$screenWidth: 200;
+body {
+	color: if($screenWidth > 100, blue, red);
+}
+
+@if $screenWidth > 100 {
+	body {
+		color: blue;
+	}
+}@else if $screenWidth > 50 {
+	body {
+		color: red;
+	}
+}@else {
+	body {
+		color: lighten(red, 0.5);
+	}
+}
+
+@for $i from 1 through 2 {
+	.span#{$i} {
+		width: 20% * $i;
+	}
+}
+
+@for $i from 3 to 4 {
+	.span#{$i} {
+		font-size: 2 * $i + 10px;
+	}
+}
+
+$j : 6;
+@while $j > 3 {
+	.span#{$j} {
+		font-size: 2 * $j + 10px;
+	}
+	$j: $j - 1;
+} 
+
+$k: 1;
+@each $c in green, black, red, white {
+	.div#{$k} {
+		color: $c;
+		height: 20px;
+	}
+	$k: $k + 1;
+} 
+
+@each $key, $color in (default, blue), (info, black), (danger, red) {
+	.text-#{$key} {
+		color: $color;
+	}
+}
+
+@each $key, $color in (default: blue, info: green, danger: red) {
+	.label-#{$key} {
+		color: $color;
+	}
+}
+
+body {
+	background-color: red;
+}
+
+div {
+	background-color: green;
+}
+
+
+
+
+
+
+
+

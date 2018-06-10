@@ -5,6 +5,7 @@
 ### 参考书籍：《React全栈》 张轩 杨寒星  &&   《深入React技术栈》 陈屹 
 ### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/) 
 ### 参考源：[Reactjs官网文档https://reactjs.org ](https://reactjs.org)  
+### 参考源：[sass教学视频](https://www.bilibili.com/video/av17492787/?p=1)
 
 ------    
 
@@ -42,6 +43,25 @@
 ### [3.8 开发模式与产品模式](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.8)
 ### [3.9 代码拆分](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.9)
 ### [3.10 懒加载lazy loading](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.10)
+## [五，sass的基本使用](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md)
+### [5.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1)
+#### [5.1.1 背景和特点](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.1)
+#### [5.1.2 Compass](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.2)
+#### [5.1.3 比较差异sass和less和styus](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.3)
+### [5.2 基本语法](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2)
+#### [5.2.1 设置变量](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.1) 
+#### [5.2.2 文件的导入](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.2) 
+#### [5.2.3 嵌套](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.3)
+#### [5.2.4 继承@extend](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.4)  
+#### [5.2.5 数据类型与数据操作](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.5)
+#### [5.2.6 @mixin@include](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.6)
+#### [5.2.7 自定义函数@function@return](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.7)
+#### [5.2.8 流程控制](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.2.8)
+### [5.3 自动化构建](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3)
+#### [5.3.1 cli命令](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.1) 
+#### [5.3.2 基础项目结构](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.2) 
+#### [5.3.3 gulp自动化构建](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.3)
+#### [5.3.4 webpack自动化构建](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.4)
         
         
 

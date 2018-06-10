@@ -9,6 +9,7 @@
 ### 参考书籍：《React全栈》 张轩 杨寒星  &&   《深入React技术栈》 陈屹 
 ### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/)
 ### 参考源：[Reactjs官网文档https://reactjs.org ](https://reactjs.org)
+### 参考源：[sass教学视频](https://www.bilibili.com/video/av17492787/?p=1)
   
         
 ------    
@@ -519,66 +520,6 @@
 > - 
 > - 
 
-        
-<h3 id='4.3'>4.3 sass的基本用法</h3>  
-        
-#### 1) 简介
-> - css预处理器，目前比较流行的是sass(诞生于2007)和less和styus，
-> - 特点：
->> - 使用变量
->> - 自动转换RGBA颜色值
->> - 忘记浏览器前缀
->> - 嵌套规则
->> - media query 更简单
->> - 自动压缩css 
-> - sass和scss的区别：scss是sass为了兼容css而做的中间格式，scss需要写大括号作为嵌套，而sass只需要用【tab】作为嵌套，这种写法一开始为了配合haml而设计的，后来为了拥抱css才做了scss的中间格式
-> - window下的安装需要用ruby
-#### 2) Compass
-> - compass是sass的开源工具库，主要特点
->> - 清除一些无用的标签
->> - 提供很多可重用的模式
->> - compass mixins 使得创建css3更加简单
->> - 提供一个漂亮的版面
->> - 下载和创建插件简单
-> - compress create 创建一个sass工程 
-#### 3) 比较差异sass和less和styus
-> - 都支持//注释和/**/注释
-> - less scss 和 css类似
-> - 目前倾向于使用scss              
-#### 4) 设置变量
-> - 变量前面需要有$
-                
-                $font-stack: Helvetica, sans-serif;
-                $primary-color: #333;
-
-                body {
-                    font: 100% $font-stack
-                    color: $primary-color  
-                }
-#### 5) 继承 @extend： 某某
-#### 6) 函数 @mixin 
-                
-                @mixin 函数名(参数: 默认值) {
-                    // style
-                }
-#### 7) cli命令 
-> - --bare
-> - --sass-dir 
-> - --css-dir
-> - --image-dir
-> - --javastripts-dir
-> - --watch filename.sass:filename.css监视文件夹变化
-> - --style \[nested|expanded|compact|compressed\]
->> - nested最后一个大括号在最后一行行末
->> - expanded最后一个大括号另起一行，风格类似Java和JS
->> - compact中等的压缩
->> - compressed极大程度压缩
-> - 
-> - 
-> - 
-> - 
-> - 
-> - 
 > - 
 
 
