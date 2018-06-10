@@ -1,82 +1,45 @@
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const devMode = process.env.NODE_ENV !== 'production';
 
 //定义一些常用路径
-var ROOT_PATH = path.resolve(__dirname);
-var APP_PATH = path.resolve(ROOT_PATH, 'app');
-var BUILD_PATH = path.resolve(ROOT_PATH, 'build');
-var DIST_PATH = path.resolve(__dirname, 'dist');
+const DIST_PATH = path.resolve(__dirname, 'dist');
+const APP_PATH = path.resolve(__dirname, 'app');
 
 module.exports = {
 
-  mode: prduction,
   entry: {
-    app:[path.resolve(APP_PATH, 'app.jsx')],
+    app:'./app/app.jsx',
   },
 
   output: {
-    path: BUILD_PATH,
-    //filename: '[name].bundle.js',
-    path: DIST_PATH
+    path: DIST_PATH,
+    filename: '[name].bundle.js'
   },
-
-  //开启dev source map
-  devtool: 'inline-source-map',
-
-
-  //开启webpack dev server
-  devServer: {
-    contentBase: DIST_PATH,
-    hot: true,
-  },
-
-  optimization: {
-    splitChunks: {
-        //chunks: ['vendors', 'vendors.js']
-        chunks: 'all'
-    }
-  },
-
-  /* 
-   *整个module的写法已经被更新，不要用原来的写法了
-  module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      include: [
-        path.resolve(__dirname, 'js'),
-      ],
-      loaders: ['react-hot', 'babel'],
-    },
-    {
-      test: /\.scss$/,
-      include: [
-        path.resolve(__dirname, 'css'),
-      ],
-      loader: sassLoader
-    }],
-  },
-  */
 
   module: {
     rules: [
-
+      
       {
         enforce: "pre",
-        test: /\.jsx?$/,
+        test: /\.jsx$/,
         include: APP_PATH,
+        exclude: /node_modules/,
         loader: "eslint-loader",
+        /*
         options: { // 这里的配置项参数将会被传递到 eslint 的 CLIEngine 
+            eslintPath: path.join(__dirname, ""),
             formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
         }
+        */
       },
 
       // the 'transform-runtime' plugin tells babel to require the runtime
       // instead of inlining it.
       {
-        test: /\.jsx?$/,
+        test: /\.jsx$/,
         include: APP_PATH,
         use: {
           loader: 'babel-loader',
@@ -85,7 +48,7 @@ module.exports = {
             //plugins: ['@babel/plugin-transform-runtime']
           }
         }
-      }
+      },
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
@@ -118,11 +81,6 @@ module.exports = {
     new HtmlWebpackPlugin({
         title: 'My First react app'
     }),
-    new CleanWebpackPlugin(['dist']),
-  ],
-
-  //配置拓展名，目的是让js文件可以引入指定后缀的文档
-  resolve: {
-    extensions: ['.js', 'jsx', 'scss']
-  }
+    new CleanWebpackPlugin(['dist'])
+  ]
 };

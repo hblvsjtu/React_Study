@@ -1,16 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import './titlestyle.scss';
-import '.src/style.css';
-import Picture from '.src/picture.png';
-import Data from '.src/data.xml';
-import {cube} from '.src/math.js';
+import './titlestyle.scss';
+
 
 function App() {
   return (
-    <div className="container">
-      <h1 className="titlestyle">Hello React!</h1>
-      <img src=Picture>
+    <div>
+      <h1 className="fontcolor">Hello React!</h1>
     </div>
   );
 }
