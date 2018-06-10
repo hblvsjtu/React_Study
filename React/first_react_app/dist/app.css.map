@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./app/titlestyle.scss"],"names":[],"mappings":"AAAA;AACA,cAAc","file":"app.css","sourcesContent":[".fontcolor {\n  color: blue; }\n"],"sourceRoot":""}

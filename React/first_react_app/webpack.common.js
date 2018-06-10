@@ -11,7 +11,9 @@ const APP_PATH = path.resolve(__dirname, 'app');
 module.exports = {
 
   entry: {
-    app:'./app/app.jsx',
+      app:'./app/app.jsx',
+      findGF: './app/findGF.js',
+      index: './app/index.js'
   },
 
   output: {
@@ -20,22 +22,19 @@ module.exports = {
   },
 
   module: {
-    rules: [
-      
+    rules: [ 
       {
         enforce: "pre",
         test: /\.jsx$/,
         include: APP_PATH,
         exclude: /node_modules/,
-        loader: "eslint-loader",
-        /*
+        loader: "eslint-loader",  
         options: { // 这里的配置项参数将会被传递到 eslint 的 CLIEngine 
-            eslintPath: path.join(__dirname, ""),
-            formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
-        }
-        */
+            //formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
+            configFile: "./.eslintrc.json"
+        }    
       },
-
+      
       // the 'transform-runtime' plugin tells babel to require the runtime
       // instead of inlining it.
       {
@@ -79,7 +78,7 @@ module.exports = {
   //插件的配置
   plugins: [
     new HtmlWebpackPlugin({
-        title: 'My First react app'
+        title: 'My First react app',
     }),
     new CleanWebpackPlugin(['dist'])
   ]
