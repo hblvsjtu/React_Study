@@ -22,7 +22,7 @@
 ## 目录
         
 ## [4.1 简介](#4.1)
-### [4.1.1 简介](#4.1.1)
+### [4.1.1 特点](#4.1.1)
 ### [4.1.2 模版创建](#4.1.2)
 ## [4.2 开发环境](#4.2) 
 ### [4.2.1 安装nvm,node和npm](#4.2.1)
@@ -33,23 +33,34 @@
 ### [4.2.6 其他插件](#4.2.6)
 ### [4.2.7 安装React环境](#4.2.7)
 ### [4.2.8 测试环境：Karma](#4.2.8)
-## [4.3 基本语法](#4.3)  
-### [4.3.1 安装nvm,node和npm](#4.3.1)
+## [4.3 基本语法](#4.3) 
+### [4.3.1 库的介绍和使用](#4.3.1)
+### [4.3.2 创建虚拟对象](#4.3.2)
+### [4.3.3 面向组件编程](#4.3.3)
+### [4.3.4 组件的三大属性](#4.3.4)
         
 ------
         
 <h2 id='4'>四、React</h2>
 <h3 id='4.1'>4.1 简介</h3>  
         
-<h4 id='4.1.1'>4.1.1 简介</h4>  
-
-> - A JavaScript library for building user interfaces
-> - 三大组件
->> - 基于组件 组件有着良好的封装性，可以让代码复用，测试和分离变得简单
->> - JSX 可以直接把HTML嵌套在JS中，但是JSX跟HTML并不是一回事，JSX只是作为编译器，利用render把类似HTML结构编译成JavaScript 
->> - Virtual DOM 每个React组件都是用Virtual DOM渲染，它是一种对于HTML DOM节点的抽象描述，不需要浏览器DOM API的支持，在Node.js中也可以使用。另外在用Diff算法，每次更新的时候检查变更的节点，然后修改变更的节点，而非更新整个DOM 
+<h4 id='4.1.1'>4.1.1 特点</h4>  
+        
+#### 1) A JavaScript library for building user interfaces
+> - 声明式编码（declarative），对应的是函数式编码，举个简单呢的例子：创建一条规则作用于一个数组，然后返回一个新的数组。而传统的命令式编码则是会把数组里面的每一个元素进行规则的运算，然后再返回所有元素所组成的数组
+> - Component-Based 组件化编码
+> - Learn Once，Write Anywhere，可以应用于网页端或者移动端
+> - 高效 虚拟DOM 和 DOM Diff算法（最小化重绘）
+> - 单向数据流
+#### 2) 三大组件
+> - 基于组件 组件有着良好的封装性，可以让代码复用，测试和分离变得简单
+> - JSX 可以直接把HTML嵌套在JS中，但是JSX跟HTML并不是一回事，JSX只是作为编译器，利用render把类似HTML结构编译成JavaScript 
+> - Virtual DOM 每个React组件都是用Virtual DOM渲染，它是一种对于HTML DOM节点的抽象描述，不需要浏览器DOM API的支持，在Node.js中也可以使用。另外在用Diff算法，每次更新的时候检查变更的节点，然后修改变更的节点，而非更新整个DOM 
 > - 消耗性能最大的地方就是对真实DOM的渲染，由于Diff算法的使用，先计算出虚拟的DOM，在通过Diff算法检查出需要更新的节点，然后只更新那些节点。另外，由于对真实DOM的操作进行了封装，对外只暴露出回调函数的组件属性作为数据的接口，避免性能大量的衰减和引用的失效
-> - 
+#### 3) 模块与组件
+> - 模块： 实现特定功能的js文件，一般是一个js文件
+> - 组件：实现特定或者局部功能的代码集合，包括HTML，CSS，js等
+> - 都是为了代码复用的
         
 <h4 id='4.1.2'>4.1.2 模版创建</h4>  
         
@@ -438,7 +449,10 @@
         
 <h4 id='4.2.7'>4.2.7 安装React环境</h4>   
         
-#### 1）安装插件 react react-dom
+#### 1）安装插件 
+> - react
+> - react-dom
+> - [prop-types](http://www.css88.com/react/docs/typechecking-with-proptypes.html) 数据验证
         
     LvHongbins-Mac-2:first_react_app lvhongbin$ npm install --save react react-dom
     npm WARN ajv-keywords@3.2.0 requires a peer of ajv@^6.0.0 but none is installed. You must install peer dependencies yourself.
@@ -532,12 +546,209 @@
       --help     Print usage and options.
       --version  Print current version.
 
-> - 
-> - 
-> - 
+        
+<h3 id='4.3'>4.3 基本语法</h3>  
+        
+<h4 id='4.3.1'>4.3.1 库的介绍和使用</h4>  
+        
+#### 1) react.js
+> - React的核心库，创建DOM元素
+#### 2) react-dom.js
+> - 提供操作DOM的react拓展库
+#### 3) babel.min.js
+> - 解释JSX语法代码转为纯JS语法代码的库
+        
+<h4 id='4.3.2'>4.3.2 创建虚拟对象</h4>  
+        
+#### 1) 第一种做法：直接返回HTML标签
+> - ReactDOM.render(虚拟DOM对象, 真实DOM对象)是用来渲染虚拟DOM的属于ReactDOM的API
+> - 真实DOM对象作为虚拟DOM对象的容器
+> - 如果重复插入，则会覆盖之前内容
+                
+        function App() {
+          return (
+            <div>
+              <h1 className="fontcolor">Hello React!</h1>
+            </div>
+          );
+        }
+        const app = document.createElement('div');
+        document.body.appendChild(app);
+        ReactDOM.render(<App />, app);
+#### 2) 第二种做法：使用react的API 
+> - React.createElement('tag', id:id, innerHTML);
+> - 如果遇到一些动态变量的时候，需要加上大括号，表示里面的是一个动态值，而非静态变量
+> - 虚拟对象
+        
+        // Note: this structure is simplified
+        const element = {
+          type: 'h1',
+          props: {
+            className: 'greeting',
+            children: 'Hello, world!'
+          }
+        };
+> - 例子
+        
+        const msg1 = '第一种创建标签的方法';
+        const msg2 = '第二种创建标签的方法';
+        const id2 = 'vDom2';
 
+        // 1,创建虚拟DOM元素对象
+        const vDom1 = <h1 className="fontcolor"> { msg1 } </h1>; // 不是字符串
+        const vDom2 = React.createElement('h2', { id: id2.toLowerCase() }, {className: 'greeting'}, msg2);
+#### 3) 将一个数组转化成一个li标签
 > - 
+        
+        *
+         * 展示动态数据
+         * 将一个数组转化成一个li标签
+         */
+        const names = ['jQuery', 'zepto', 'angular', 'react', 'vue'];
+        const ul = (
+          <ul>
+            { names.map((name, index) => <li id={`li${index}`} > { name } </li>) }
+          </ul>
+        );
 
+        realObjectFactory('div', 'test3');
+        ReactDOM.render(ul, document.getElementById('test3'));
+
+        
+<h4 id='4.3.3'>4.3.3 面向组件编程</h4>  
+        
+#### 1) 组件和props
+> - The simplest way to define a component is to write a JavaScript function:
+> - When React sees an element representing a user-defined component, it passes JSX attributes to this component as a single object. We call this object “props”.
+> - <ComponentName 键值对/> 其实是一种组件方法的立即执行的简写，ComponentName既是方法的名称，有时组件的名称，又是类名
+> - 键值对就是该组件的属性和属性值，属性作为方法的参数传进方法内部，并由挂在在prop属性上的同名属性所接收
+        
+        function Welcome(props) {
+          return <h1>Hello, {props.name}</h1>;
+        }
+
+        < Welcome name='Sara' />
+> - We call ReactDOM.render() with the <Welcome name="Sara" /> element.
+> - React calls the Welcome component with {name: 'Sara'} as the props.
+> - Our Welcome component returns a < h1>Hello, Sara< /h1> element as the result.
+> - React DOM efficiently updates the DOM to match < h1>Hello, Sara< /h1>.
+> - We recommend naming props from the component’s own point of view rather than the context in which it is being used.
+        
+        function Comment(props) {
+          return (
+            <div className="Comment">
+              <div className="UserInfo">
+                <Avatar user={props.author} />
+                <div className="UserInfo-name">
+                  {props.author.name}
+                </div>
+              </div>
+              <div className="Comment-text">
+                {props.text}
+              </div>
+              <div className="Comment-date">
+                {formatDate(props.date)}
+              </div>
+            </div>
+          );
+        }
+> - Props都是只读的，不允许直接修改其属性，也不允许参数之间间接修改。Props are Read-Only，All React components must act like pure functions with respect to their props. 
+> - 比如下面的函数，是绝对不允许的
+        
+        function withdraw(account, amount) {
+          account.total -= amount;
+        }
+#### 2) 工厂函数组件（简单组件）
+> - 定义组件
+> - 渲染组件
+        
+        // 工厂函数组件
+        realObjectFactory('span', 'test4');
+        function MyComponent() {
+          return <h2>工厂函数组件(简单组件)</h2>;
+        }
+        ReactDOM.render(<MyComponent />, document.getElementById('test4'));
+#### 3) ES6类组件（复杂组件）
+> - 使用了ES6的继承方法
+        
+        // ES6类组件（复杂组件）
+        realObjectFactory('span', 'test5');
+        class MyComponent2 extends React.Component {
+          render() {
+            return <h1>Hello, {this.props.name}</h1>;
+          }
+        }
+        ReactDOM.render(<MyComponent2 name='lvhongbin' />, document.getElementById('test5'));
+#### 4) 复杂组件
+> - 两个组件的嵌套
+        
+        function Welcome(props) {
+          return <h1>Hello, {props.name}</h1>;
+        }
+
+        function App() {
+          return (
+            <div>
+              <Welcome name="Sara" />
+              <Welcome name="Cahal" />
+              <Welcome name="Edite" />
+            </div>
+          );
+        }
+
+        ReactDOM.render(
+          <App />,
+          document.getElementById('root')
+        );        
+
+        
+<h4 id='4.3.4'>4.3.4 组件的三大属性</h4>  
+        
+#### 1) state
+> - 更新变量的时候
+> - 
+        
+        import React from 'react';
+        import ReactDOM from 'react-dom';
+
+        // 真实容器工厂
+        function realObjectFactory(tag, id) {
+          const obj = document.createElement(tag);
+          document.body.appendChild(obj);
+          obj.setAttribute('id', id);
+          obj.style.fontSize = '15px';
+        }
+
+        // isLikeMe
+        realObjectFactory('div', 'test8');
+        class Like extends React.Component {
+          constructor(props) {
+            super(props);
+
+            // 定义状态
+            this.state = {
+              isLikeMe: false,
+            };
+
+            // 绑定当前环境
+            this.handleClick = this.handleClick.bind(this);
+          }
+
+          handleClick() {
+            // 获取状态
+            const isLikeMe = !this.state.isLikeMe;
+
+            // 更新状态
+            this.setState({ isLikeMe });
+          }
+
+          render() {
+            return (<button onClick={this.handleClick} onKeyDown={this.handleKeyDown}>{this.state.isLikeMe ? '我喜欢你' : '你喜欢我'}</button>);
+          }
+        }
+
+        ReactDOM.render(<Like />, document.getElementById('test8'));
+> - 
 
                 
 
