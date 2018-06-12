@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // 真实容器工厂
-function realObjectFactory(tag, id) {
+export default function realObjectFactory(tag, id) {
 	const obj = document.createElement(tag);
 	document.body.appendChild(obj);
 	obj.setAttribute('id', id);
@@ -39,3 +39,4 @@ class Like extends React.Component {
 }
 
 ReactDOM.render(<Like />, document.getElementById('test8'));
+

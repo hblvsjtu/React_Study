@@ -63,6 +63,7 @@
 ### [4.3.4 面向组件编程](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.4)
 ### [4.3.5 state](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.5)
 ### [4.3.6 事件与ref](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.6)
+### [4.3.7 动态组件](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.7)
 ## [五，sass的基本使用](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md)
 ### [5.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1)
 #### [5.1.1 背景和特点](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.1)

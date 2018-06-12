@@ -622,7 +622,7 @@
         
 #### 1) prop属性
 > - We recommend naming props from the component’s own point of view rather than the context in which it is being used.
-> -        
+> -  需要导入相应的库 import PropTypes from 'prop-types';      
         function Comment(props) {
           return (
             <div className="Comment">
@@ -1153,7 +1153,113 @@
         realObjectFactory('div', 'test9');
         ReactDOM.render(<Resultmodule />, document.getElementById('test9'));
 
+        
+<h4 id='4.3.7'>4.3.7 动态组件</h4>  
+        
+#### 1) 要解决两个问题
+> - 数据和状态保存的位置在哪个组件？
+> - 如何利用子组件数据的更新来改变父组件的状态？
+#### 2) 数据和状态保存的位置在哪个组件？
+> - 数据保存的位置，如果数据是某个组件需要的，数据就保存在它那里，如果是某些组件需要的，就给他们共同的父组件
+#### 3) 如何利用子组件数据的更新来改变父组件的状态？
+> - 父组件定义函数，传递给子组件，然后子组件进行调用
+> - 但是这里有一个问题，由于render函数是异步更新的，这会造成数据的获取“慢一拍”，所以你会看到后面的Add组件需要加1，而最后面的List组件不需要
+> - todolist.jsx
+        
+        import React from 'react';
+        import ReactDOM from 'react-dom';
+        import PropTypes from 'prop-types';
+        import realObjectFactory from './isLikeMe.jsx';
 
+
+        // 建立一个div容器
+        realObjectFactory('div', 'test10');
+
+        // 建立共同的父类
+        class Todo extends React.Component {
+          constructor(prop) {
+            super(prop);
+
+            this.state = {
+              list: ['lvhongbin', 'lvhongchao'],
+              count: 2,
+            };
+
+            this.updateState = this.updateState.bind(this);
+          }
+
+          updateState(content) {
+            this.setState((preState) => {
+              let array = preState.list;
+              array.push(content);
+              let num = preState.count + 1;
+              let state = { list: array, count: num };
+              return state;
+            });
+            return this.state.count;
+          }
+
+          render() {
+            return (
+              <div>
+                <h2>My todolist</h2>
+                <Add updateState={this.updateState} count={this.state.count} ></Add>
+                <List list={this.state.list}></List>
+              </div>
+            );
+          }
+        }
+
+
+        // 建立按钮
+        class Add extends React.Component {
+          constructor(prop) {
+            super(prop);
+            this.prop = prop;
+            this.contentRef = React.createRef();
+            this.handleClick = this.handleClick.bind(this);
+            this.num = this.prop.count - 1;
+          }
+
+          handleClick() {
+            let str = this.contentRef.current.value.trim();
+            if (str !== '') {
+              this.num = this.prop.updateState(str);
+            }
+          }
+
+          render() {
+            return (
+              <div>
+                <input id="TodoList" type="text" ref={this.contentRef} placeholder="请输入你的TodoList" />&nbsp;&nbsp;&nbsp;
+                <button onClick={this.handleClick}>
+                  添加#{this.num + 1}
+                </button>
+              </div>
+            );
+          }
+        }
+
+        Add.propTypes = {
+          count: PropTypes.number.isRequired,
+          updateState: PropTypes.func.isRequired,
+        };
+
+        // 建立列表标签
+        function List(prop) {
+          return (
+              <ul>
+                {prop.list.map((content) => <li key={content.toString()}>{content}</li>)}
+              </ul>
+          );
+        }
+
+        List.propTypes = {
+          list: PropTypes.array.isRequired,
+        };
+
+        ReactDOM.render(<Todo />, document.getElementById('test10'));
+> - 
 
                 
 

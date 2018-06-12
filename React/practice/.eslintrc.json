@@ -87,6 +87,7 @@
       "redux-saga/no-yield-in-race": 2,
       "redux-saga/yield-effects": 2,
       "react/no-multi-comp": "off",
+      "react/no-unused-prop-types" : 1,
       "require-yield": 0,
       "prefer-const": 0
     }

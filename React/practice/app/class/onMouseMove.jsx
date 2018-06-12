@@ -1,14 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
-// 真实容器工厂
-function realObjectFactory(tag, id) {
-	const obj = document.createElement(tag);
-	document.body.appendChild(obj);
-	obj.setAttribute('id', id);
-	obj.style.fontSize = '15px';
-}
+import realObjectFactory from './isLikeMe.jsx';
 
 // ES6类组件（复杂组件）
 realObjectFactory('span', 'test5');

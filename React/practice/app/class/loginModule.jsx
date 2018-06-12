@@ -1,13 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-// 真实容器工厂
-function realObjectFactory(tag, id) {
-	const obj = document.createElement(tag);
-	document.body.appendChild(obj);
-	obj.setAttribute('id', id);
-	obj.style.fontSize = '15px';
-}
+import realObjectFactory from './isLikeMe.jsx';
 
 class Loginmodule extends React.Component {
 	constructor(props) {
@@ -29,10 +22,10 @@ class Loginmodule extends React.Component {
                           + '((/?)|' // a slash isn't required if there is no file name
                           + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
 		if (content.match(strRegex) !== null) {
-			alert('网址格式正确！');
+			console.log('网址格式正确！');
 			document.getElementById('focus').value = content;
 		} else {
-			alert('网址格式错误！请重新输入');
+			console.log('网址格式错误！请重新输入');
 		}
 	}
 
