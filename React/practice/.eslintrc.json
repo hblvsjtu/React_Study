@@ -83,9 +83,10 @@
         2,
         "tab"
       ],
-      "react/prefer-stateless-function": 0,
+      "react/prefer-stateless-function": 1,
       "redux-saga/no-yield-in-race": 2,
       "redux-saga/yield-effects": 2,
-      "require-yield": 0
+      "require-yield": 0,
+      "prefer-const": 0
     }
 }

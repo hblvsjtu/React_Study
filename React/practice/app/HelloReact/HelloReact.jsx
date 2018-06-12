@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import '../titlestyle.scss';
 
 // 定义变量
@@ -36,7 +35,7 @@ ReactDOM.render(vDom2, document.getElementById('test2'));
 const names = ['jQuery', 'zepto', 'angular', 'react', 'vue'];
 const ul = (
 	<ul>
-		{ names.map((name, index) => <li id={`li${index}`} > { name } </li>) }
+		{ names.map((name, index) => <li id={`li${index}`} key={name.toString()} > { name } </li>) }
 	</ul>
 );
 
@@ -50,33 +49,12 @@ function MyComponent() {
 }
 ReactDOM.render(<MyComponent />, document.getElementById('test4'));
 
-// ES6类组件（复杂组件）
-realObjectFactory('span', 'test5');
-class MyComponent2 extends React.Component {
-  render() {
-    return <h1>Hello, {this.props.name}</h1>;
-  }
-}
-
-// 指定 props 的默认值：
-MyComponent2.defaultProps = {
-  name: 'Stranger',
-};
-
-// 验证数据类型
-MyComponent2.propTypes = {
-  name: PropTypes.string.isRequired,
-};
-ReactDOM.render(<MyComponent2 name="lvhongbin" />, document.getElementById('test5'));
-
 
 // 只更新局部的变化
 realObjectFactory('div', 'test6');
 function tick() {
   const element = (
-	<div>
-		<h2>Update time with React：It is {new Date().toLocaleTimeString()}.</h2>
-	</div>
+		<h2 id="test6style">Update time with React：It is {new Date().toLocaleTimeString()}.</h2>
   );
   ReactDOM.render(element, document.getElementById('test6'));
 }
@@ -85,3 +63,8 @@ setInterval(tick, 1000);
 // 与JS更新时间的方法进行比较
 realObjectFactory('h2', 'test7');
 setInterval(() => { document.getElementById('test7').innerHTML = `Update time with JS：It is ${new Date().toLocaleTimeString()}`; }, 1000);
+
+// 获取‘test6’的样式，并赋给‘test7’
+const style1 = document.getElementById('test6').style.cssText;
+console.log(`样式表${style1}`);
+document.getElementById('test7').style.cssText = 'color: red;';

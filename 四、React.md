@@ -35,9 +35,10 @@
 ### [4.2.8 测试环境：Karma](#4.2.8)
 ## [4.3 基本语法](#4.3) 
 ### [4.3.1 库的介绍和使用](#4.3.1)
-### [4.3.2 创建虚拟对象](#4.3.2)
-### [4.3.3 面向组件编程](#4.3.3)
-### [4.3.4 组件的三大属性](#4.3.4)
+### [4.3.2 prop属性与propTypes](#4.3.2)
+### [4.3.3 创建虚拟对象](#4.3.3)
+### [4.3.4 面向组件编程](#4.3.4)
+### [4.3.5 组件的三大属性](#4.3.5)
         
 ------
         
@@ -557,7 +558,7 @@
 > - 提供操作DOM的react拓展库
 #### 3) babel.min.js
 > - 解释JSX语法代码转为纯JS语法代码的库
-        
+               
 <h4 id='4.3.2'>4.3.2 创建虚拟对象</h4>  
         
 #### 1) 第一种做法：直接返回HTML标签
@@ -615,25 +616,11 @@
         ReactDOM.render(ul, document.getElementById('test3'));
 
         
-<h4 id='4.3.3'>4.3.3 面向组件编程</h4>  
+<h4 id='4.3.3'>4.3.3 prop属性与propTypes</h4>  
         
-#### 1) 组件和props
-> - The simplest way to define a component is to write a JavaScript function:
-> - When React sees an element representing a user-defined component, it passes JSX attributes to this component as a single object. We call this object “props”.
-> - <ComponentName 键值对/> 其实是一种组件方法的立即执行的简写，ComponentName既是方法的名称，有时组件的名称，又是类名
-> - 键值对就是该组件的属性和属性值，属性作为方法的参数传进方法内部，并由挂在在prop属性上的同名属性所接收
-        
-        function Welcome(props) {
-          return <h1>Hello, {props.name}</h1>;
-        }
-
-        < Welcome name='Sara' />
-> - We call ReactDOM.render() with the <Welcome name="Sara" /> element.
-> - React calls the Welcome component with {name: 'Sara'} as the props.
-> - Our Welcome component returns a < h1>Hello, Sara< /h1> element as the result.
-> - React DOM efficiently updates the DOM to match < h1>Hello, Sara< /h1>.
+#### 1) prop属性
 > - We recommend naming props from the component’s own point of view rather than the context in which it is being used.
-        
+> -        
         function Comment(props) {
           return (
             <div className="Comment">
@@ -657,7 +644,128 @@
         
         function withdraw(account, amount) {
           account.total -= amount;
+        } 
+#### 2) [propTypes数据验证](https://reactjs.org/docs/typechecking-with-proptypes.html)
+> - 简单的指定默认值defaultProps
+        
+        // ES6类组件（复杂组件）
+        realObjectFactory('span', 'test5');
+        class MyComponent2 extends React.Component {
+          render() {
+            return <h1>Hello, {this.props.name}</h1>;
+          }
         }
+
+        // 指定 props 的默认值：
+        MyComponent2.defaultProps = {
+          name: 'Stranger',
+        };
+
+        // 验证数据类型和必要性
+        MyComponent2.propTypes = {
+          name: PropTypes.string.isRequired,
+        };
+        ReactDOM.render(<MyComponent2 name="lvhongbin" />, document.getElementById('test5'));       
+> - Note:React.PropTypes has moved into a different package since React v15.5. Please use the prop-types library instead.
+> - 验证数据的必要性 后面加上.isRequired
+        
+        import PropTypes from 'prop-types';
+
+        MyComponent.propTypes = {
+          // You can declare that a prop is a specific JS type. By default, these
+          // are all optional.
+          optionalArray: PropTypes.array,
+          optionalBool: PropTypes.bool,
+          optionalFunc: PropTypes.func,
+          optionalNumber: PropTypes.number,
+          optionalObject: PropTypes.object,
+          optionalString: PropTypes.string,
+          optionalSymbol: PropTypes.symbol,
+
+          // Anything that can be rendered: numbers, strings, elements or an array
+          // (or fragment) containing these types.
+          optionalNode: PropTypes.node,
+
+          // A React element.
+          optionalElement: PropTypes.element,
+
+          // You can also declare that a prop is an instance of a class. This uses
+          // JS's instanceof operator.
+          optionalMessage: PropTypes.instanceOf(Message),
+
+          // You can ensure that your prop is limited to specific values by treating
+          // it as an enum.
+          optionalEnum: PropTypes.oneOf(['News', 'Photos']),
+
+          // An object that could be one of many types
+          optionalUnion: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+            PropTypes.instanceOf(Message)
+          ]),
+
+          // An array of a certain type
+          optionalArrayOf: PropTypes.arrayOf(PropTypes.number),
+
+          // An object with property values of a certain type
+          optionalObjectOf: PropTypes.objectOf(PropTypes.number),
+
+          // An object taking on a particular shape
+          optionalObjectWithShape: PropTypes.shape({
+            color: PropTypes.string,
+            fontSize: PropTypes.number
+          }),
+
+          // You can chain any of the above with `isRequired` to make sure a warning
+          // is shown if the prop isn't provided.
+          requiredFunc: PropTypes.func.isRequired,
+
+          // A value of any data type
+          requiredAny: PropTypes.any.isRequired,
+
+          // You can also specify a custom validator. It should return an Error
+          // object if the validation fails. Don't `console.warn` or throw, as this
+          // won't work inside `oneOfType`.
+          customProp: function(props, propName, componentName) {
+            if (!/matchme/.test(props[propName])) {
+              return new Error(
+                'Invalid prop `' + propName + '` supplied to' +
+                ' `' + componentName + '`. Validation failed.'
+              );
+            }
+          },
+
+          // You can also supply a custom validator to `arrayOf` and `objectOf`.
+          // It should return an Error object if the validation fails. The validator
+          // will be called for each key in the array or object. The first two
+          // arguments of the validator are the array or object itself, and the
+          // current item's key.
+          customArrayProp: PropTypes.arrayOf(function(propValue, key, componentName, location, propFullName) {
+            if (!/matchme/.test(propValue[key])) {
+              return new Error(
+                'Invalid prop `' + propFullName + '` supplied to' +
+                ' `' + componentName + '`. Validation failed.'
+              );
+            }
+          })
+        };        
+<h4 id='4.3.4'>4.3.4 面向组件编程</h4>  
+        
+#### 1) 组件component
+> - The simplest way to define a component is to write a JavaScript function:
+> - When React sees an element representing a user-defined component, it passes JSX attributes to this component as a single object. We call this object “props”.
+> - <ComponentName 键值对/> 其实是一种组件方法的立即执行的简写，ComponentName既是方法的名称，有时组件的名称，又是类名
+> - 键值对就是该组件的属性和属性值，属性作为方法的参数传进方法内部，并由挂在在prop属性上的同名属性所接收
+        
+        function Welcome(props) {
+          return <h1>Hello, {props.name}</h1>;
+        }
+
+        < Welcome name='Sara' />
+> - We call ReactDOM.render() with the <Welcome name="Sara" /> element.
+> - React calls the Welcome component with {name: 'Sara'} as the props.
+> - Our Welcome component returns a < h1>Hello, Sara< /h1> element as the result.
+> - React DOM efficiently updates the DOM to match < h1>Hello, Sara< /h1>.
 #### 2) 工厂函数组件（简单组件）
 > - 定义组件
 > - 渲染组件
@@ -702,11 +810,12 @@
         );        
 
         
-<h4 id='4.3.4'>4.3.4 组件的三大属性</h4>  
+<h4 id='4.3.5'>4.3.5 组件的三大属性</h4>  
         
 #### 1) state
-> - 更新变量的时候
-> - 
+> - 是组件内部的属性，
+> - 组件本身就是一个状态机，通过constructor内部的this.state直接定义它的值
+> - 然后根据这些状态值来渲染不同的UI
         
         import React from 'react';
         import ReactDOM from 'react-dom';
@@ -748,6 +857,47 @@
         }
 
         ReactDOM.render(<Like />, document.getElementById('test8'));
+#### 2) setState()
+> - 而通过this.setState方法可以再次调用render的方法，来渲染新的UI
+> - 如果你直接改变this.state内部属性的值是不能直接渲染的，因为你还缺少来render方法
+> - 异步更新，所以你不能依赖它的值去计算下一个状态 State Updates May Be Asynchronous，Because this.props and this.state may be updated asynchronously, you should not rely on their values for calculating the next state.
+> - 为了解决这个问题，可以使用函数作为参数，函数的第一个参数就是上一个状态的第一个属性值，第二个参数就是上一个状态的第二属性值个值
+        
+        // Wrong
+        this.setState({
+          counter: this.state.counter + this.props.increment,
+        });
+
+        // Correct
+        this.setState((prevState, props) => ({
+          counter: prevState.counter + props.increment
+        }));
+
+> - State Updates are Merged 设置状态机内部的属性可以分开分别实现
+        
+        constructor(props) {
+            super(props);
+            this.state = {
+              posts: [],
+              comments: []
+            };
+          }
+
+          componentDidMount() {
+              fetchPosts().then(response => {
+                this.setState({
+                  posts: response.posts
+                });
+              });
+
+              fetchComments().then(response => {
+                this.setState({
+                  comments: response.comments
+                });
+              });
+            }
+> - 
+> - 
 > - 
 
                 

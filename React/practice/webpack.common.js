@@ -15,7 +15,7 @@ module.exports = {
     findGF: './app/findGF.js',
     index: './app/index.js',
     HelloReact: './app/HelloReact/HelloReact.jsx',
-    isLikeMe: './app/isLikeMe/isLikeMe.jsx'
+    class: ['./app/class/isLikeMe.jsx', './app/class/onMouseMove.jsx']
   },
 
   output: {
