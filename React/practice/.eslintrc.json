@@ -86,6 +86,7 @@
       "react/prefer-stateless-function": 1,
       "redux-saga/no-yield-in-race": 2,
       "redux-saga/yield-effects": 2,
+      "react/no-multi-comp": "off",
       "require-yield": 0,
       "prefer-const": 0
     }

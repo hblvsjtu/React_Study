@@ -38,7 +38,9 @@
 ### [4.3.2 prop属性与propTypes](#4.3.2)
 ### [4.3.3 创建虚拟对象](#4.3.3)
 ### [4.3.4 面向组件编程](#4.3.4)
-### [4.3.5 组件的三大属性](#4.3.5)
+### [4.3.5 state](#4.3.5)
+### [4.3.6 事件与ref](#4.3.6)
+### [4.3.7 动态组件](#4.3.7)
         
 ------
         
@@ -668,6 +670,7 @@
         ReactDOM.render(<MyComponent2 name="lvhongbin" />, document.getElementById('test5'));       
 > - Note:React.PropTypes has moved into a different package since React v15.5. Please use the prop-types library instead.
 > - 验证数据的必要性 后面加上.isRequired
+> - react默认的数据类型是PropTypes.类型
         
         import PropTypes from 'prop-types';
 
@@ -754,6 +757,8 @@
 #### 1) 组件component
 > - The simplest way to define a component is to write a JavaScript function:
 > - When React sees an element representing a user-defined component, it passes JSX attributes to this component as a single object. We call this object “props”.
+> - 名称开头必须大写
+> - return的内容必须有一个标签包裹内容
 > - <ComponentName 键值对/> 其实是一种组件方法的立即执行的简写，ComponentName既是方法的名称，有时组件的名称，又是类名
 > - 键值对就是该组件的属性和属性值，属性作为方法的参数传进方法内部，并由挂在在prop属性上的同名属性所接收
         
@@ -810,7 +815,7 @@
         );        
 
         
-<h4 id='4.3.5'>4.3.5 组件的三大属性</h4>  
+<h4 id='4.3.5'>4.3.5 state</h4>  
         
 #### 1) state
 > - 是组件内部的属性，
@@ -896,9 +901,259 @@
                 });
               });
             }
-> - 
-> - 
-> - 
+> - 例子
+        
+        import React from 'react';
+        import ReactDOM from 'react-dom';
+        import PropTypes from 'prop-types';
+
+        // 真实容器工厂
+        function realObjectFactory(tag, id) {
+          const obj = document.createElement(tag);
+          document.body.appendChild(obj);
+          obj.setAttribute('id', id);
+          obj.style.fontSize = '15px';
+        }
+
+        // ES6类组件（复杂组件）
+        realObjectFactory('span', 'test5');
+        class MyComponent2 extends React.Component {
+          constructor() {
+            super();
+            this.state = {
+              index: 0,
+            };
+            this.color = ['blue', 'red', 'green', 'yellow'];
+            this.handleMouseOver = this.handleMouseOver.bind(this);
+            this.getColor = this.getColor.bind(this);
+          }
+          getColor() {
+            return this.color[this.state.index];
+          }
+
+          handleMouseOver() {
+            let num = this.state.index;
+            console.log(`Now this state.index is ${num}`);
+            console.log(`Now this color is ${this.color[this.state.index]}`);
+            this.setState((prevState) => ({
+              index: (prevState.index + 1) % 4,
+            }));
+          }
+
+          render() {
+            return <button onMouseOver={this.handleMouseOver} style={{ color: this.getColor() }} onFocus={() => 0}>Hello, {this.props.name}</button>;
+          }
+        }
+
+        // 指定 props 的默认值：
+        MyComponent2.defaultProps = {
+          name: 'Stranger',
+        };
+
+        // 验证数据类型
+        MyComponent2.propTypes = {
+          name: PropTypes.string,
+        };
+
+        ReactDOM.render(<MyComponent2 name="lvhongbin" />, document.getElementById('test5'));
+
+        
+<h4 id='4.3.6'>4.3.6 事件与ref</h4>  
+        
+#### 1) [同步事件SyntheticEvent](https://reactjs.org/docs/events.html)
+> - 基于浏览器本地的特性
+> - Your event handlers will be passed instances of SyntheticEvent, a cross-browser wrapper around the browser’s native event. It has the same interface as the browser’s native event, including stopPropagation() and preventDefault(), except the events work identically across all browsers.
+> - 所有的属性如下
+        
+        boolean bubbles
+        boolean cancelable
+        DOMEventTarget currentTarget
+        boolean defaultPrevented
+        number eventPhase
+        boolean isTrusted
+        DOMEvent nativeEvent
+        void preventDefault()
+        boolean isDefaultPrevented()
+        void stopPropagation()
+        boolean isPropagationStopped()
+        DOMEventTarget target
+        number timeStamp
+        string type
+> - 事件池 事件的属性都是瞬时和同步获得的，异步会失效，如果你要获取某一个时刻事件的状态，请赋值给对象，这样做的原因是提升性能
+> - The SyntheticEvent is pooled. This means that the SyntheticEvent object will be reused and all properties will be nullified after the event callback has been invoked. This is for performance reasons. As such, you cannot access the event in an asynchronous way.
+        
+        function onClick(event) {
+          console.log(event); // => nullified object.
+          console.log(event.type); // => "click"
+          const eventType = event.type; // => "click"
+
+          setTimeout(function() {
+            console.log(event.type); // => null
+            console.log(eventType); // => "click"
+          }, 0);
+
+          // Won't work. this.state.clickEvent will only contain null values.
+          this.setState({clickEvent: event});
+
+          // You can still export event properties.
+          this.setState({eventType: event.type});
+        }
+> - 另外一种方法是采用event.persist()
+> - If you want to access the event properties in an asynchronous way, you should call event.persist() on the event, which will remove the synthetic event from the pool and allow references to the event to be retained by user code.
+#### 2) [事件处理](https://reactjs.org/docs/handling-events.html)
+> - react和浏览器事件处理的异同点
+>> - 第一点：React 采用的是驼峰式记法 React events are named using camelCase, rather than lowercase.
+>> - 第二点：React handler采用是用{},而非字符串 With JSX you pass a function as the event handler, rather than a string. 
+          
+          // HTML
+          <button onclick="activateLasers()">
+            Activate Lasers
+          </button>
+
+          //react
+          <button onClick={activateLasers}>
+            Activate Lasers
+          </button>
+>> - 第三点：取消默认事件react必须使用显式使用preventDefault。Another difference is that you cannot return false to prevent default behavior in React. You must call preventDefault explicitly.
+        
+        function ActionLink() {
+          function handleClick(e) {
+            e.preventDefault();
+            console.log('The link was clicked.');
+          }
+
+          return (
+            <a href="#" onClick={handleClick}>
+              Click me
+            </a>
+          );
+        }
+> - this的绑定
+> - ou have to be careful about the meaning of this in JSX callbacks. In JavaScript, class methods are not bound by default. If you forget to bind this.handleClick and pass it to onClick, this will be undefined when the function is actually called.
+        
+        constructor(props) {
+            super(props);
+            this.state = {isToggleOn: true};
+
+            // This binding is necessary to make `this` work in the callback
+            this.handleClick = this.handleClick.bind(this);
+          }
+> - 当然了，你也可以使用箭头函数自动绑定当前环境 这叫“class fields syntax”
+> - If calling bind annoys you, there are two ways you can get around this. If you are using the experimental public class fields syntax, you can use class fields to correctly bind callbacks:
+        
+        class LoggingButton extends React.Component {
+          // This syntax ensures `this` is bound within handleClick.
+          // Warning: this is *experimental* syntax.
+          handleClick = () => {
+            console.log('this is:', this);
+          }
+
+          render() {
+            return (
+              <button onClick={this.handleClick}>
+                Click me
+              </button>
+            );
+          }
+        }
+> - 另外你还可以再回调函数内部直接使用箭头函数进行绑定
+        
+        <button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
+        <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+#### 3) [refs](https://reactjs.org/docs/refs-and-the-dom.html)
+> - 什么事refs? Refs provide a way to access DOM nodes or React elements created in the render method.
+> - 而且是只读数据，无法修改
+> - 不同于典型的react数据流typical React dataflow通过props自上而下传递数据并通过render更新所有局部节点，refs提供了另外一种方式进行组件内节点的数据传递
+> - 步骤：
+>> - 第一步：Creating Refs 采用React.createRef()方法
+        
+        class MyComponent extends React.Component {
+          constructor(props) {
+            super(props);
+            this.myRef = React.createRef();
+          }
+          render() {
+
+            /*
+             * When the ref attribute is used on an HTML element, 
+             * the ref created in the constructor 
+             * with React.createRef() receives the underlying DOM element 
+             * as its current property.
+             */
+            return <div ref={this.myRef} />;
+          }
+        }
+>> - 第二步：Accessing Refs When the ref attribute is used on a custom class component, the ref object receives the mounted instance of the component as its current. You may not use the ref attribute on functional components because they don’t have instances.那什么是**functional components**呢？比如function MyFunctionalComponent()  { return < input />; }
+> - 例子 Loginmodule.jsx
+        
+        import React from 'react';
+        import ReactDOM from 'react-dom';
+
+        // 真实容器工厂
+        function realObjectFactory(tag, id) {
+          const obj = document.createElement(tag);
+          document.body.appendChild(obj);
+          obj.setAttribute('id', id);
+          obj.style.fontSize = '15px';
+        }
+
+        class Loginmodule extends React.Component {
+          constructor(props) {
+            super(props);
+            this.content = React.createRef();
+            this.handleClick = this.handleClick.bind(this);
+          }
+
+          handleClick() {
+            let content = this.content.current.value;
+            let strRegex = '^((https|http|ftp|rtsp|mms)?://)'
+                                  + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
+                                  + '(([0-9]{1,3}.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184
+                                  + '|' // 允许IP和DOMAIN（域名）
+                                  + "([0-9a-z_!~*'()-]+.)*" // 域名- www.
+                                  + '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].' // 二级域名
+                                  + '[a-z]{2,6})' // first level domain- .com or .museum
+                                  + '(:[0-9]{1,4})?' // 端口- :80
+                                  + '((/?)|' // a slash isn't required if there is no file name
+                                  + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+            if (content.match(strRegex) !== null) {
+              alert('网址格式正确！');
+              document.getElementById('focus').value = content;
+            } else {
+              alert('网址格式错误！请重新输入');
+            }
+          }
+
+          render() {
+            return (
+              <div>
+                <input type="text" ref={this.content} />&nbsp;&nbsp;&nbsp;&nbsp;
+                <button onClick={this.handleClick} >提示输入</button>&nbsp;&nbsp;&nbsp;&nbsp;
+              </div>
+              );
+          }
+        }
+
+        class Resultmodule extends React.Component {
+          constructor(props) {
+            super(props);
+            this.rightContent = React.createRef();
+          }
+
+          render() {
+            return (
+              <div>
+                <Loginmodule />
+                <input id="focus" type="text" placeholder="失去焦点提示内容" />
+              </div>
+              );
+          }
+        }
+
+        realObjectFactory('div', 'test9');
+        ReactDOM.render(<Resultmodule />, document.getElementById('test9'));
+
+
 
                 
 
