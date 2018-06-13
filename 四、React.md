@@ -1295,7 +1295,7 @@
         
 
     
->>>>>> ![图4-3 生命周期]()
+>>>>>> ![图4-3 生命周期](https://github.com/hblvsjtu/React_Study/blob/master/picture/%E5%9B%BE4-3%20%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png?raw=true)
     
 #### 1) 组件首次加载mount
 > - **constructor()**   包含了原来的getDefaultProps()和getInitialState方法
