@@ -1142,6 +1142,20 @@
 >>>>>> ![图1-10 拆分后vendors~app~findGFbundlejs](https://github.com/hblvsjtu/React_Study/blob/master/picture/图1-10%20拆分后vendors~app~findGFbundlejs.png?raw=true)
 #### 5) 拆分：动态导入
 > - 这个比较复杂，有兴趣可以看[这里](https://webpack.js.org/guides/code-splitting/)
+> - As import() returns a promise, it can be used with async functions. 
+> - 或者看这里，[react的官网对于动态拆分代码的解释](https://reactjs.org/docs/code-splitting.html)
+> - The dynamic import() syntax is a ECMAScript (JavaScript) proposal not currently part of the language standard. It is expected to be accepted in the near future.
+> - before
+        
+        import { add } from './math';
+
+        console.log(add(16, 26));
+> - after
+        
+        import("./math").then(math => {
+          console.log(math.add(16, 26));
+        });
+> - 
 
 <h3 id='3.10'>3.10 懒加载lazy loading</h3>  
         

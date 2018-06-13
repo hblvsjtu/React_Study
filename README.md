@@ -6,6 +6,7 @@
 ### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/) 
 ### 参考源：[Reactjs官网文档https://reactjs.org ](https://reactjs.org)  
 ### 参考源：[sass教学视频](https://www.bilibili.com/video/av17492787/?p=1)
+### 参考源：[Reactjs官网中文文档](http://www.css88.com/react/) 
 
 ------    
 
@@ -64,6 +65,9 @@
 ### [4.3.5 state](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.5)
 ### [4.3.6 事件与ref](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.6)
 ### [4.3.7 动态组件](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.7)
+### [4.3.8 受控组件与非受控组件](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.8)
+### [4.3.9 生命周期](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.9)
+### [4.3.10 关于ReactDOM的操作方法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.10)
 ## [五，sass的基本使用](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md)
 ### [5.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1)
 #### [5.1.1 背景和特点](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.1)

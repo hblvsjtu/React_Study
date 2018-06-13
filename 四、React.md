@@ -6,10 +6,11 @@
         
         
 ### 作者：冰红茶  
-### 参考书籍：《React全栈》 张轩 杨寒星  &&   《深入React技术栈》 陈屹 
-### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/)
+### 参考书籍：《React全栈》 张轩 杨寒星  &&   《深入React技术栈》 陈屹
 ### 参考源：[Reactjs官网文档https://reactjs.org ](https://reactjs.org)
-### 参考源：[sass教学视频](https://www.bilibili.com/video/av17492787/?p=1)
+### 参考源：[Reactjs官网中文文档](http://www.css88.com/react/) 
+### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/)
+
   
         
 ------    
@@ -41,6 +42,10 @@
 ### [4.3.5 state](#4.3.5)
 ### [4.3.6 事件与ref](#4.3.6)
 ### [4.3.7 动态组件](#4.3.7)
+### [4.3.8 受控组件与非受控组件](#4.3.8)
+### [4.3.9 生命周期](#4.3.9)
+### [4.3.10 关于ReactDOM的操作方法](#4.3.10)
+
         
 ------
         
@@ -862,10 +867,21 @@
         }
 
         ReactDOM.render(<Like />, document.getElementById('test8'));
-#### 2) setState()
+#### 2) setState(updater, [callback])
+> - 在这个签名中，第一个参数是的一个 updater 函数：
+        
+        (prevState, props) => stateChange
+        // 比如
+        this.setState((prevState, props) => {
+          return {counter: prevState.counter + props.step};
+        });
+> - 这种形式的 setState() 也是异步的，并且在同一周期内的多个调用可以被合并在一起执行批处理
+> - 异步更新，所以你不能依赖它的值去计算下一个状态 State Updates May Be Asynchronous，Because this.props and this.state may be updated asynchronously, you should not rely on their values for calculating the next state.
+> - "记住 setState() 作为一个请求，而不是立即命令来更新组件。为了更好的感知性能，React 可能会延迟它，然后合并多个setState()更新多个组件。 React不保证 state 更新就立即应用(重新渲染)。setState() 并不总是立即更新组件。它可能会 批量 或 延迟到后面更新。这使得在调用 setState() 之后立即读取 this.state 存在一个潜在的陷阱。"
+> - 您可以随意的传递 一个对象 作为 setState() 的第一个参数，而不是一个函数：
 > - 而通过this.setState方法可以再次调用render的方法，来渲染新的UI
 > - 如果你直接改变this.state内部属性的值是不能直接渲染的，因为你还缺少来render方法
-> - 异步更新，所以你不能依赖它的值去计算下一个状态 State Updates May Be Asynchronous，Because this.props and this.state may be updated asynchronously, you should not rely on their values for calculating the next state.
+> - 
 > - 为了解决这个问题，可以使用函数作为参数，函数的第一个参数就是上一个状态的第一个属性值，第二个参数就是上一个状态的第二属性值个值
         
         // Wrong
@@ -1259,9 +1275,263 @@
         };
 
         ReactDOM.render(<Todo />, document.getElementById('test10'));
-> - 
+#### 4) 流程
+> - 拆分组件
+> - 实现静态组件
+> - 实现动态组件（实现初始化数据动态显示，实现交互功能）
 
-                
+        
+<h4 id='4.3.8'>4.3.8 受控组件与非受控组件</h4>  
+        
+#### 1) 受控组件
+> - 拥有value属性，什么叫input标签拥有value属性呢？其实说的是value属性被显式放在标签当中。比如value={this.state.xxx}，value属性被状态机的某个属性所占用。或者是value="Hello!"
+> - 其特点是用户不能直接修改value属性
+> - 必须铜鼓onChange()方法，然后简介修改状态机属性，才能更改value的值
+#### 2) 非受控组件
+> - 没有value属性的input标签
+
+        
+<h4 id='4.3.9'>4.3.9 生命周期</h4>  
+        
+
+    
+>>>>>> ![图4-3 生命周期]()
+    
+#### 1) 组件首次加载mount
+> - **constructor()**   包含了原来的getDefaultProps()和getInitialState方法
+>> - 如果你不需要初始化和为类方法绑定环境变量，就不需要使用该方法。if you don’t initialize state and you don’t bind methods, you don’t need to implement a constructor for your React component.
+>> - Constructor是唯一指定状态机的地方 Constructor is the only place where you should assign this.state directly
+>> - 避免在初始化的时候才用属性作为状态机的初始状态，这是常见的错误 Avoid copying props into state! This is a common mistake:
+        
+        constructor(props) {
+         super(props);
+         // Don't do this!
+         this.state = { color: props.color };
+        }
+> - **static getDerivedStateFromProps(props, state)**  用于设置props和stats。相当于原来的componentWillMount() 它在 render() 之前调用，因此在此方法中的设置state(状态) 不会触发重新渲染。 避免在此方法中进行任何其它修改（side－effects）或订阅（subscriptions）。这是在服务器渲染上调用的唯一的生命周期钩子。在16.4版本的react里面被改名为UNSAFE_componentWillMount()。原来的名字可以用到17.0版本 hat name will continue to work until version 17.目测componentWillMount()最终会被getDerivedStateFromProps(props, state)所取代
+> - render() 不应该有任何修改组件state的代码或者是和浏览器交互的请夸昂
+> - componentDidMount() 装载完成后调用一次 可以在这里获取组件的DOM结构 “在这个方法中调用 setState() 会触发一个额外的渲染， 但会在浏览器更新屏幕之前发生。在这种情况下，即使 render() 会被调用两次， 也可以保证用户不会看到中间状态。 请谨慎使用此模式，因为这通常会导致性能问题。 但是，当你需要测量一个 DOM 节点，并在渲染一些依赖于它的大小或位置的东西之前，这种情况下，这种模式可能会非常有用，比如 modals 和tooltip 之类的组件。”
+> - 注意事项：These methods are considered legacy and you should avoid them in new code: UNSAFE_componentWillMount()
+#### 2) 状组件props更新Updating
+> - **static getDerivedStateFromProps(props, state)**  其实用来在未来取代UNSAFE_componentWillReceiveProps方法用的
+> - **shouldComponentUpdate(nextProps, nextState)**  使用 shouldComponentUpdate() 让 React 知道组件的输出是否不受 state 或 props 当前变化的影响。 默认行为是在每次 state 更改时重新渲染，并调用 componentWillUpdate() ，render()和componentDidUpdate() 如果返回false，则不重新渲染。对于初始(第一次)渲染 或 使用 forceUpdate() 时，不调用此方法。
+> - **UNSAFE_componentWillUpdate()**  未来将会被取消，被**getSnapshotBeforeUpdate(prevProps, prevState)**所替代
+> - **render()**
+> - **getSnapshotBeforeUpdate(prevProps, prevState)**  有点类似UNSAFE_componentWillUpdate()的意味，但是比较奇怪的是在render()方法之后执行的。严格来讲是在render输出到DOM过程中间发生的事件，此时DOM将要被更新，然后运用该方法可以得到DOM更新前的状态信息，然后把返回值传给componentDidUpdate() “getSnapshotBeforeUpdate() is invoked right before the most recently rendered output is committed to e.g. the DOM. It enables your component to capture some information from the DOM (e.g. scroll position) before it is potentially changed. Any value returned by this lifecycle will be passed as a parameter to componentDidUpdate().” 后来笔者终于知道为什么render()方法之后执行了？这是因为render方法因为异步的原因往往是会“慢一拍”执行的，为了节省时间提升效率，于是就在了render()方法之后执行。“In the above examples, it is important to read the scrollHeight property in getSnapshotBeforeUpdate because there may be delays between “render” phase lifecycles (like render) and “commit” phase lifecycles (like getSnapshotBeforeUpdate and componentDidUpdate).”
+> - **componentDidUpdate(prevProps, prevState, snapshot)**
+> - 例子
+        
+        class ScrollingList extends React.Component {
+          constructor(props) {
+            super(props);
+            this.listRef = React.createRef();
+          }
+
+          getSnapshotBeforeUpdate(prevProps, prevState) {
+            // Are we adding new items to the list?
+            // Capture the scroll position so we can adjust scroll later.
+            if (prevProps.list.length < this.props.list.length) {
+              const list = this.listRef.current;
+              return list.scrollHeight - list.scrollTop;
+            }
+            return null;
+          }
+
+          componentDidUpdate(prevProps, prevState, snapshot) {
+            // If we have a snapshot value, we've just added new items.
+            // Adjust scroll so these new items don't push the old ones out of view.
+            // (snapshot here is the value returned from getSnapshotBeforeUpdate)
+            if (snapshot !== null) {
+              const list = this.listRef.current;
+              list.scrollTop = list.scrollHeight - snapshot;
+            }
+          }
+
+          render() {
+            return (
+              <div ref={this.listRef}>{/* ...contents... */}</div>
+            );
+          }
+        }
+#### 3) Unmounting
+> - **componentWillUnmount()** 
+#### 4) Error Handling
+> - **componentDidCatch()** 
+> - 错误边界（Error boundaries）是一个 React 组件，可以在其子组件树中的任何位置捕获JavaScript 错误，记录这些错误，并显示备用 UI 而不是崩溃的组件树。 错误边界在渲染过程中，在生命周期方法中，以及整个树下的构造函数中捕获错误。
+> - 错误边界(Error Boundaries) 只能捕获组件树中子组件中的错误。不能捕获 错误边界(Error Boundaries)组件 本身错误。
+#### 5) React Without ES6
+> - createReactClass() 相当于ES6的组件类的定义方法
+> - 另外值得注意的是createReactClass()的Autobinding特性，就是对于内部的方法是自动绑定this的，这就比较类似于箭头函数的特性
+> - getDefaultProps()的作用是将组件中赋值的数据被设置在this.props中；
+> - getInitialState返回值被设置在this.state中。
+> - getDefaultProps()和getInitialState属性，这两个都只会在装载之前调用一次。
+        
+        var Greeting = createReactClass({
+          getDefaultProps: function() {
+            return {
+              name: 'Mary'
+            };
+          },
+
+          getInitialState: function() {
+             return {count: this.props.initialCount};
+           },
+
+           handleClick: function() {
+              alert(this.state.message);
+            },
+
+            render: function() {
+              return (
+                <button onClick={this.handleClick}>
+                  Say hello
+                </button>
+              );
+            }
+
+          // ...
+
+        });
+> - ES6 launched without any mixin support. Therefore, there is no support for mixins when you use React with ES6 classes.
+
+
+        
+<h4 id='4.3.10'>4.3.10 关于ReactDOM的操作方法</h4>  
+        
+#### 1) 浏览器环境Browser Support
+> - 支持IE9及以上的版本 React supports all popular browsers, including Internet Explorer 9 and above, although some polyfills are required for older browsers such as IE 9 and IE 10.
+#### 2) render方法
+> - ReactDOM.render(element, container[, callback])
+> - 不能修改父节点 does not modify the container node (only modifies the children of the container)
+#### 3) hydrate方法
+> - ReactDOM.hydrate(element, container[, callback])
+> - 与 render() 相同，但用于混合容器，该容器的HTML内容是由 ReactDOMServer 渲染的。 React 将尝试将事件监听器附加到现有的标记。
+#### 4) unmountComponentAtNode()
+> - ReactDOM.unmountComponentAtNode(container)
+> - 从 DOM 中移除已装载的 React 组件，并清除其事件处理程序和 state 。 如果在容器中没有挂载组件，调用此函数什么也不做。 如果组件被卸载，则返回 true ，如果没有要卸载的组件，则返回 false 。
+#### 5) findDOMNode()
+> - ReactDOM.findDOMNode(component)
+> - findDOMNode 是一个用于访问真实 DOM 节点（underlying DOM node）的接口。 在大多数情况下，不建议使用它，因为它会越过组件抽象层访问真实 DOM 。
+> - findDOMNode 仅适用于已装载的组件（即已放置在DOM中的组件）。 如果你试图在一个尚未安装的组件上调用它（就像在一个尚未创建的组件上调用 render()中的 findDOMNode() ），将抛出一个异常。
+> - findDOMNode 不能用于函数式组件。
+#### 6) createPortal() [实例](https://codepen.io/gaearon/pen/yzMaBd)
+> - ReactDOM.createPortal(child, container)
+> - 创建一个 插槽(portal) 。 插槽提供了一种方法，可以将子元素渲染到 DOM 组件层次结构之外的 DOM 节点中。
+> - 例子 Portal.jsx
+        
+        import React from 'react';
+        import ReactDOM from 'react-dom';
+        import PropTypes from 'prop-types';
+        import realObjectFactory from './isLikeMe.jsx';
+
+        // 建立一个div容器
+        realObjectFactory('div', 'test11');
+
+        class Modal extends React.Component {
+          constructor(prop) {
+            super(prop);
+            this.contentObj = document.createElement('div');
+            this.contentObj.id = 'this.contentObj';
+            this.contentObj.style.color = this.props.color;
+            this.mountObject = document.getElementById('test10');
+          }
+
+          /*
+           * 装载组件的行为
+           * 只要被父组件render装载之后就会执行
+           */
+          componentDidMount(state, prop) {
+            console.log('componentDidMount...');
+            this.mountObject.appendChild(this.contentObj);
+          }
+
+          /*
+           * 移除组件前的行为
+           * 只要被render装载之后
+           */
+          componentWillUnmount() {
+            console.log('componentWillUnmount...');
+            // 删除虚拟Portal的装载
+            this.mountObject.removeChild(this.contentObj);
+          }
+
+          render() {
+            return (ReactDOM.createPortal(this.props.children, this.contentObj));
+          }
+        }
+
+        Modal.propTypes = {
+          children: PropTypes.array.isRequired,
+          color: PropTypes.string.isRequired,
+        };
+
+        class CheakPwd extends React.Component {
+          constructor(prop) {
+            super(prop);
+            this.state = {
+              isHidden: true,
+              content: '',
+            };
+
+            this.content = React.createRef();
+
+            this.handleClick = this.handleClick.bind(this);
+            this.handleClickHidden = this.handleClickHidden.bind(this);
+            this.handleChange = this.handleChange.bind(this);
+          }
+
+          getSnapshotBeforeUpdate(prevProps, prevState) {
+            console.log('CheakPwd getSnapshotBeforeUpdate...');
+            console.log(prevProps);
+            console.log(prevState);
+            return 'getSnapshotBeforeUpdate finish';
+          }
+
+          componentDidUpdate(prevProps, prevState, snapshot) {
+            console.log('CheakPwd componentDidUpdate...');
+            console.log(prevProps);
+            console.log(prevState);
+            console.log(snapshot);
+          }
+
+          handleClick() {
+            if (this.state.content === '12345687') {
+              this.setState({ isHidden: false });
+            } else {
+              console.log('Your passward is wrong, please input again!');
+            }
+          }
+
+          handleClickHidden() {
+            this.setState({ isHidden: true });
+          }
+
+          handleChange(event) {
+            let content = event.target.value;
+
+            if (content !== null) {
+              this.setState({ content: content });
+            } else {
+              console.log('your content is empty!');
+            }
+          }
+
+          render() {
+            console.log('CheakPwd render...');
+            const modal = this.state.isHidden ? null : (<Modal color="lightpink">你好，这里是Modal<br /> <button onClick={this.handleClickHidden}>Ok</button> </Modal>);
+            return (
+              <div>
+                <h2>Please input the passward</h2>
+                <input type="text" value={this.state.content} onChange={this.handleChange} />
+                <button onClick={this.handleClick}>check now</button>
+                {modal}
+              </div>
+            );
+          }
+        }
+
+        ReactDOM.render(<CheakPwd />, document.getElementById('test11'));
+
 
 
 
