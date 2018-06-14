@@ -8,15 +8,17 @@
 ### 参考源：[sass教学视频](https://www.bilibili.com/video/av17492787/?p=1)
 ### 参考源：[Reactjs官网中文文档](http://www.css88.com/react/) 
 ### 参考源：[REACT ROUTER](https://reacttraining.com/react-router/)
-
+### 参考源：[Flux 官网](http://facebook.github.io/flux/docs/in-depth-overview.html#content) 
+### 参考源：[Flux Example](https://github.com/facebook/flux/tree/master/examples)
+        
 ------    
-
+        
 
 
    跟据目前所了解的情况，从MVC到MVVM再到React，前端经历了几个大的技术上的变化，不再是以前单纯的切图做ppt的层次，更多的需要同时具备后端工作的能力，即所谓的大前端或者叫全端。此时React盛起，打算花半个月的时间把全栈搞通^_ ^
-  
+         
 ## 目录
-
+        
 ## [一、现代前端开发](https://github.com/hblvsjtu/React_Study/blob/master/一、现代前端开发.md#1)
 ### [1.1 新一代JS标准](https://github.com/hblvsjtu/React_Study/blob/master/一、现代前端开发.md#1.1)
 ### [1.2 前端组件化方案](https://github.com/hblvsjtu/React_Study/blob/master/一、现代前端开发.md#1.2) 
@@ -33,7 +35,7 @@
 ### [2.8 grunt](https://github.com/hblvsjtu/React_Study/blob/master/二、环境的安装.md#2.8)
 ### [2.9 gulp](https://github.com/hblvsjtu/React_Study/blob/master/二、环境的安装.md#2.9)
 ### [2.10 browserify](https://github.com/hblvsjtu/React_Study/blob/master/二、环境的安装.md#2.10)
-## [2.11 node](https://github.com/hblvsjtu/React_Study/blob/master/二、环境的安装.md#2.11)
+### [2.11 node](https://github.com/hblvsjtu/React_Study/blob/master/二、环境的安装.md#2.11)
 ## [三、webpack](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3)
 ### [3.1 简介，安装与卸载](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.1)
 ### [3.2 一个简单的例子](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.2) 
@@ -69,11 +71,11 @@
 #### [4.3.8 受控组件与非受控组件](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.8)
 #### [4.3.9 生命周期](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.9)
 #### [4.3.10 关于ReactDOM的操作方法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.10)
-## [4.4 高级用法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.4) 
-### [4.4.1 虚拟DOM的操纵](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.4.1)
-## [4.5 React Router](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5) 
-### [4.5.1 介绍和使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.1)
-### [4.5.2 相关标签的使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.2)
+### [4.4 高级用法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.4) 
+#### [4.4.1 虚拟DOM的操纵](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.4.1)
+### [4.5 React Router](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5) 
+#### [4.5.1 介绍和使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.1)
+#### [4.5.2 相关标签的使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.2)
 ## [五，sass的基本使用](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md)
 ### [5.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1)
 #### [5.1.1 背景和特点](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.1)
@@ -93,11 +95,7 @@
 #### [5.3.2 基础项目结构](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.2) 
 #### [5.3.3 gulp自动化构建](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.3)
 #### [5.3.4 webpack自动化构建](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.4)
-        
-        
-
-
-                
+   
 
 
 
