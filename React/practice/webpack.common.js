@@ -12,10 +12,12 @@ module.exports = {
 
   entry: {
     app: './app/app.jsx',
+    router: ['./app/router/myFirstRouter.jsx'],
     findGF: './app/findGF.js',
     index: './app/index.js',
     HelloReact: './app/HelloReact/HelloReact.jsx',
     class: ['./app/class/isLikeMe.jsx', './app/class/onMouseMove.jsx', './app/class/loginModule.jsx', './app/class/todolist.jsx', './app/class/portals.jsx']
+
   },
 
   output: {

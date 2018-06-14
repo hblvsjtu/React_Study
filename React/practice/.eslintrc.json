@@ -63,6 +63,7 @@
       "jsx-a11y/mouse-events-have-key-events": 2,
       "jsx-a11y/role-has-required-aria-props": 2,
       "jsx-a11y/role-supports-aria-props": 2,
+      "jsx-a11y/anchor-is-valid": 0,
       "max-len": 0,
       "newline-per-chained-call": 0,
       "no-console": 0,
@@ -84,6 +85,7 @@
         "tab"
       ],
       "react/prefer-stateless-function": 1,
+      "react/prop-types": 0,
       "redux-saga/no-yield-in-race": 2,
       "redux-saga/yield-effects": 2,
       "react/no-multi-comp": "off",

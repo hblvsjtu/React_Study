@@ -35,6 +35,7 @@ class Modal extends React.Component {
 	}
 
 	render() {
+		// this.props.children表示内容节点的子节点，类型是array
 		return (ReactDOM.createPortal(this.props.children, this.contentObj));
 	}
 }

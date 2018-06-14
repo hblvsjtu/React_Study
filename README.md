@@ -7,6 +7,7 @@
 ### 参考源：[Reactjs官网文档https://reactjs.org ](https://reactjs.org)  
 ### 参考源：[sass教学视频](https://www.bilibili.com/video/av17492787/?p=1)
 ### 参考源：[Reactjs官网中文文档](http://www.css88.com/react/) 
+### 参考源：[REACT ROUTER](https://reacttraining.com/react-router/)
 
 ------    
 
@@ -44,7 +45,7 @@
 ### [3.8 开发模式与产品模式](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.8)
 ### [3.9 代码拆分](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.9)
 ### [3.10 懒加载lazy loading](https://github.com/hblvsjtu/React_Study/blob/master/三、webpack.md#3.10)
-## [四、React](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4)
+## [四、React](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md)
 ### [4.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.1)
 #### [4.1.1 特点](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.1.1)
 #### [4.1.2 模版创建](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.1.2)
@@ -68,6 +69,11 @@
 #### [4.3.8 受控组件与非受控组件](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.8)
 #### [4.3.9 生命周期](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.9)
 #### [4.3.10 关于ReactDOM的操作方法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.3.10)
+## [4.4 高级用法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.4) 
+### [4.4.1 虚拟DOM的操纵](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.4.1)
+## [4.5 React Router](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5) 
+### [4.5.1 介绍和使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.1)
+### [4.5.2 相关标签的使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.2)
 ## [五，sass的基本使用](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md)
 ### [5.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1)
 #### [5.1.1 背景和特点](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.1)

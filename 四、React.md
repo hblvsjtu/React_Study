@@ -10,6 +10,7 @@
 ### 参考源：[Reactjs官网文档https://reactjs.org ](https://reactjs.org)
 ### 参考源：[Reactjs官网中文文档](http://www.css88.com/react/) 
 ### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/)
+### 参考源：[REACT ROUTER](https://reacttraining.com/react-router/)
 
   
         
@@ -45,6 +46,11 @@
 ### [4.3.8 受控组件与非受控组件](#4.3.8)
 ### [4.3.9 生命周期](#4.3.9)
 ### [4.3.10 关于ReactDOM的操作方法](#4.3.10)
+## [4.4 高级用法](#4.4) 
+### [4.4.1 虚拟DOM的操纵](#4.4.1)
+## [4.5 React Router](#4.5) 
+### [4.5.1 介绍和使用](#4.5.1)
+### [4.5.2 相关标签的使用](#4.5.2)
 
         
 ------
@@ -277,7 +283,7 @@
     + eslint-plugin-import@2.12.0
     + eslint-plugin-jsx-a11y@6.0.3
     + eslint-config-airbnb@16.1.0
-    added 26 packages from 19 contributors and audited 8834 packages in 14.461s
+    added 26 packages from 19 contributors and audited 8834 packages in 14.561s
     found 0 vulnerabilities
 #### 4）添加.eslintrc.json配置文件，使用命令eslint --init
     
@@ -1531,6 +1537,265 @@
         }
 
         ReactDOM.render(<CheakPwd />, document.getElementById('test11'));
+
+        
+<h3 id='4.4'>4.4 高级用法</h3>  
+        
+<h4 id='4.4.1'>4.4.1 虚拟DOM的操纵</h4>  
+        
+#### 1) Creating React Elements
+> - 两个重要的创建方法
+> - createElement()
+> - createFactory(type)  such as 'div' or 'span' ，但是不建议使用
+#### 2) isValidElement()
+> - 判别是否是有效的元素
+#### 3) React.Children
+> - React.Children返回当前标签的子结构
+> - children使用的时候可以用this.props.children
+> - React.Children.map(children, function[(thisArg)])
+> - React.Children.forEach(children, function[(thisArg)])
+> - **React.Children.count(children)** Returns the total number of components in children, equal to the number of times that a callback passed to map or forEach would be invoked.
+> - **React.Children.only**  Verifies that children has only one child (a React element) and returns it. Otherwise this method throws an error.
+> - React.Children.toArray(children)
+        
+<h3 id='4.5'>4.5 基本语法</h3>  
+        
+<h4 id='4.5.1'>4.5.1 介绍和使用</h4>  
+        
+#### 1) React Router组件类型
+> - router components
+> - route matching components
+> - navigation components.
+#### 2) 需要的包
+> - 'react-router-dom'
+        
+        import { BrowserRouter, Route, Link } from 'react-router-dom'
+> - 安装包
+        
+        LvHongbins-Mac-2:practice lvhongbin$ npm install --save-dev react-router-dom
+        + react-router-dom@4.3.1
+        added 10 packages from 5 contributors and audited 10285 packages in 25.18s
+        found 10 moderate severity vulnerabilities
+          run `npm audit fix` to fix them, or `npm audit` for details
+#### 3) 路由的类型 
+> - React Router提供了两种路由<BrowserRouter>和<HashRouter>
+> - <BrowserRouter> if you have a server that responds to requests 
+        
+        import { BrowserRouter } from 'react-router-dom'
+        ReactDOM.render((
+          <BrowserRouter>
+            <App/>
+          </BrowserRouter>
+        ), holder)
+> - <HashRouter> if you are using a static file server.
+#### 4) 路由的匹配
+> - 使用两个标签<Route>和<Switch>
+> - <Switch>标签是用来分组的 The <Switch> component is used to group <Route>s together.  
+> - <Switch>不是必须的，但是它的存在会非常有用，通过迭代匹配第一个符合要求的router
+> - The <Switch> is not required for grouping <Route>s, but it can be quite useful. A <Switch> will iterate over all of its children <Route> elements and only render the first one that matches the current location. This helps when multiple route’s paths match the same pathname, when animating transitions between routes, and in identifying when no routes match the current location (so that you can render a “404” component).
+> - 
+        
+<h4 id='4.5.2'>4.5.2 相关标签的使用</h4>  
+        
+#### 1) <Router>
+> - 分为四种不同的类型<BrowserRouter>、<HashRouter>、<MemoryRouter>、<NativeRouter>和<StaticRouter>
+> - 一般来讲都不主张直接使用Router标签，The most common use-case for using the low-level <Router> is to synchronize a custom history with a state management lib like Redux or Mobx. Note that this is not required to use state management libs alongside React Router, it’s only for deep integration.
+> - <StaticRouter>
+>> - 主要用在服务器端，因为不需要跳转 This can be useful in server-side rendering scenarios when the user isn’t actually clicking around, so the location never actually changes
+>> - context: object 参数传递用的
+>> - location: object A location object shaped like { pathname, search, hash, state }
+> - <BrowserRouter>
+>> - basename={optionalString}
+>> - forceRefresh={optionalBool}
+>> - getUserConfirmation={optionalFunc}
+>> - keyLength={optionalNumber}
+> - <HashRouter>
+> - <MemoryRouter>
+> - <NativeRouter>
+#### 2) <Link>
+> - 相当于HTML的link标签，但是比link标签更为强大，<Link>能跳转页面内标签组件
+> - Provides declarative, accessible navigation around your application.
+> - to
+>> - 接收string类型
+>> - 接收object类型
+>>> - pathname: A string representing the path to link to.
+>>> - search: A string represenation of query parameters.
+>>> - hash: A hash to put in the URL, e.g. #a-hash.
+>>> - state: State to persist to the location.
+        
+        <Link to={{
+          pathname: '/courses',
+          search: '?sort=name',
+          hash: '#the-hash',
+          state: { fromDashboard: true }
+        }}/>
+> - replace: bool
+>> - When true, clicking the link will replace the current entry in the history stack instead of adding a new one.
+> - innerRef: function
+>> - Allows access to the underlying ref of the component
+#### 2) <NavLink>
+> - <Link>的加强版，可以为其配置一系列的active样式
+> - A special version of the <Link> that will add styling attributes to the rendered element when it matches the current URL.
+> - activeClassName: string
+>> - 提供样式的类名 The class to give the element when it is active. The default given class is active. This will be joined with the className prop.
+> - activeStyle: object
+>> - 内联样式及的事双大括号，在外面的大括号表示使用JS命令，里面一层的大括号表示对象
+> - exact: bool
+> - strict: bool
+> - isActive: function(match, location) 很奇怪的是，使用了这个函数后，样式就变成一闪而过
+#### 2) <Switch>
+> - 在<Switch>标签下只要碰到一个合适的就会被render，然后就结束，如果是<Route>的话就会继续往下匹配，只要成功一个就会render一个，所以<Route>在做动画方面比较有优势
+> - <Switch> is unique in that it renders a route exclusively. In contrast, every <Route> that matches the location renders inclusively.
+> - This is also useful for animated transitions since the matched <Route> is rendered in the same position as the previous one.
+#### 3) <Route>
+> - 有点像转发的意味，一旦匹配得到就会转发到相应的UI组件
+> - Its most basic responsibility is to render some UI when a location matches the route’s path.
+> - 只要匹配就会自动render
+> - A Route is always technically “rendered” even though its rendering null. As soon as the app location matches the route’s path, your component will be rendered.
+> - path属性 冒号后面加parasName，然后对应的组件通过this.porps.match.parasName获得相应的变量。当然了，你还可以加一些正则表达式作为过滤的规则，比如直接在参数命的后面加上？号表示不带参数的链接也可以进行传输
+        
+        const About = ({ match }) => (
+          <div>
+            <h2>{match.params.username}</h2>
+          </div>
+        );
+
+        <li><Link to="/user/lvhongbin">/user/lvhongbin</Link></li>
+        <li><Link to="/user/lvhongchao">/user/lvhongchao</Link></li>
+        <Route path="/user/:username" component={User} />
+> - component属性
+> - render属性  便捷的内联render函数 func
+This allows for convenient inline rendering and wrapping without the undesired remounting explained above.
+        
+        <li><Link to="/render">内联render</Link></li>
+        <Route path="/render" render={() => <div>内联render</div>} />
+#### 4) <Redirect>
+> - to属性
+>> - 接收string类型
+>> - 接收object类型 
+> - push: bool
+>> - 历史是否保存的问题When true, redirecting will push a new entry onto the history instead of replacing the current one.
+> - exact: bool
+>> - Match from exactly; equivalent to Route.exact.
+> - strict: bool
+>> - Match from strictly; equivalent to Route.strict.
+#### 5) 举例：myfirstrouter.jsx
+        
+        import React from 'react';
+        import ReactDOM from 'react-dom';
+        import {
+          BrowserRouter,
+          Route,
+          Link,
+          Redirect,
+          Switch,
+          NavLink,
+        } from 'react-Router-dom';
+        import realObjectFactor from '../class/isLikeMe.jsx';
+
+        realObjectFactor('div', 'test12');
+
+        const Home = () => (
+          <div>
+            <h2>Home</h2>
+          </div>
+        );
+
+        const About = ({ match }) => (
+          <div>
+            <h2>{match.params.username}</h2>
+          </div>
+        );
+
+        const Topic = ({ match }) => (
+          <div>
+            <h3>{match.params.topicId}</h3>
+          </div>
+        );
+
+        const User = ({ match }) => (
+          <h1>
+            Hello {match.params.username ? match.params.username : '无参数'}!
+          </h1>
+        );
+
+        const Topics = ({ match }) => (
+          <div>
+            <h2>Topics</h2>
+            <ul>
+              <li>
+                <Link to={`${match.url}/rendering`}>
+                  Rendering with React
+                </Link>
+              </li>
+              <li>
+                <Link to={`${match.url}/components`}>
+                  Components
+                </Link>
+              </li>
+              <li>
+                <Link to={`${match.url}/props-v-state`}>
+                  Props v. State
+                </Link>
+              </li>
+            </ul>
+
+            <Route path={`${match.path}/:topicId`} component={Topic} />
+            <Route
+          exact
+          path={match.path}
+          render={() => (
+              <h3>Please select a topic.</h3>
+            )}
+            />
+          </div>
+        );
+
+        const BasicExample = (props) => {
+          const log = (match, location) => console.log(`match.params=${match} location=${location}`);
+          const activeStyle = { fontWeight: 'bold', color: 'red' };
+
+          (function componentDidMount(state, prop) {
+            if (props.children) {
+                React.Children.forEach(props.children, (children) => console.log('children.type'));
+              } else {
+                console.log('it has no children');
+              }
+          }());
+
+
+          return (
+            <BrowserRouter>
+              <div>
+                <ul>
+                  <li><Link to="/">Home</Link></li>
+                  <li><NavLink to="/about" activeStyle={activeStyle}>About</NavLink></li>
+                  <li><Link to="/user">/user</Link></li>
+                  <li><NavLink to="/user/lvhongbin" activeStyle={activeStyle} isActive={log} >/user/lvhongbin</NavLink></li>
+                  <li><NavLink to="/user/lvhongchao" activeStyle={activeStyle} isActive={log} >/user/lvhongchao</NavLink></li>
+                  <li><Link to="/user/123">/user/123</Link></li>
+                  <li><Link to="/render">内联render</Link></li>
+                  <li><Link to="/topics">Topics</Link></li>
+                </ul>
+
+                <hr />
+
+                <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route path="/about" component={About} />
+                  <Route exact path="/user" component={User} />
+                  <Redirect from="/user/123" to="/about" />
+                  <Route path="/user/:username([^\d]+)" component={User} />
+                  <Route path="/render" render={() => <div>内联render</div>} />
+                  <Route path="/topics" component={Topics} />
+                </Switch>
+              </div>
+            </BrowserRouter>
+          );
+        };
+
+        ReactDOM.render(<BasicExample username="lvhongbin" />, document.getElementById('test12'));
+        export default BasicExample;
 
 
 
