@@ -12,6 +12,7 @@ module.exports = {
 
   entry: {
     app: './app/app.jsx',
+    flux: ['./app/todolist/component/Todo.jsx'],
     router: ['./app/router/myFirstRouter.jsx'],
     findGF: './app/findGF.js',
     index: './app/index.js',
