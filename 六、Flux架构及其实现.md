@@ -151,7 +151,14 @@
         
 <h4 id='6.2.3'>6.2.3 添加单元测试</h4>  
         
-#### 1) Todo.jsp 
+#### 1) [Jest](https://facebook.github.io/jest/)
+> -  Delightful JavaScript Testing
+> -  One of Jest's philosophies is to provide an integrated "zero-configuration" experience
+> - Developer Ready
+> - Instant Feedback
+> - Snapshot Testing
+> - Jest是Facebook开源的React单元测试框架，内部的DOM操作基于JSDOM，语法和断言基于Jasmine框架，
+> - 安装 npm install --save-dev jest
         
 
 <h4 id='6.2.4'>6.2.4 相关文件</h4>  

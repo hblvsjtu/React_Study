@@ -11,6 +11,8 @@
 ### 参考源：[Flux 官网](http://facebook.github.io/flux/docs/in-depth-overview.html#content) 
 ### 参考源：[Flux Example](https://github.com/facebook/flux/tree/master/examples)
 ### 参考源：[REACT ROUTER教学视频](https://www.bilibili.com/video/av22934284/?p=21)
+### 参考源：[Test Utilities](http://www.css88.com/react/docs/test-utils.html)
+### 参考源：[Enzyme](http://airbnb.io/enzyme/)
         
 ------    
         
@@ -77,6 +79,14 @@
 ### [4.5 React Router](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5) 
 #### [4.5.1 介绍和使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.1)
 #### [4.5.2 相关标签的使用](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.5.2)
+### [4.6 添加单元测试](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6)
+#### [4.6.1 Jest](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6.1)
+#### [4.6.2 Configuring Jest](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6.2)
+#### [4.6.3 Jest的语法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6.3)
+#### [4.6.4 Test Utilities](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6.4)
+#### [4.6.5 Test Utilities语法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6.5)
+#### [4.6.6 Enzyme](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6.6)
+#### [4.6.7 Enzyme语法](https://github.com/hblvsjtu/React_Study/blob/master/四、React.md#4.6.7)
 ## [五，sass的基本使用](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md)
 ### [5.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1)
 #### [5.1.1 背景和特点](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.1.1)
@@ -96,6 +106,14 @@
 #### [5.3.2 基础项目结构](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.2) 
 #### [5.3.3 gulp自动化构建](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.3)
 #### [5.3.4 webpack自动化构建](https://github.com/hblvsjtu/React_Study/blob/master/五，sass的基本使用.md#5.3.4)
+### [六、Flux架构及其实现](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现)
+### [6.1 简介](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现#6.1)
+#### [6.1.1 背景和特点](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现#6.1.1)
+#### [6.1.2 control-view](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现#6.1.2)
+### [6.2 项目 todolist](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现#6.2)
+#### [6.2.1 准备工作](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现#6.2.1)
+#### [6.2.2 相关依赖解释](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现#6.2.2)
+#### [6.2.3 相关文件](https://github.com/hblvsjtu/React_Study/blob/master/六、Flux架构及其实现#6.2.3)
    
 
 

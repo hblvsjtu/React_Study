@@ -12,6 +12,9 @@
 ### 参考源：[webpack官网文档https://webpack.js.org/concepts/](https://webpack.js.org/concepts/)
 ### 参考源：[REACT ROUTER](https://reacttraining.com/react-router/)
 ### 参考源：[REACT ROUTER教学视频](https://www.bilibili.com/video/av22934284/?p=21)
+### 参考源：[Test Utilities](http://www.css88.com/react/docs/test-utils.html)
+### 参考源：[Enzyme](http://airbnb.io/enzyme/)
+
 
   
         
@@ -49,10 +52,21 @@
 ### [4.3.10 关于ReactDOM的操作方法](#4.3.10)
 ## [4.4 高级用法](#4.4) 
 ### [4.4.1 虚拟DOM的操纵](#4.4.1)
+### [4.4.2 高阶组件](#4.4.2)
+### [4.4.3 组件间通讯](#4.4.3)
+### [4.4.4 组件性能优化](#4.4.4)
+### [4.4.5 动画](#4.4.5)
 ## [4.5 React Router](#4.5) 
 ### [4.5.1 介绍和使用](#4.5.1)
 ### [4.5.2 相关标签的使用](#4.5.2)
-
+## [4.6 添加单元测试](#4.6) 
+### [4.6.1 Jest](#4.6.1)
+### [4.6.2 Configuring Jest](#4.6.2)
+### [4.6.3 Jest的语法](#4.6.3)
+### [4.6.4 Test Utilities](#4.6.4)
+### [4.6.5 Test Utilities语法](#4.6.5)
+### [4.6.6 Enzyme](#4.6.6)
+### [4.6.7 Enzyme语法](#4.6.7)
         
 ------
         
@@ -1796,13 +1810,384 @@ This allows for convenient inline rendering and wrapping without the undesired r
         };
 
         ReactDOM.render(<BasicExample username="lvhongbin" />, document.getElementById('test12'));
-        export default BasicExample;
+        export default BasicExample;        
 
+        
+<h3 id='4.6'>4.6 添加单元测试</h3>  
+        
+<h4 id='4.6.1'>4.6.1 <a href="https://facebook.github.io/jest/">Jest</a></h4>  
+        
+#### 1) 介绍
+> -  Delightful JavaScript Testing
+> -  One of Jest's philosophies is to provide an integrated "zero-configuration" experience
+> - Developer Ready
+> - Instant Feedback
+> - Snapshot Testing
+> - Jest是Facebook开源的React单元测试框架，内部的DOM操作基于JSDOM，语法和断言基于Jasmine框架，
+> - 安装 npm install --save-dev jest
+#### 2) Snapshot Testing
+> - 安装相关的依赖
+>> - jest 
+>> - babel-jest 
+>> - babel-preset-env 
+>> - babel-preset-react 
+>> - react-test-renderer
+>> - react
+>> - react-dom 
+        
+        npm install -save-dev react react-dom jest babel-jest babel-preset-env babel-preset-react react-test-renderer
+#### 3) DOM Testing——[Enzyme](http://airbnb.io/enzyme/)
+> - Enzyme is a JavaScript Testing utility for React that makes it easier to assert, manipulate, and traverse your React Components' output.
+> - If you are using a React version below 15.5.0, you will also need to install react-addons-test-utils.
+> - 通过模仿jQuery的DOM操作和遍历API，Enzyme的API意味着直观和灵活。
+> - 安装enzyme enzyme-adapter-react-16
+        
+        LvHongbins-Mac-2:jest lvhongbin$ npm install --save-dev enzyme enzyme-adapter-react-16
+        npm WARN deprecated nomnom@1.6.2: Package no longer supported. Contact support@npmjs.com for more info.
+        npm WARN jesttest@1.0.0 No description
+        npm WARN jesttest@1.0.0 No repository field.
 
+        + enzyme@3.3.0
+        + enzyme-adapter-react-16@1.1.1
+        added 39 packages from 47 contributors and audited 24685 packages in 9.666s
+        found 0 vulnerabilities
+> - 设置适配器
+        
+        import Enzyme from 'enzyme';
+        import Adapter from 'enzyme-adapter-react-16';
 
+        Enzyme.configure({ adapter: new Adapter() });        
 
+        
+<h4 id='4.6.2'>4.6.2 Configuring Jest</h4>  
+        
+#### 1) 第一种方法：package.json
+        
+        {
+          "name": "my-project",
+          "jest": {
+            "verbose": true
+          }
+        }
+#### 2) 第二种方法：jest.config.js
+> - 命令行 --config < path/to/js|json> 
+        
+        // jest.config.js
+        module.exports = {
+          verbose: true,
+        };
+#### 3) 效果
+> - 多了一些打勾的具体选项
+        
+        LvHongbins-Mac-2:jest lvhongbin$ npm test 
 
+        > jesttest@1.0.0 test /Users/lvhongbin/Desktop/React_Study/React/jesttest
+        > jest
 
+         PASS  enzymetest/__tests__/checkbox_with_label.test.js
+          ✓ CheckboxWithLabel changes the text after click (9ms)
+
+         PASS  snapshotstest/link.react.test.js
+          ✓ Link changes the class when hovered (12ms)
+          ✓ adds 1 + 2 to equal 3
+
+         PASS  ./sum.test.js
+          ✓ adds 1 + 2 to equal 3 (2ms)
+
+        Test Suites: 3 passed, 3 total
+        Tests:       4 passed, 4 total
+        Snapshots:   3 passed, 3 total
+        Time:        1.745s
+        Ran all test suites.
+<h4 id='4.6.3'>4.6.3 Jest的语法</h4>  
+        
+#### 1) 介绍expect returns an "expectation" object
+        
+        test('adds 1 + 2 to equal 3', () => {
+          expect(sum(1, 2)).toBe(3);
+        });
+#### 2) Using Matchers
+> - 单值用toBe()，对象或者数组用toEqual()  用toBe() is the matcher，If you want to check the value of an object or array, use toEqual() instead
+> - When Jest runs, it tracks all the failing matchers so that it can print out nice error messages for you.
+> - 细分
+>> - toBeNull matches only null
+>> - toBeUndefined matches only undefined
+>> - toBeDefined is the opposite of toBeUndefined
+>> - toBeTruthy matches anything that an if statement treats as true
+>> - toBeFalsy matches anything that an if statement treats as false 
+> - number
+        
+        test('two plus two', () => {
+          const value = 2 + 2;
+          expect(value).toBeGreaterThan(3);
+          expect(value).toBeGreaterThanOrEqual(3.5);
+          expect(value).toBeLessThan(5);
+          expect(value).toBeLessThanOrEqual(4.5);
+
+          // toBe and toEqual are equivalent for numbers
+          expect(value).toBe(4);
+          expect(value).toEqual(4);
+        });
+
+        // 注意浮点数
+        test('adding floating point numbers', () => {
+          const value = 0.1 + 0.2;
+          //expect(value).toBe(0.3);           This won't work because of rounding error
+          expect(value).toBeCloseTo(0.3); // This works.
+        });
+> - Strings You can check strings against regular expressions with toMatch:
+        
+        test('there is no I in team', () => {
+          expect('team').not.toMatch(/I/);
+        });
+
+        test('but there is a "stop" in Christoph', () => {
+          expect('Christoph').toMatch(/stop/);
+        });
+> - Arrays 
+        
+        const shoppingList = [
+          'diapers',
+          'kleenex',
+          'trash bags',
+          'paper towels',
+          'beer',
+        ];
+
+        test('the shopping list has beer on it', () => {
+          expect(shoppingList).toContain('beer');
+        });
+> - Exceptions
+        
+        function compileAndroidCode() {
+          throw new ConfigError('you are using the wrong JDK');
+        }
+
+        test('compiling android goes as expected', () => {
+          expect(compileAndroidCode).toThrow();
+          expect(compileAndroidCode).toThrow(ConfigError);
+
+          // You can also use the exact error message or a regexp
+          expect(compileAndroidCode).toThrow('you are using the wrong JDK');
+          expect(compileAndroidCode).toThrow(/JDK/);
+        });
+#### 3) 测试异步代码
+> - 首先对于异步回调，向其传入并执行 done 函数， Jest 会等 done 回调执行结束后，结束测试
+> - 首先写出原来的函数，然后添加expect到你的回调函数中，最后再添加done函数到回调函数的最后一行，这样不容易出错
+> - 单文件的test时间不能超过6秒，否则会报错“Timeout - Async callback was not invoked within the 5000ms timeout specified by jest.setTimeout.”
+        
+        test('the data is peanut butter', done => {
+          function callback(data) {
+            expect(data).toBe('peanut butter');
+            done();
+          };
+
+          function fetchData(data, callback) {
+            setTimeout((() => {
+              callback("peanut " + data);
+              console.log("fetchData...");
+            }), 1000);
+          };
+
+          fetchData('butter', callback);
+        });
+#### 4) 钩子函数 
+        
+        beforeEach(() => {
+          console.log("start a test....");
+        });
+
+        afterEach(() => {
+          console.log("end a test....");
+        });
+
+        beforeAll(() => console.log('start ....'));
+        afterAll(() => console.log('end ....'));
+#### 5) 区域scope
+> - 使用describe to split the block
+> - 所有的describe函数都比test函数执行的要早，即使test函数处于describe函数内部，其实就相当于describe函数在解释的时候就已经执行了
+> - Jest executes all describe handlers in a test file before it executes any of the actual tests.
+> - test.only 只单独测试一个函数
+#### 5) Mock Functions
+> - 有时候我们在测试一个函数的时候，函数式需要输入参数的，但是怎么保证参数的一般性呢？或者换种说法，比如说我想输入任意一个函数作为我测试函数的参数，那么该如何给出一个任意的函数作为输入呢？我总不能穷尽世界上所有函数吧
+> - 为了解决这个问题，Mock就给我们带来了便利——给我们创造一些一般性的参数出来
+        
+        // 这是我需要测试的函数，以你所见，callback是一个一般性的函数
+        function forEach(items, callback) {
+          for (let index = 0; index < items.length; index++) {
+            callback(items[index]);
+          }
+        }
+
+        // 这是mock给我们创造的一般性函数
+        const mockCallback = jest.fn();
+
+        // 执行函数
+        forEach([0, 1], mockCallback);
+
+        // The mock function is called twice
+        expect(mockCallback.mock.calls.length).toBe(2);
+
+        // The first argument of the first call to the function was 0
+        expect(mockCallback.mock.calls[0][0]).toBe(0);
+
+        // The first argument of the second call to the function was 1
+        expect(mockCallback.mock.calls[1][0]).toBe(1);
+
+        // The return value of the first call to the function was 42
+        expect(mockCallback.mock.results[0].value).toBe(42);
+
+        // 我的测试
+        describe("mock function", () => {
+
+          // 创建我们需要测试的函数
+          let testFunction = function(array, callback) {
+            array.map(callback);
+            console.log([...array]);
+          }
+
+          const mockCallback = jest.fn();
+          testFunction([1, 2, 3], mockCallback);
+          expect(mockCallback.mock.calls.length).toBe(3);
+        })
+> - Mock Return Values 返回值
+        
+        const myMock = jest.fn();
+        console.log(myMock());
+        // > undefined
+
+        myMock
+          .mockReturnValueOnce(10)
+          .mockReturnValueOnce('x')
+          .mockReturnValue(true);
+
+        console.log(myMock(), myMock(), myMock(), myMock());
+        // > 10, 'x', true, true
+> - Mock Names 函数的名字
+> - Mock Implementations 用函数作为输入MockFunction的参数
+          
+        // cb就是等待输入的函数参数
+        const myMockFn = jest.fn(cb => cb(null, true));
+
+        myMockFn((err, val) => console.log(val));
+        // > true
+
+        myMockFn((err, val) => console.log(val));
+        // > true
+
+        // 拥有一次调用和默认调用的功能，一次调用优先级最高
+        const myMockFn = jest
+          .fn(() => 'default')
+          .mockImplementationOnce(() => 'first call')
+          .mockImplementationOnce(() => 'second call');
+
+        console.log(myMockFn(), myMockFn(), myMockFn(), myMockFn());
+        // > 'first call', 'second call', 'default', 'default'
+#### 6) Snapshot 快照
+> - expect(tree).toMatchSnapshot()
+        
+<h4 id='4.6.4'>4.6.4 Test Utilities</h4>  
+
+#### 1）导入
+> - 两种方法
+        
+        import ReactTestUtils from 'react-dom/test-utils'; // ES6
+        var ReactTestUtils = require('react-dom/test-utils'); // ES5 with npm
+#### 2）浅层渲染(Shallow Rendering)
+> - 在为 React 编写单元测试时，浅层渲染可能会有所帮助。 浅层渲染使你可以渲染 “单层深度” 的组件，并且对组件的 render 方法的返回值进行断言，不用担心子组件的行为，组件并没有实例化或被渲染。浅渲染并不需要 DOM。
+> - 安装
+          
+        import ShallowRenderer from 'react-test-renderer/shallow'; // ES6
+        var ShallowRenderer = require('react-test-renderer/shallow'); // ES5 with npm
+> - 应用
+        
+        import shallow from 'react-test-renderer/shallow';
+        import App from './app.jsx';
+
+        const ShallowRenderer = new shallow();
+        ShallowRenderer.render(<App />);
+        const result = ShallowRenderer.getRenderOutput();
+
+        expect(result.type).toBe("div");
+        expect(result.props.children).toEqual([<h1 className="fontcolor">Hello React!</h1>]);
+> - 局限性：即不支持 refs
+#### 3）全渲染(Shallow Rendering)
+> - 完整渲染出当前组件及其所有子组件
+> - 当内部直接改变了DOM时，就需要全渲染来测试了
+
+        
+<h4 id='4.6.5'>4.6.5 Test Utilities语法</h4>  
+       
+#### 1）Simulate
+#### 2）renderIntoDocument()
+#### 3）mockComponent()
+#### 4）isElement()
+#### 5）isElementOfType()
+#### 6）isDOMComponent()
+#### 7）isCompositeComponent()
+#### 8）isCompositeComponentWithType()
+#### 9）findAllInRenderedTree()
+#### 10）scryRenderedDOMComponentsWithClass()
+#### 11）findRenderedDOMComponentWithClass()
+#### 12）scryRenderedDOMComponentsWithTag()
+#### 13）findRenderedDOMComponentWithTag()
+#### 14）scryRenderedComponentsWithType()
+#### 15）findRenderedComponentWithType()
+
+        
+<h4 id='4.6.6'>4.6.6 Enzyme</h4>  
+       
+#### 1）简介
+> - Test Utilities的高级版
+#### 2）安装
+> - enzyme 
+> - enzyme-adapter-react-16
+        
+        npm i --save-dev enzyme enzyme-adapter-react-16
+#### 3）环境设置
+> - 设置适配器
+        
+        import Enzyme from 'enzyme';
+        import Adapter from 'enzyme-adapter-react-16';
+
+        Enzyme.configure({ adapter: new Adapter() });
+
+        
+<h4 id='4.6.7'>4.6.7 Enzyme语法</h4>  
+       
+#### 1）shallow()
+> - 浅层渲染
+> - 比如
+        
+        const wrapper = shallow(<MyComponent />);
+#### 2）.find(selector)
+> - Finds every node in the render tree of the current wrapper that matches the provided selector. 
+> - 总共提供了四种选择器
+>> - CSS Selectors
+        
+        wrapper.find('.bar');
+
+        // CSS id selector
+        expect(wrapper.find('#foo')).to.have.length(1);
+>> - Component Constructors
+        
+        import Foo from '../components/Foo';
+
+        const wrapper = shallow(<MyComponent />);
+        expect(wrapper.find(Foo)).to.have.length(1);
+>> - Component Display Name
+        
+        const wrapper = shallow(<MyComponent />);
+        expect(wrapper.find('Foo')).to.have.length(1);
+>> - Object Property Selector
+        
+        const wrapper = shallow(<MyComponent />);
+        expect(wrapper.find({ prop: 'value' })).to.have.length(1); 
+#### 2）.simulate(event[, mock])
+> - simulate(event[, mock]) => Self.
+> - 参数
+>> - event (String): The event name to be simulated
+>> - mock (Object [optional]): A mock event object that will be merged with the event object passed to the handlers. 
 
 
 
