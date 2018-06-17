@@ -7,11 +7,10 @@
 ### 参考源：[Flux 官网](http://facebook.github.io/flux/docs/in-depth-overview.html#content) 
 ### 参考源：[Flux Example](https://github.com/facebook/flux/tree/master/examples)
 ### 参考源：[REACT ROUTER教学视频](https://www.bilibili.com/video/av22934284/?p=21)
-
+### [源码](https://github.com/hblvsjtu/React_Study/tree/master/React/practice/app/todolist)
+    
 ------    
-
-
-
+    
    面对多向复杂交错的数据流动的时候，明显发现MVC架构对此无能为力，但是如果数据是单向的话呢，由于每个view对应一个model，View的重渲染很容易会使得性能受到严重影响。而Flux特有的单项数据流架构，与React的合作，恰好能解决这个单项数据流动造成的渲染性能的问题。但是对于原本使用MVC就能解决的问题，使用Flux明显有点用牛刀杀鸡了^_ ^
      
 ## 目录
