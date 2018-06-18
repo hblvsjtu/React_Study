@@ -22,7 +22,7 @@
         
 
 ## 技术栈总览
->>>>>> ![图0 技术栈总览]()  
+>>>>>> ![图0 技术栈总览](https://github.com/hblvsjtu/React_Study/blob/master/picture/图0%20技术栈总览.JPG?raw=true)  
                
 ## 目录
         
