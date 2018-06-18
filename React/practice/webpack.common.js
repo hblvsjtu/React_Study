@@ -12,6 +12,7 @@ module.exports = {
 
   entry: {
     app: './app/app.jsx',
+    redux: ['./app/reduxtest/index.jsx'],
     flux: ['./app/todolist/component/Todo.jsx'],
     router: ['./app/router/myFirstRouter.jsx'],
     findGF: './app/findGF.js',
@@ -28,19 +29,19 @@ module.exports = {
 
   module: {
     rules: [
-
-      {
-        enforce: "pre",
-        test: /\.jsx$/,
-        include: APP_PATH,
-        exclude: /node_modules/,
-        loader: "eslint-loader",
-        options: { // 这里的配置项参数将会被传递到 eslint 的 CLIEngine 
-          //formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
-          configFile: "./.eslintrc.json"
-        }
-      },
-
+      /*
+            {
+              enforce: "pre",
+              test: /\.jsx$/,
+              include: APP_PATH,
+              exclude: /node_modules/,
+              loader: "eslint-loader",
+              options: { // 这里的配置项参数将会被传递到 eslint 的 CLIEngine 
+                //formatter: require('eslint-friendly-formatter') // 指定错误报告的格式规范
+                configFile: "./.eslintrc.json"
+              }
+            },
+      */
       // the 'transform-runtime' plugin tells babel to require the runtime
       // instead of inlining it.
       {
