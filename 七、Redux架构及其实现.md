@@ -410,7 +410,9 @@
         
 <h4 id='7.4.4'>7.4.4 示例 </h4> 
       
+> - 变化前效果
 >>>>>> ![图7-1 变化前](https://github.com/hblvsjtu/React_Study/blob/master/picture/%E5%9B%BE7-1%20%E5%8F%98%E5%8C%96%E5%89%8D.png?raw=true)
+> - 变化后效果
 >>>>>> ![图7-1 变化后](https://github.com/hblvsjtu/React_Study/blob/master/picture/%E5%9B%BE7-1%20%E5%8F%98%E5%8C%96%E5%90%8E.png?raw=true)
       
 

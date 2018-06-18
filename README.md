@@ -129,7 +129,7 @@
 #### [7.4.1 安装插件](https://github.com/hblvsjtu/React_Study/blob/master/七、Redux架构及其实现.md#7.4.1)
 #### [7.4.2 展示型和容器型组件的异同比较](https://github.com/hblvsjtu/React_Study/blob/master/七、Redux架构及其实现.md#7.4.2)
 #### [7.4.3 相关API ](https://github.com/hblvsjtu/React_Study/blob/master/七、Redux架构及其实现.md#7.4.3)
-### [7.4.4 实例](https://github.com/hblvsjtu/React_Study/blob/master/七、Redux架构及其实现.md#7.4.4)
+#### [7.4.4 实例](https://github.com/hblvsjtu/React_Study/blob/master/七、Redux架构及其实现.md#7.4.4)
    
 
 
